@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         Pacifico: ["Pacifico", "cursive"],
+        Inter: ["Inter", "sans-serif"], // Adding the Inter font family
       },
     },
   },

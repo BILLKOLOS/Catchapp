@@ -4,7 +4,7 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
     const filters = ["Today", "Tomorrow", "Next Month", "This Year"];
 
     return (
-        <div className="flex flex-col w-full">
+        <div className="fixed top-0 z-50 flex flex-col bg-white w-full mb-12">
             {/* Top Section */}
             <div className="flex justify-between items-center px-8 py-1">
                 <div className="flex justify-start items-center gap-8">
