@@ -160,7 +160,7 @@ const MainContent = ({ activeFilter }) => {
             </div>
             <div  className="flex  px-1 gap-12">
                 <LiveEvent />
-                <MyEvents />
+                <MyEvents activeFilter={activeFilter}/>
             </div>
         </div>
     );

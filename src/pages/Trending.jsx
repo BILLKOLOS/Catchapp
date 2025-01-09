@@ -1,114 +1,207 @@
-import { useState } from "react";
-import Navbar from "../components/Navbar.jsx"
+import React, { useState } from "react";
+import { Card, CardContent } from "@mui/material";
+import { Avatar } from '@mui/material';
+import { Calendar, MapPin, Users, Clock, ChevronRight, Heart } from "lucide-react";
+
+const EventCard = ({ event, isExpanded, onClick }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <Card
+      className={`mb-6 mt-6 cursor-pointer transform transition-all duration-500 ease-in-out rounded-[30px] ${
+        isExpanded ? "scale-[1.02] shadow-2xl" : "hover:scale-[1.01] hover:shadow-lg"
+      } ${isHovered ? "ring-2 ring-blue-500 ring-opacity-50" : ""}`}
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+
+      {/* Card Header */}
+      <div className="relative group">
+        {/* Cover Image */}
+        <img
+          src={event.coverImage}
+          alt={event.title}
+          className={`w-full h-[312px]  object-cover transition-transform duration-700 ${
+            isHovered ? "scale-105" : "scale-100"
+          }`}
+        />
+
+        {/* Gradient Overlay */}
+        <div
+          className={`absolute inset-0 bg-gradient-to-t  ${
+            isExpanded ? "from-black/90 via-black/60" : "from-black/70 via-transparent"
+          } to-transparent transition-opacity duration-500`}
+        />
+
+        {/* Event Header Content */}
+        <div className="absolute top-2 left-0 right-0 p-6">
+          <div className="flex justify-between py-3">
+            {/* Organizer Section */}
+            <div className="flex flex-col items-start gap-12">
+              <div className="flex items-center gap-3">
+                <Avatar className="border-2 border-white/50 shadow-lg">
+                  <img
+                    src={event.organizer.avatar}
+                    alt={event.organizer.name}
+                    className="hover:scale-110 transition-transform duration-300 w-16 h-16"
+                  />
+                </Avatar>
+                <h3 className="text-white font-semibold">{event.organizer.name}</h3>
+              </div>
+              <div className="">
+                <h3 className="text-white text-2xl font-[Pacifico] tracking-wide">{event.title}</h3>
+                {/* Likes Counter */}
+                <div className="flex items-center gap-2 mt-28 py-1">
+                  <Heart className="w-4 h-4 text-red-500" />
+                  <span className="text-white text-sm">{event.likes}</span>
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-2 text-white text-md">
+                <h2 className="font-semibold">{event.date}</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Expanded Content */}
+      <div
+        className={`transition-all duration-500 ease-in-out overflow-hidden ${
+          isExpanded ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+        }`}
+      >
+        <CardContent className="bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+          <div className="space-y-6 py-4">
+            {/* Location Section */}
+            <div className="flex items-center gap-3 bg-white/10 p-3 rounded-lg backdrop-blur-sm">
+              <MapPin className="w-5 h-5 text-blue-400" />
+              <div>
+                <p className="text-sm text-gray-300">Location</p>
+                <p className="font-medium">{event.location}</p>
+              </div>
+            </div>
+
+            {/* Personalities Section */}
+            <div className="space-y-3">
+              <h4 className="font-semibold text-lg flex items-center gap-2">
+                <Users className="w-5 h-5 text-purple-400" />
+                Personalities
+              </h4>
+              <div className="flex gap-2 flex-wrap">
+                {event.personalities.map((person) => (
+                  <div
+                    key={person.id}
+                    className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors duration-300"
+                  >
+                    <Avatar className="h-8 w-8 border border-white/20">
+                      <img src={person.avatar} alt={person.name} />
+                    </Avatar>
+                    <span className="text-sm">{person.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Speakers Section */}
+            <div className="space-y-3">
+              <h4 className="font-semibold text-lg flex items-center gap-2">
+                <Users className="w-5 h-5 text-yellow-400" />
+                Speakers
+              </h4>
+              <div className="flex gap-2 flex-wrap">
+                {event.speakers.map((speaker) => (
+                  <div
+                    key={speaker.id}
+                    className="flex items-center gap-2 bg-white/5 px-3 py-2 rounded-lg hover:bg-white/10 transition-colors duration-300"
+                  >
+                    <Avatar className="h-8 w-8 border border-white/20">
+                      <img src={speaker.avatar} alt={speaker.name} />
+                    </Avatar>
+                    <span className="text-sm">{speaker.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Request Button */}
+            <button
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-400 text-white py-3 rounded-lg font-medium hover:from-blue-700 hover:to-blue-500 transform hover:scale-[1.02] transition-all duration-300 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 shadow-lg hover:shadow-xl"
+            >
+              Request to Join
+            </button>
+          </div>
+        </CardContent>
+      </div>
+
+      {/* Expansion Indicator */}
+      <div
+        className={`absolute right-4 bottom-4 transform transition-transform duration-300 ${
+          isExpanded ? "rotate-90" : "rotate-0"
+        }`}
+      >
+        <ChevronRight className="w-6 h-6 text-white/80" />
+      </div>
+    </Card>
+  );
+};
 
 const Trending = () => {
-    const [events] = useState([
-        {
-            id: 1, title: "White Party",
-            date: "12th Nov", host: "Susan",
-            likes: 54,
-            description: "welcome to the white party as we cut through th ages of entertainment",
-            image: "https://images.pexels.com/photos/28976233/pexels-photo-28976233/free-photo-of-rustic-cheese-board-with-cold-cuts-and-bread.jpeg?auto=compress&cs=tinysrgb&w=600",
-            type: "Today", profile: "https://images.pexels.com/photos/29783131/pexels-photo-29783131/free-photo-of-silhouette-of-man-in-profile-wearing-hat-outdoors.jpeg?auto=compress&cs=tinysrgb&w=600"
-        },
-        {
-            id: 2, title: "Graduation",
-            date: "1st Dec", host: "James",
-            likes: 32,
-            description: "welcome to the Graduation party as we cut through th ages of entertainment",
-            image: "https://images.pexels.com/photos/7944240/pexels-photo-7944240.jpeg?auto=compress&cs=tinysrgb&w=600",
-            type: "Tomorrow", profile: "https://images.pexels.com/photos/29846889/pexels-photo-29846889/free-photo-of-portrait-of-woman-by-lake-in-kaduna-nigeria.jpeg?auto=compress&cs=tinysrgb&w=600"
-        },
-        {
-            id: 3, title: "Wedding Anniversary",
-            date: "5th Jan", host: "Andrew",
-            likes: 32,
-            description: "welcome to the wedding anniversary ceremony as we cut through th ages of entertainment",
-            image: "https://images.pexels.com/photos/29816651/pexels-photo-29816651/free-photo-of-elegant-engagement-ring-in-velvet-box.jpeg?auto=compress&cs=tinysrgb&w=600",
-            type: "This Year", profile: "https://images.pexels.com/photos/29846889/pexels-photo-29846889/free-photo-of-portrait-of-woman-by-lake-in-kaduna-nigeria.jpeg?auto=compress&cs=tinysrgb&w=600"
-        },
-        {
-            id: 4, title: "Home Coming Ceremony",
-            date: "12th Nov", host: "Ochieng",
-            likes: 100,
-            description: "welcome to the Home coming ceremony as we cut through th ages of entertainment",
-            image: "https://images.pexels.com/photos/5604922/pexels-photo-5604922.jpeg?auto=compress&cs=tinysrgb&w=600",
-            type: "Today", profile: "https://images.pexels.com/photos/29846889/pexels-photo-29846889/free-photo-of-portrait-of-woman-by-lake-in-kaduna-nigeria.jpeg?auto=compress&cs=tinysrgb&w=600"
-        },
-        {
-            id: 5, title: "Sports Day",
-            date: "12th Feb", host: "Michael",
-            likes: 100,
-            description: "welcome to the Sports Day as we cut through th ages of entertainment",
-            image: "https://images.pexels.com/photos/29783074/pexels-photo-29783074/free-photo-of-men-practicing-soccer-on-outdoor-field.jpeg?auto=compress&cs=tinysrgb&w=600",
-            type: "Next Month", profile: "https://images.pexels.com/photos/29846889/pexels-photo-29846889/free-photo-of-portrait-of-woman-by-lake-in-kaduna-nigeria.jpeg?auto=compress&cs=tinysrgb&w=600"
-        },
-    ]);
+  const [expandedEventId, setExpandedEventId] = useState(null);
 
-    const filteredEvents = events.filter(event => event.type);
+  const events = [
+    {
+      id: 1,
+      title: "Home Coming Ceremony",
+      date: "12TH NOV",
+      coverImage: "https://images.pexels.com/photos/28976233/pexels-photo-28976233/free-photo-of-rustic-cheese-board-with-cold-cuts-and-bread.jpeg?auto=compress&cs=tinysrgb&w=600",
+      location: "Grand Ballroom, Central Hotel",
+      likes: 32,
+      organizer: { name: "Johnny", avatar: "https://images.pexels.com/photos/29846889/pexels-photo-29846889/free-photo-of-portrait-of-woman-by-lake-in-kaduna-nigeria.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      personalities: [
+        { id: 1, name: "Harry Potter", avatar: "https://images.pexels.com/photos/15566416/pexels-photo-15566416/free-photo-of-beautiful-woman-with-necklace-on-hill.jpeg?auto=compress&cs=tinysrgb&w=600" },
+        { id: 2, name: "Pete Davidson", avatar: "https://images.pexels.com/photos/29783131/pexels-photo-29783131/free-photo-of-silhouette-of-man-in-profile-wearing-hat-outdoors.jpeg?auto=compress&cs=tinysrgb&w=600" },
+        { id: 3, name: "Emma Watson", avatar: "https://images.pexels.com/photos/3743389/pexels-photo-3743389.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      ],
+      speakers: [
+        { id: 1, name: "Dr. Mary Johnson", avatar: "https://images.pexels.com/photos/30039441/pexels-photo-30039441/free-photo-of-emotional-portrait-of-a-woman-in-low-light.jpeg?auto=compress&cs=tinysrgb&w=600" },
+        { id: 2, name: "Prof. John Smith", avatar: "https://images.pexels.com/photos/29976870/pexels-photo-29976870/free-photo-of-contemplative-young-adult-in-urban-setting.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      ],
+    },
+    {
+      id: 2,
+      title: "Sports Day Championship",
+      date: "12TH FEB",
+      likes: 43,
+      coverImage: "https://images.pexels.com/photos/7944240/pexels-photo-7944240.jpeg?auto=compress&cs=tinysrgb&w=600",
+      location: "Olympic Sports Complex",
+      organizer: { name: "Michael", avatar: "https://images.pexels.com/photos/30007344/pexels-photo-30007344/free-photo-of-dynamic-portrait-of-a-woman-with-flowing-hair.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      personalities: [
+        { id: 3, name: "Sam Wilson", avatar: "https://images.pexels.com/photos/30039441/pexels-photo-30039441/free-photo-of-emotional-portrait-of-a-woman-in-low-light.jpeg?auto=compress&cs=tinysrgb&w=600" },
+        { id: 4, name: "Alex Morgan", avatar: "https://images.pexels.com/photos/29976870/pexels-photo-29976870/free-photo-of-contemplative-young-adult-in-urban-setting.jpeg?auto=compress&cs=tinysrgb&w=600" },
+        { id: 5, name: "Chris Evans", avatar: "/api/placeholder/40/40" },
+      ],
+      speakers: [
+        { id: 3, name: "Coach Timothy", avatar: "https://images.pexels.com/photos/15566416/pexels-photo-15566416/free-photo-of-beautiful-woman-with-necklace-on-hill.jpeg?auto=compress&cs=tinysrgb&w=600" },
+        { id: 4, name: "Coach Sarah", avatar: "https://images.pexels.com/photos/29783131/pexels-photo-29783131/free-photo-of-silhouette-of-man-in-profile-wearing-hat-outdoors.jpeg?auto=compress&cs=tinysrgb&w=600" },
+      ],
+    },
+  ];
 
-    return (
-        <div>
-            {/*<Navbar />*/}
-            <div className="flex flex-col items-center justify-center p-4 mt-12">
-                <div className="flex flex-col items-center gap-8">
-                    {events.map((event) => (
-                        <div key={event.id} className="flex flex-col bg-white shadow-lg rounded-[30px] overflow-hidden w-[680px]">
-                            {/* Event Image */}
-                            <div className="relative">
-                                <img
-                                    src={event.image}
-                                    alt={event.title}
-                                    className="w-full h-64 object-cover"
-                                />
-                                <div className="absolute inset-0 bg-black bg-opacity-50 rounded-xl p-6 text-white flex flex-col justify-between">
-                                    <div className="flex justify-between items-center">
-                                        <div className="flex items-center gap-4">
-                                            <img
-                                                src={event.profile}
-                                                alt={event.host}
-                                                className="w-12 h-12 rounded-full border-2 border-gray-300"
-                                            />
-                                            <p className="font-medium">{event.host}</p>
-                                        </div>
-                                        <h3 className="text-xl font-bold uppercase">{event.date}</h3>
-                                    </div>
-                                    <div className="mt-4">
-                                        <h3 className="text-2xl font-bold mb-2">{event.title}</h3>
-                                        <div className="w-full flex justify-start items-center gap-4">
-                                            <h5 className="block font-bold">{event.description}</h5>
-                                            <div className="w-full flex justify-between">
-                                                {/* Show the total number of events */}
-                                                {filteredEvents.length > 0 && `1 / ${filteredEvents.length}`}
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
-                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
-                                                </svg>
-                                                <div className="flex gap-2">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
-                                                    </svg>
-                                                    <p>{event.likes}</p>
-                                                </div>
-                                                <div className="flex justify-end items-center gap-4">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
-                                                    </svg>
-                                                    <div className="border-[2px] border-gray-100 px-4 p-1 rounded-[30px] bg-gray-300 bg-opacity-50">
-                                                        <p>Request</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> 
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );    
+  return (
+    <div className="max-w-2xl mx-auto p-6 space-y-8">
+      <div className="space-y-6 rounded-[30px]">
+        {events.map((event) => (
+          <EventCard
+            key={event.id}
+            event={event}
+            isExpanded={expandedEventId === event.id}
+            onClick={() => setExpandedEventId(expandedEventId === event.id ? null : event.id)}
+          />
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default Trending;

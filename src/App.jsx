@@ -2,6 +2,7 @@ import Home from './components/Home.jsx';
 import Explore from './pages/Explore';
 import Trending from './pages/Trending';
 import  ServiceCard from './pages/Gives';
+import SocialFeed from './pages/Feed';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
                     <Route path="/explore" element={<Explore />}>
                         <Route path="trending" element={<Trending />} />
                         <Route path="gives" element={<ServiceCard />} />
+                        <Route path="feeds" element={<SocialFeed />} />
                     </Route>
                 </Routes>
             </div>

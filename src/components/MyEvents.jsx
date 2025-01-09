@@ -1,79 +1,90 @@
-const MyEvents = () => {
-    return (
-        <div>
-            <h1 className="font-bold text-[#272222] text-lg">My Events</h1>
-            <div className="w-full grid grid-cols-4  gap-8">
-                <div className="bg-[#272222] rounded-[30px] py-3 px-4 w-[227px] flex flex-col gap-10">
-                    <div className="flex justfiy-between items-center gap-4">
-                        <div className="w-full">
-                            <img src="https://images.pexels.com/photos/29783131/pexels-photo-29783131/free-photo-of-silhouette-of-man-in-profile-wearing-hat-outdoors.jpeg?auto=compress&cs=tinysrgb&w=600" alt="profile" className="object-cover rounded-full w-16 h-16" />
-                        </div>
-                        <div>
-                            <p className="text-white font-semibold">James</p>
-                        </div>
-                    </div>
-                    <h3 className="text-center text-white font-[Pacifico] text-2xl">Mbuzi Choma</h3>
-                    <div className="flex justify-between items-center">
-                        <p className="text-white">123/200</p>
-                        <div className="border-[1px] border-gray-100 px-4 p-1 rounded-[30px] bg-gray-300 bg-opacity-50 cursor-pointer">
-                            <p className="text-white">Request</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="bg-[#272222] rounded-[30px] py-3 px-4 w-[227px] flex flex-col gap-10">
-                    <div className="flex justfiy-between items-center gap-4">
-                        <div className="w-full">
-                            <img src="https://images.pexels.com/photos/29886296/pexels-photo-29886296/free-photo-of-dynamic-portrait-of-woman-in-black-dress.jpeg?auto=compress&cs=tinysrgb&w=600" alt="profile" className="object-cover rounded-full w-16 h-16" />
-                        </div>
-                        <div>
-                            <p className="text-white font-semibold">Alice</p>
-                        </div>
-                    </div>
-                    <h3 className="text-center text-white font-[Pacifico] text-2xl">Graduation</h3>
-                    <div className="flex justify-between items-center">
-                        <p className="text-white">123/200</p>
-                        <div className="border-[1px] border-gray-100 px-4 p-1 rounded-[30px] bg-gray-300 bg-opacity-50 cursor-pointer">
-                            <p className="text-white">Request</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="bg-[#272222] rounded-[30px] py-3 px-4 w-[227px] flex flex-col gap-10">
-                    <div className="flex justfiy-between items-center gap-4">
-                        <div className="w-full">
-                            <img src="https://images.pexels.com/photos/29876569/pexels-photo-29876569/free-photo-of-elegant-black-and-white-portrait-of-a-man.jpeg?auto=compress&cs=tinysrgb&w=600" alt="profile" className="object-cover rounded-full w-16 h-16" />
-                        </div>
-                        <div>
-                            <p className="text-white font-semibold">Andrew</p>
-                        </div>
-                    </div>
-                    <h3 className="text-center text-white font-[Pacifico] text-2xl">Wedding</h3>
-                    <div className="flex justify-between items-center">
-                        <p className="text-white">200/300</p>
-                        <div className="border-[1px] border-gray-100 px-4 p-1 rounded-[30px] bg-gray-300 bg-opacity-50 cursor-pointer">
-                            <p className="text-white">Request</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="bg-[#272222] rounded-[30px] py-3 px-4 w-[227px] flex flex-col gap-10">
-                    <div className="flex justfiy-between items-center gap-4">
-                        <div className="w-full">
-                            <img src="https://images.pexels.com/photos/29976870/pexels-photo-29976870/free-photo-of-contemplative-young-adult-in-urban-setting.jpeg?auto=compress&cs=tinysrgb&w=600" alt="profile" className="object-cover rounded-full w-16 h-16" />
-                        </div>
-                        <div>
-                            <p className="text-white font-semibold">Williams</p>
-                        </div>
-                    </div>
-                    <h3 className="text-center text-white font-[Pacifico] text-2xl">White Party</h3>
-                    <div className="flex justify-between items-center">
-                        <p className="text-white">200/300</p>
-                        <div className="border-[1px] border-gray-100 px-4 p-1 rounded-[30px] bg-gray-300 bg-opacity-50 cursor-pointer">
-                            <p className="text-white">Request</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-}
+import React, { useState } from "react";
 
-export default MyEvents
+const MyEvents = ({ activeFilter }) => {
+  const [events] = useState([
+      {
+          id: 1, title: "White Party",
+          date: "12th Nov", host: "Susan",
+          likes: 54, attendees: '123/400',
+          description: "welcome to the white party as we cut through th ages of entertainment",
+          image: "https://images.pexels.com/photos/28976233/pexels-photo-28976233/free-photo-of-rustic-cheese-board-with-cold-cuts-and-bread.jpeg?auto=compress&cs=tinysrgb&w=600",
+          type: "Today", profile: "https://images.pexels.com/photos/29783131/pexels-photo-29783131/free-photo-of-silhouette-of-man-in-profile-wearing-hat-outdoors.jpeg?auto=compress&cs=tinysrgb&w=600"
+      },
+      {
+          id: 2, title: "Graduation",
+          date: "1st Dec", host: "James",
+          likes: 32, attendees: '123/400',
+          description: "welcome to the Graduation party as we cut through th ages of entertainment",
+          image: "https://images.pexels.com/photos/7944240/pexels-photo-7944240.jpeg?auto=compress&cs=tinysrgb&w=600",
+          type: "Tomorrow", profile: "https://images.pexels.com/photos/29846889/pexels-photo-29846889/free-photo-of-portrait-of-woman-by-lake-in-kaduna-nigeria.jpeg?auto=compress&cs=tinysrgb&w=600"
+      },
+      {
+          id: 3, title: "Wedding Anniversary",
+          date: "5th Jan", host: "Andrew",
+          likes: 32, attendees: '123/400',
+          description: "welcome to the wedding anniversary ceremony as we cut through th ages of entertainment",
+          image: "https://images.pexels.com/photos/29816651/pexels-photo-29816651/free-photo-of-elegant-engagement-ring-in-velvet-box.jpeg?auto=compress&cs=tinysrgb&w=600",
+          type: "This Year", profile: "https://images.pexels.com/photos/29846889/pexels-photo-29846889/free-photo-of-portrait-of-woman-by-lake-in-kaduna-nigeria.jpeg?auto=compress&cs=tinysrgb&w=600"
+      },
+      {
+          id: 4, title: "Home Coming Ceremony",
+          date: "12th Nov", host: "Ochieng",
+          likes: 100, attendees: '123/400',
+          description: "welcome to the Home coming ceremony as we cut through th ages of entertainment",
+          image: "https://images.pexels.com/photos/5604922/pexels-photo-5604922.jpeg?auto=compress&cs=tinysrgb&w=600",
+          type: "Today", profile: "https://images.pexels.com/photos/29846889/pexels-photo-29846889/free-photo-of-portrait-of-woman-by-lake-in-kaduna-nigeria.jpeg?auto=compress&cs=tinysrgb&w=600"
+      },
+      {
+          id: 5, title: "Sports Day",
+          date: "12th Feb", host: "Michael",
+          likes: 100, attendees: '123/400',
+          description: "welcome to the Sports Day as we cut through th ages of entertainment",
+          image: "https://images.pexels.com/photos/29783074/pexels-photo-29783074/free-photo-of-men-practicing-soccer-on-outdoor-field.jpeg?auto=compress&cs=tinysrgb&w=600",
+          type: "Next Month", profile: "https://images.pexels.com/photos/29846889/pexels-photo-29846889/free-photo-of-portrait-of-woman-by-lake-in-kaduna-nigeria.jpeg?auto=compress&cs=tinysrgb&w=600"
+      },
+  ]);
+
+  // Filter events based on the activeFilter
+  const filteredEvents = events.filter(
+    (event) => event.type === activeFilter
+  );
+
+  return (
+    <div>
+      <h1 className="font-bold text-[#272222] text-lg">My Events</h1>
+      <div className="w-full grid grid-cols-4 gap-8">
+        {filteredEvents.map((event) => (
+          <div
+            key={event.id}
+            className="bg-[#272222] rounded-[30px] py-3 px-4 w-[227px] flex flex-col gap-10"
+          >
+            <div className="flex justify-between items-center gap-4">
+              <div className="w-full">
+                <img
+                  src={event.profile}
+                  alt="profile"
+                  className="object-cover rounded-full w-16 h-16"
+                />
+              </div>
+              <div>
+                <p className="text-white font-semibold">{event.host}</p>
+              </div>
+            </div>
+            <h3 className="text-center text-white font-[Pacifico] text-2xl">
+              {event.title}
+            </h3>
+            
+            <div className="flex justify-between items-center">
+              <p className="text-white">{event.attendees}</p>
+              <div className="border-[1px] border-gray-100 px-4 p-1 rounded-[30px] bg-gray-300 bg-opacity-50 cursor-pointer">
+                <p className="text-white">Request</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default MyEvents;

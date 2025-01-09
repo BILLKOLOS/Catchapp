@@ -2,20 +2,20 @@ import React from 'react';
 import { Star, Mail, Phone, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const ServiceCard = ({ name, rating, specialization, price }) => (
-  <div className="min-w-[280px] bg-white rounded-xl p-5 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+  <div className="min-w-[280px] bg-[#272222] rounded-[30px] p-5 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
     <div className="flex items-center gap-3 mb-3">
-      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-lg">
+      <div className="w-12 h-12 bg-white  rounded-full flex items-center justify-center text-[#000000] font-semibold text-lg">
         {name[0]}
       </div>
       <div>
-        <h3 className="font-semibold text-gray-800 mt-12">{name}</h3>
-        <p className="text-sm text-gray-500">{specialization}</p>
+        <h3 className="font-semibold text-white">{name}</h3>
+        <p className="text-sm text-white">{specialization}</p>
       </div>
     </div>
     
     <div className="flex items-center mb-3">
       <div className="flex items-center">
-        <span className="text-lg font-bold text-gray-800 mr-2">{rating}</span>
+        <span className="text-lg font-bold text-gray-400 mr-2">{rating}</span>
         <div className="flex gap-0.5">
           {[...Array(5)].map((_, i) => (
             <Star
@@ -33,18 +33,17 @@ const ServiceCard = ({ name, rating, specialization, price }) => (
       <span className="text-sm text-gray-500 ml-2">(120+ reviews)</span>
     </div>
 
-    <div className="text-sm text-gray-600 mb-4">
-      Starting from <span className="font-semibold text-gray-800">{price}</span>
+    <div className="text-sm text-white mb-4">
+      Starting from <span className="font-semibold text-gray-500">{price}</span>
     </div>
     
     <div className="flex gap-2">
-      <button className="flex-1 flex items-center justify-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-600 py-2 rounded-lg transition-colors duration-300">
-        <Mail size={16} />
-        <span className="text-sm font-medium">Message</span>
+      <button className="flex-1 flex items-center justify-start gap-2 ">
+        <Mail size={16} className=" text-white duration-300"/>
+        
       </button>
-      <button className="flex-1 flex items-center justify-center gap-2 bg-green-50 hover:bg-green-100 text-green-600 py-2 rounded-lg transition-colors duration-300">
-        <Phone size={16} />
-        <span className="text-sm font-medium">Call</span>
+      <button className="flex-1 flex items-center justify-end">
+        <Phone size={16} className=" text-white duration-300"/>
       </button>
     </div>
   </div>
@@ -76,20 +75,22 @@ const ServiceCategory = ({ title, description, services }) => {
   };
 
   return (
-    <div className="mb-12">
+    <div className="mb-12 mt-12 max-w-[900px] mx-auto">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-2">{title}</h2>
         <p className="text-gray-600">{description}</p>
       </div>
       <div className="relative">
         <ScrollButton direction="left" onClick={() => scroll('left')} />
-        <div 
-          ref={scrollRef}
-          className="flex gap-6 overflow-x-auto pb-4 scroll-smooth hide-scrollbar"
-        >
-          {services.map((service, index) => (
-            <ServiceCard key={index} {...service} />
-          ))}
+        <div className="overflow-hidden max-w-[900px] mx-auto">
+          <div 
+            ref={scrollRef}
+            className="flex gap-6 overflow-x-auto pb-4 scroll-smooth hide-scrollbar"
+          >
+            {services.map((service, index) => (
+              <ServiceCard key={index} {...service} />
+            ))}
+          </div>
         </div>
         <ScrollButton direction="right" onClick={() => scroll('right')} />
       </div>
