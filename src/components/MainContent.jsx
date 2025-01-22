@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Map from "./Map";
 import LiveEvent from "./LiveEvent"
 import MyEvents from "./MyEvents"
+import { Link } from 'react-router-dom';
 
 const MainContent = ({ activeFilter }) => {
     const [events] = useState([
@@ -10,7 +11,7 @@ const MainContent = ({ activeFilter }) => {
             date: "12th Nov", host: "Susan",
             likes: 54,
             description: "welcome to the white party as we cut through th ages of entertainment",
-            image: "https://images.pexels.com/photos/28976233/pexels-photo-28976233/free-photo-of-rustic-cheese-board-with-cold-cuts-and-bread.jpeg?auto=compress&cs=tinysrgb&w=600",
+            image: "https://images.pexels.com/photos/787961/pexels-photo-787961.jpeg?auto=compress&cs=tinysrgb&w=600",
             type: "Today", profile: "https://images.pexels.com/photos/29783131/pexels-photo-29783131/free-photo-of-silhouette-of-man-in-profile-wearing-hat-outdoors.jpeg?auto=compress&cs=tinysrgb&w=600"
         },
         {
@@ -81,6 +82,7 @@ const MainContent = ({ activeFilter }) => {
                                 {filteredEvents.map((event) => (
                                     <div key={event.id} className="flex-shrink-0 w-full">
                                         <div className="relative">
+                                            
                                             <img
                                                 src={event.image}
                                                 alt={event.title}
@@ -90,7 +92,9 @@ const MainContent = ({ activeFilter }) => {
                                                 <div className="flex justify-between items-center">
                                                     <div className="flex justify-start items-center gap-2">
                                                         <div className="border-[4px] border-[#000000] rounded-full p-[2px] cursor-pointer">
-                                                            <img src={event.profile} alt="profile" className="object-cover rounded-full w-16 h-16" /> 
+                                                            <Link to="/profile">
+                                                                <img src={event.profile} alt="profile" className="object-cover rounded-full w-16 h-16" />
+                                                            </Link>
                                                         </div>
                                                         <p className="text-lg">{event.host}</p>
                                                     </div>

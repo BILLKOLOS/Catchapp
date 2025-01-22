@@ -1,52 +1,55 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Star, Mail, Phone, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const ServiceCard = ({ name, rating, specialization, price }) => (
-  <div className="min-w-[280px] bg-[#272222] rounded-[30px] p-5 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
-    <div className="flex items-center gap-3 mb-3">
-      <div className="w-12 h-12 bg-white  rounded-full flex items-center justify-center text-[#000000] font-semibold text-lg">
-        {name[0]}
-      </div>
-      <div>
-        <h3 className="font-semibold text-white">{name}</h3>
-        <p className="text-sm text-white">{specialization}</p>
-      </div>
-    </div>
-    
-    <div className="flex items-center mb-3">
-      <div className="flex items-center">
-        <span className="text-lg font-bold text-gray-400 mr-2">{rating}</span>
-        <div className="flex gap-0.5">
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              size={16}
-              className={`${
-                i < Math.floor(rating)
-                  ? 'text-yellow-400 fill-yellow-400'
-                  : 'text-gray-300 fill-gray-300'
-              }`}
-            />
-          ))}
+const ServiceCard = ({ id, name, rating, specialization, price }) => (
+  <Link to={`/explore/gives/service/${id}`}>
+    <div className="min-w-[280px] bg-[#272222] rounded-[30px] cursor-pointer p-5 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
+      <div className="flex items-center gap-3 mb-3">
+        <div className="w-12 h-12 bg-white  rounded-full flex items-center justify-center text-[#000000] font-semibold text-lg">
+          {name[0]}
+        </div>
+        <div>
+          <h3 className="font-semibold text-white">{name}</h3>
+          <p className="text-sm text-white">{specialization}</p>
         </div>
       </div>
-      <span className="text-sm text-gray-500 ml-2">(120+ reviews)</span>
-    </div>
+      
+      <div className="flex items-center mb-3">
+        <div className="flex items-center">
+          <span className="text-lg font-bold text-gray-400 mr-2">{rating}</span>
+          <div className="flex gap-0.5">
+            {[...Array(5)].map((_, i) => (
+              <Star
+                key={i}
+                size={16}
+                className={`${
+                  i < Math.floor(rating)
+                    ? 'text-gray-300'
+                    : 'text-gray-300 fill-gray-300'
+                }`}
+              />
+            ))}
+          </div>
+        </div>
+        <span className="text-sm text-gray-500 ml-2">(120+ reviews)</span>
+      </div>
 
-    <div className="text-sm text-white mb-4">
-      Starting from <span className="font-semibold text-gray-500">{price}</span>
+      <div className="text-sm text-white mb-4">
+        Starting from <span className="font-semibold text-gray-500">{price}</span>
+      </div>
+      
+      <div className="flex gap-2">
+        <button className="flex-1 flex items-center justify-start gap-2 ">
+          <Mail size={16} className=" text-white duration-300"/>
+          
+        </button>
+        <button className="flex-1 flex items-center justify-end">
+          <Phone size={16} className=" text-white duration-300"/>
+        </button>
+      </div>
     </div>
-    
-    <div className="flex gap-2">
-      <button className="flex-1 flex items-center justify-start gap-2 ">
-        <Mail size={16} className=" text-white duration-300"/>
-        
-      </button>
-      <button className="flex-1 flex items-center justify-end">
-        <Phone size={16} className=" text-white duration-300"/>
-      </button>
-    </div>
-  </div>
+  </Link>
 );
 
 const ScrollButton = ({ direction, onClick }) => (
@@ -101,18 +104,20 @@ const ServiceCategory = ({ title, description, services }) => {
 const ServiceCategories = () => {
   const categories = [
     {
+      id: 1,
       title: "Photography",
       description: "Professional photographers for your special moments",
       services: [
-        { name: "James Wilson", rating: 4.5, specialization: "Wedding Photography", price: "$500/day" },
-        { name: "Sunny Lee", rating: 4.8, specialization: "Portrait & Events", price: "$400/day" },
-        { name: "Maria Garcia", rating: 5.0, specialization: "Fashion Photography", price: "$600/day" },
-        { name: "Alex Chen", rating: 4.7, specialization: "Commercial Shoots", price: "$450/day" },
-        { name: "Sarah Brown", rating: 4.9, specialization: "Family Portraits", price: "$350/day" },
-        { name: "David Kim", rating: 4.6, specialization: "Product Photography", price: "$550/day" }
-      ]
+        { id: 1, name: "James Wilson", rating: 4.5, specialization: "Wedding Photography", price: "$500/day" },
+        { id: 2, name: "Sunny Lee", rating: 4.8, specialization: "Portrait & Events", price: "$400/day" },
+        { id: 3, name: "Maria Garcia", rating: 5.0, specialization: "Fashion Photography", price: "$600/day" },
+        { id: 4, name: "Alex Chen", rating: 4.7, specialization: "Commercial Shoots", price: "$450/day" },
+        { id: 5, name: "Sarah Brown", rating: 4.9, specialization: "Family Portraits", price: "$350/day" },
+        { id: 6, name: "David Kim", rating: 4.6, specialization: "Product Photography", price: "$550/day" }
+      ],
     },
     {
+      id: 2,
       title: "Event Decor",
       description: "Transform your venue with stunning decorations",
       services: [
@@ -122,9 +127,11 @@ const ServiceCategories = () => {
         { name: "Bloom & Wild", rating: 4.6, specialization: "Floral Design", price: "$800/event" },
         { name: "Elite Events", rating: 5.0, specialization: "Full Venue Styling", price: "$2500/event" },
         { name: "Creative Space", rating: 4.7, specialization: "Modern Minimalist", price: "$1800/event" }
-      ]
+      ],
+      
     },
     {
+      id: 3,
       title: "MCs & Hosts",
       description: "Experienced hosts to keep your event engaging",
       services: [
@@ -134,9 +141,10 @@ const ServiceCategories = () => {
         { name: "Robert King", rating: 4.6, specialization: "Entertainment Host", price: "$350/event" },
         { name: "Lisa Chen", rating: 4.8, specialization: "Ceremony Master", price: "$500/event" },
         { name: "Tom Harris", rating: 4.7, specialization: "Awards Night Host", price: "$600/event" }
-      ]
+      ],
     },
     {
+      id: 4,
       title: "Catering Services",
       description: "Delicious food and professional service",
       services: [
