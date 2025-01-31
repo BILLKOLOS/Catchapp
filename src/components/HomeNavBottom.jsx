@@ -6,6 +6,17 @@ import EventModal from './EventModal';
 const BottomNav = () => {
     const [isAtBottom, setIsAtBottom] = useState(false);
     const [showEventModal, setShowEventModal] = useState(false);
+    const [showCategories, setShowCategories] = useState(false);
+
+    const categories = [
+        { id: 1, name: 'Genaeral', active: true },
+        { id: 2, name: 'Technology' },
+        { id: 3, name: 'Tourism' },
+        { id: 4, name: 'music' },
+        { id: 5, name: 'Lifestyle' },
+        { id: 6, name: 'Sports' },
+        { id: 7, name: 'Health' }
+    ];
 
     useEffect(() => {
         const handleScroll = () => {
@@ -20,8 +31,33 @@ const BottomNav = () => {
         };
     }, []);
 
+    const toggleCategories = () => {
+        setShowCategories(!showCategories);
+    };
+
     return (
         <>
+            {showCategories && (
+                <div className="fixed w-[220px] bottom-14 left-[40%] transform -translate-x-1/2 bg-gray-200 text-[#272222] rounded-lg p-4 shadow-lg z-50">
+                    <h3 className="text-sm font-bold mb-2">category</h3>
+                    <div className="flex flex-col gap-2">
+                        {categories.map((category) => (
+                            <div
+                                key={category.id}
+                                className={`px-4 py-2 rounded-lg cursor-pointer flex items-center gap-2 ${
+                                    category.active ? 'bg-gray-300' : 'hover:bg-gray-300'
+                                }`}
+                            >
+                                <span>{category.name}</span>
+                                {category.active && (
+                                    <span className="w-2 h-2 bg-black rounded-full"></span>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+            
             <div
                 className={`fixed bottom-1 right-0 w-full transition-transform duration-500 mt-12 ${
                     isAtBottom ? "translate-y-0" : "translate-y-full"
@@ -43,7 +79,10 @@ const BottomNav = () => {
                                 d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
                             />
                         </svg>
-                        <div className="flex gap-4 border-2 border-black p-2 px-3 rounded-full">
+                        <div 
+                            className="flex gap-4 border-2 border-black p-2 px-3 rounded-full cursor-pointer"
+                            onClick={toggleCategories}
+                        >
                             <h4>General</h4>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -51,12 +90,17 @@ const BottomNav = () => {
                                 viewBox="0 0 24 24"
                                 strokeWidth={1.5}
                                 stroke="currentColor"
-                                className="w-6 h-6 cursor-pointer"
+                                className={`w-6 h-6 cursor-pointer transition-transform duration-300 ${
+                                    showCategories ? 'rotate-180' : ''
+                                }`}
                             >
                                 <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
-                                    d="m4.5 15.75 7.5-7.5 7.5 7.5"
+                                    d={showCategories 
+                                        ? "m19.5 8.25-7.5 7.5-7.5-7.5"  // Pointing down
+                                        : "m4.5 15.75 7.5-7.5 7.5 7.5"  // Pointing up
+                                    }
                                 />
                             </svg>
                         </div>

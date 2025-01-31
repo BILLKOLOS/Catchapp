@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <!-- Outer rounded square -->
+  <rect 
+    x="20" 
+    y="20" 
+    width="160" 
+    height="160" 
+    rx="50" 
+    fill="#262727"
+    stroke="white"
+    stroke-width="12"
+  />
+  
+  <!-- Larger dynamic arc (facing right) -->
+  <path
+    d="M 100 60
+       A 40 40 0 1 0 140 100
+       L 120 100
+       A 20 20 0 1 1 100 80
+       Z"
+    fill="white"
+  />
+  
+  <!-- Subtle dot accent -->
+  <circle 
+    cx="75" 
+    cy="100" 
+    r="6" 
+    fill="white"
+  />
+</svg>
