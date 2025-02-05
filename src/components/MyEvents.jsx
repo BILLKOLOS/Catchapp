@@ -50,41 +50,40 @@ const MyEvents = ({ activeFilter }) => {
   );
 
   return (
-    <div>
-      <h1 className="font-bold text-[#272222] text-lg">My Events</h1>
-      <div className="w-full grid grid-cols-4 gap-8">
-        {filteredEvents.map((event) => (
-          <div
-            key={event.id}
-            className="bg-[#272222] rounded-[30px] py-3 px-4 w-[227px] flex flex-col gap-10"
-          >
-            <div className="flex justify-between items-center gap-4">
-              <div className="w-full">
-                <img
-                  src={event.profile}
-                  alt="profile"
-                  className="object-cover rounded-full w-16 h-16"
-                />
-              </div>
-              <div>
-                <p className="text-white font-semibold">{event.host}</p>
-              </div>
-            </div>
-            <h3 className="text-center text-white font-[Pacifico] text-2xl">
-              {event.title}
-            </h3>
-            
-            <div className="flex justify-between items-center">
-              <p className="text-white">{event.attendees}</p>
-              <div className="border-[1px] border-gray-100 px-4 p-1 rounded-[30px] bg-gray-300 bg-opacity-50 cursor-pointer">
-                <p className="text-white">Request</p>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
+    <div className="w-full px-0 md:px-4">
+        <h1 className="font-bold text-[#272222] text-base md:text-lg mb-4">My Events</h1>
+        <div className="w-full grid grid-cols-2  md:grid-cols-3 gap-4 md:gap-8">
+            {filteredEvents.map((event) => (
+                <div
+                    key={event.id}
+                    className="bg-[#272222] rounded-lg md:rounded-[30px] py-3 px-4 w-full max-w-[227px] mx-auto flex flex-col gap-6 md:gap-10"
+                >
+                    <div className="flex justify-between items-center gap-2 md:gap-4">
+                        <div className="w-full">
+                            <img
+                                src={event.profile}
+                                alt="profile"
+                                className="object-cover rounded-full w-12 h-12 md:w-16 md:h-16"
+                            />
+                        </div>
+                        <div>
+                            <p className="text-white text-sm md:text-base font-semibold">{event.host}</p>
+                        </div>
+                    </div>
+                    <h3 className="text-center text-white font-[Pacifico] text-xl md:text-2xl">
+                        {event.title}
+                    </h3>
+                    <div className="flex justify-between items-center">
+                        <p className="text-white text-sm md:text-base">{event.attendees}</p>
+                        <div className="border-[1px] border-gray-100 px-1 md:px-4 py-1 rounded-[30px] bg-gray-300 bg-opacity-50 cursor-pointer">
+                            <p className="text-white text-sm md:text-base">Request</p>
+                        </div>
+                    </div>
+                </div>
+            ))}
+        </div>
     </div>
-  );
+);
 };
 
 export default MyEvents;

@@ -1,7 +1,7 @@
 const LoadingSpinner = () => {
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-md flex items-center justify-center z-50">
-      <div className="bg-white/10 p-8 rounded-3xl backdrop-blur-sm">
+    <div className="fixed inset-0 bg-[#272222]/90 flex items-center justify-center z-50">
+      <div className="p-8 rounded-3xl backdrop-blur-sm">
         <div className="relative animate-spin-slow">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" className="w-24 h-24">
             <rect 

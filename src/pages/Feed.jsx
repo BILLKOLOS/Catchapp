@@ -1,5 +1,41 @@
-import React, { useState } from 'react';
-import { SearchIcon, GiftIcon, MonitorIcon, Heart, MessageCircle, Share2, BookmarkIcon } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Heart, MessageCircle, Share2, BookmarkIcon, Camera, Image as ImageIcon, Smile, X } from 'lucide-react';
+
+
+const EmojiPicker = ({ onSelect, onClose }) => {
+  const emojis = ['😊', '😂', '🥰', '😎', '🤔', '👍', '❤️', '🎉', '🔥', '✨', '🌟', '💪', '🙌', '🤝', '👋'];
+  
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+      <div 
+        className="w-11/12 max-w-md bg-white mt-0 p-4 rounded-xl shadow-2xl border border-gray-100 transform transition-all 
+        animate-fade-in-up"
+      >
+        <div className="grid grid-cols-5 gap-2">
+          {emojis.map((emoji, index) => (
+            <button
+              key={index}
+              onClick={() => onSelect(emoji)}
+              className="w-full text-3xl p-2 rounded-lg hover:bg-gray-100 
+              active:bg-gray-200 active:scale-95 transition-all duration-200 
+              focus:outline-none focus:ring-2 focus:ring-blue-300"
+            >
+              {emoji}
+            </button>
+          ))}
+        </div>
+        <button 
+          onClick={onClose} 
+          className="mt-4 w-full py-2 bg-gray-100 text-gray-700 rounded-lg 
+          hover:bg-gray-200 transition-colors"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+};
+
 
 const SocialFeed = () => {
   const [posts, setPosts] = useState([
@@ -75,6 +111,67 @@ const SocialFeed = () => {
     }
   ]);
 
+  const [newPostText, setNewPostText] = useState('');
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const fileInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
+
+  const handleImageSelect = (e) => {
+    const files = Array.from(e.target.files);
+    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    
+    if (imageFiles.length > 0) {
+      const newImages = imageFiles.map(file => ({
+        url: URL.createObjectURL(file),
+        file: file
+      }));
+      setSelectedImages(prev => [...prev, ...newImages].slice(0, 4)); // Limit to 4 images
+    }
+  };
+
+  const handleCameraCapture = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedImages(prev => [...prev, {
+        url: URL.createObjectURL(file),
+        file: file
+      }].slice(0, 4));
+    }
+  };
+
+  const removeImage = (indexToRemove) => {
+    setSelectedImages(prev => prev.filter((_, index) => index !== indexToRemove));
+  };
+
+  const handleEmojiSelect = (emoji) => {
+    setNewPostText(prev => prev + emoji);
+    setShowEmojiPicker(false);
+  };
+
+  const handlePost = () => {
+    if (newPostText.trim() || selectedImages.length > 0) {
+      const newPost = {
+        id: Date.now(),
+        username: 'you',
+        avatar: '/api/placeholder/40/40',
+        verified: true,
+        content: newPostText,
+        images: selectedImages.map(img => img.url),
+        likes: 0,
+        isLiked: false,
+        comments: 0,
+        shares: 0,
+        timestamp: 'Just now',
+        saved: false
+      };
+
+      setPosts([newPost, ...posts]);
+      setNewPostText('');
+      setSelectedImages([]);
+    }
+  };
+
   const handleLike = (postId) => {
     setPosts(posts.map(post => {
       if (post.id === postId) {
@@ -101,7 +198,109 @@ const SocialFeed = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto bg-gray-50 min-h-screen mt-16">
+    <div className="max-w-2xl mx-auto bg-gray-50 min-h-screen mt-20">
+      <div className="bg-white z-10">
+        <div className="max-w-[356px] md:max-w-2xl mx-auto mt-12">
+          <div className="flex flex-col p-4 space-y-4">
+            {/* Profile and Input Section */}
+            <div className="flex items-center space-x-4">
+              <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
+                <img 
+                  src="https://images.pexels.com/photos/29976870/pexels-photo-29976870/free-photo-of-contemplative-young-adult-in-urban-setting.jpeg?auto=compress&cs=tinysrgb&w=600"
+                  alt="Your profile" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <input
+                type="text"
+                placeholder="What's on your mind?"
+                value={newPostText}
+                onChange={(e) => setNewPostText(e.target.value)}
+                className="flex-1 px-4 py-2 bg-gray-100 rounded-full text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors"
+              />
+            </div>
+
+            {/* Image Preview Section */}
+            {selectedImages.length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {selectedImages.map((img, index) => (
+                  <div key={index} className="relative w-full aspect-square">
+                    <img
+                      src={img.url}
+                      alt={`Selected ${index + 1}`}
+                      className="w-full h-full object-cover rounded-lg"
+                    />
+                    <button
+                      onClick={() => removeImage(index)}
+                      className="absolute top-1 right-1 p-1 bg-gray-800 bg-opacity-50 rounded-full text-white hover:bg-opacity-70 transition-colors"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Action Buttons Section */}
+            <div className="flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
+              {/* Media Buttons */}
+              <div className="flex items-center space-x-2 w-full sm:w-auto justify-start">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageSelect}
+                  accept="image/*"
+                  multiple
+                  className="hidden"
+                />
+                <input
+                  type="file"
+                  ref={cameraInputRef}
+                  onChange={handleCameraCapture}
+                  accept="image/*"
+                  capture="environment"
+                  className="hidden"
+                />
+                <button
+                  onClick={() => cameraInputRef.current?.click()}
+                  className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
+                >
+                  <Camera className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
+                >
+                  <ImageIcon className="w-6 h-6" />
+                </button>
+                <div className="relative">
+                  <button
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                    className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100 transition-colors"
+                  >
+                    <Smile className="w-6 h-6" />
+                  </button>
+                  {showEmojiPicker && (
+                    <EmojiPicker
+                      onSelect={handleEmojiSelect}
+                      onClose={() => setShowEmojiPicker(false)}
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* Post Button */}
+              <button
+                onClick={handlePost}
+                disabled={!newPostText.trim() && selectedImages.length === 0}
+                className="w-full sm:w-auto px-4 py-1.5 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                Post
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
       {/* Posts */}
       <div className="p-4 space-y-6">
         {posts.map(post => (

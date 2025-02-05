@@ -88,8 +88,8 @@ const ProfilePage = () => {
   return (
     <div>
         <Navbar />
-        <div className="max-w-2xl mt-20 rounded-[30px] mx-auto bg-gradient-to-b from-gray-50 to-gray-100 min-h-screen">
-            <div className="bg-[#272222] text-white p-4 rounded-[30px]">
+        <div className="w-full max-w-[347px] md:max-w-2xl mx-auto mt-16 md:mt-20 mb-14 rounded-lg bg-gradient-to-b from-gray-50 to-gray-100 p-3">
+            <div className="bg-[#272222] text-white rounded-lg p-4 md:rounded-[30px]">
                 <div className="flex items-start justify-between mb-4">
                 <div className="relative group">
                     <div className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 ring-2 ring-white/20 transform transition-transform group-hover:scale-105" />

@@ -16,15 +16,15 @@ const App = () => {
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsLoading(false);
-        }, 3000);
+        }, 10000);
 
         return () => clearTimeout(timer);
     }, []);
 
     return (
         <Router>
-            <div className={`relative ${isLoading ? 'blur-sm' : ''} transition-all duration-300`}>
-                <div className="text-white p-3">
+            <div className={`relative ${isLoading ? 'blur-md' : ''} transition-all duration-300`}>
+                <div className="text-white">
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/explore" element={<Explore />}>

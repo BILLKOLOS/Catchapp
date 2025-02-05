@@ -61,14 +61,14 @@ const PhotoProfile = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto mt-16 bg-[#272222] text-[#e6d5c9] rounded-[30px] overflow-hidden border border-[#3d2b27]">
-      <div className="p-8 bg-gradient-to-b from-[#1a0f0f] to-[#120808]">
+    <div className="w-full max-w-[347px] md:max-w-2xl mx-auto mt-20 md:mt-20 mb-14 bg-[#272222] text-[#e6d5c9] rounded-lg md:rounded-[30px] overflow-hidden border border-[#3d2b27]">
+      <div className="p-4 md:p-8 bg-gradient-to-b from-[#1a0f0f] to-[#120808]">
         {/* Profile Header */}
-        <div className="flex items-center gap-8 mb-8">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4 sm:gap-8 mb-6 md:mb-8">
           <div className="relative">
-            <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#c4a484] via-[#deb887] to-[#c4a484] p-[1px]">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-br from-[#c4a484] via-[#deb887] to-[#c4a484] p-[1px]">
               <div className="w-full h-full rounded-2xl bg-[#120808] flex items-center justify-center overflow-hidden">
-                <img src={service.avatar} className="object-cover text-white" />
+                <img src={service.avatar} className="object-cover text-white" alt={service.username} />
               </div>
             </div>
             <div className="absolute -bottom-2 -right-2 bg-[#deb887] text-[#120808] rounded-full px-2 py-0.5 text-xs font-semibold">
@@ -76,7 +76,7 @@ const PhotoProfile = () => {
             </div>
           </div>
           <div>
-            <h2 className="text-2xl font-light tracking-wide mb-1 text-white">
+            <h2 className="text-xl sm:text-2xl font-light tracking-wide mb-1 text-white">
               {service.username}
             </h2>
             <p className="text-sm text-white font-light tracking-wider">
@@ -86,7 +86,7 @@ const PhotoProfile = () => {
         </div>
 
         {/* Rating and Contact */}
-        <div className="flex items-center justify-between gap-32 mb-8">
+        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-32 mb-6 md:mb-8">
           <div className="flex items-center gap-2">
             <span className="text-lg font-bold text-gray-400 mr-2">{service.rating}</span>
             <div className="flex gap-0.5">
@@ -103,7 +103,7 @@ const PhotoProfile = () => {
               ))}
             </div>
           </div>
-          <div className="flex gap-4 w-full">
+          <div className="flex gap-4 w-full sm:w-auto justify-center sm:justify-start">
             <button className="p-2.5 rounded-xl bg-[#1e1210] hover:bg-[#2a1815] transition-all duration-300 border border-[#3d2b27]">
               <Mail className="w-5 h-5 text-white" />
             </button>
@@ -114,11 +114,11 @@ const PhotoProfile = () => {
         </div>
 
         {/* Follow Button and Stats */}
-        <div className="flex items-center justify-between gap-32 mb-8">
-          <button className="px-10 py-2.5 bg-gradient-to-r from-[#c4a484] to-[#deb887] text-[#120808] rounded-xl text-sm font-medium hover:opacity-90 transition-all duration-300 shadow-lg">
+        <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-32 mb-6 md:mb-8">
+          <button className="w-full sm:w-auto px-10 py-2.5 bg-gradient-to-r from-[#c4a484] to-[#deb887] text-[#120808] rounded-xl text-sm font-medium hover:opacity-90 transition-all duration-300 shadow-lg">
             Follow
           </button>
-          <div className="flex w-full gap-8 text-sm font-light">
+          <div className="flex w-full justify-center sm:justify-start gap-8 text-sm font-light">
             <div className="text-center">
               <div className="text-lg font-normal text-white">{service.following}</div>
               <div className="text-white tracking-wide">following</div>
@@ -132,13 +132,13 @@ const PhotoProfile = () => {
 
         {/* Specialties */}
         {service.specialties && (
-          <div className="mb-8">
-            <p className="text-sm text-white mb-4 tracking-wide">specialties</p>
-            <div className="flex flex-wrap gap-2">
+          <div className="mb-6 md:mb-8">
+            <p className="text-sm text-white mb-4 tracking-wide text-center sm:text-left">specialties</p>
+            <div className="flex flex-wrap justify-center sm:justify-start gap-2">
               {service.specialties.map((specialty) => (
                 <span
                   key={specialty}
-                  className="px-5 py-2 bg-[#1e1210] text-white border border-[#3d2b27] rounded-xl text-sm font-light tracking-wide hover:bg-[#2a1815] transition-all duration-300 cursor-pointer"
+                  className="px-4 sm:px-5 py-1.5 sm:py-2 bg-[#1e1210] text-white border border-[#3d2b27] rounded-xl text-xs sm:text-sm font-light tracking-wide hover:bg-[#2a1815] transition-all duration-300 cursor-pointer"
                 >
                   {specialty}
                 </span>
@@ -149,7 +149,7 @@ const PhotoProfile = () => {
       </div>
 
       {/* Image Gallery */}
-      <div className="grid grid-cols-3 gap-1 bg-[#2a1815]">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-1 bg-[#2a1815]">
         {service.galleryImages.map((image) => (
           <div
             key={image.id}
@@ -158,7 +158,6 @@ const PhotoProfile = () => {
             onMouseLeave={() => setIsHovered(null)}
           >
             <div className="relative overflow-hidden bg-[#120808]">
-              {/* Date display moved to top-right */}
               <div className="absolute top-3 right-3 z-10">
                 <div className="bg-black/20 backdrop-blur-sm rounded-lg p-1 text-center min-w-[40px]">
                   <div className="text-white text-xs font-bold">{image.date.day}</div>
@@ -169,7 +168,7 @@ const PhotoProfile = () => {
               <img
                 src={image.src}
                 alt={`Gallery image ${image.id}`}
-                className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 mix-blend-luminosity"
+                className="w-full h-40 sm:h-52 object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 mix-blend-luminosity"
               />
               <div
                 className={`absolute inset-0 bg-gradient-to-t from-[#120808] via-[#120808]/50 to-transparent 
@@ -180,7 +179,7 @@ const PhotoProfile = () => {
               className={`absolute bottom-3 left-3 right-3 transition-all duration-300 
                   ${isHovered === image.id ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'}`}
             >
-              <div className="flex items-center justify-between text-sm">
+              <div className="flex items-center justify-between text-xs sm:text-sm">
                 <div className="flex items-center gap-1.5">
                   <MapPin className="w-3 h-3 text-white" />
                   <span className="font-light tracking-wide text-white">{image.location}</span>
