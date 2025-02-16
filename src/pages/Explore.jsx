@@ -1,6 +1,5 @@
 import { Outlet } from "react-router-dom";
 import Navbar from "../components/Navbar.jsx";
-import Trending from "./Trending.jsx";
 
 const Explore = () => {
     return (

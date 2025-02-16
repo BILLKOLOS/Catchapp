@@ -9,10 +9,19 @@ import PhotoProfile from './pages/GiveItem';
 import ProfilePage from './pages/ProfilePage';
 import HappeningNow from './pages/happening_now.jsx';
 import LoadingSpinner from './components/LoadingSpinner';
+import PicsGallery from './pages/PicsGallery.jsx';
+import EventPhotoAlbum from './pages/EventPhotoAlbum';
+import ProfileGallery from './pages/ProfileGallery.jsx';
+import ProfilePhotoAlbum from './pages/ProfilePhotoAlbum.jsx';
+import EventRoute from './pages/EventRoute.jsx';
+import MyEventDetails from './pages/MyEventDetails.jsx';
+import EditEvent from './pages/EditEvent.jsx';
+import EventAnalytics from './pages/EventAnlytics.jsx';
+import MyEvent from './pages/Myvent.jsx';
 
 const App = () => {
     const [isLoading, setIsLoading] = useState(true);
-
+  
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsLoading(false);
@@ -30,11 +39,23 @@ const App = () => {
                         <Route path="/explore" element={<Explore />}>
                             <Route path="trending" element={<Trending />} />
                             <Route path="gives" element={<ServiceCard />} />
-                            <Route path="gives/service/:id" element={<PhotoProfile />} />
+                            <Route path="gives/service/:id" element={<PhotoProfile />}>
+                                <Route path="pics" element={<PicsGallery />} />
+                                <Route path=":eventId" element={<EventPhotoAlbum />} />
+                            </Route>
                             <Route path="feeds" element={<SocialFeed />} />
                         </Route>
-                        <Route path="/profile" element={<ProfilePage />} />
+                        <Route path="/profile/:id" element={<ProfilePage />}>
+                            <Route path="profile-gallery" element={<ProfileGallery />} />
+                            <Route path=":profileId" element={<ProfilePhotoAlbum />} />
+                        </Route>
                         <Route path="/happening-now" element={<HappeningNow />} />
+                        <Route path='/my-event' element={<MyEvent />}>
+                            <Route path=":id" element={<MyEventDetails />} />
+                            <Route path=":id/analytics" element={<EventAnalytics />} />
+                            <Route path=":id/edit" element={<EditEvent onClose={() => navigate(-1)} />} />
+                        </Route>
+                        <Route path='/event-route' element={<EventRoute />} />
                     </Routes>
                 </div>
             </div>

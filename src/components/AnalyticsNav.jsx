@@ -1,11 +1,16 @@
 import { useState, useRef } from 'react';
 import { NavLink } from "react-router-dom";
 
-const Navbar = () => {
+const AnalyticsNav = ( { id } ) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const searchInputRef = useRef(null);
+
+
+    const isPathActive = (path) => {
+        return location.pathname === path;
+    };
 
     const toggleSearch = () => {
         setIsSearchOpen(!isSearchOpen);
@@ -18,7 +23,7 @@ const Navbar = () => {
     };
 
     return (
-        <div className="fixed top-0 z-50 flex flex-col bg-white w-full">
+        <div className="fixed top-0 z-50 flex flex-col bg-white w-full mb-20">
             {/* Top Section */}
             <div className="flex justify-between items-center px-4 md:px-8 py-2">
                 {/* Logo and Search */}
@@ -80,26 +85,25 @@ const Navbar = () => {
                             </svg>
                         </button>
 
-                        {/* Desktop Search Input Container */}
+                        {/* Desktop Search Input */}
                         <div 
                             className={`
                                 hidden 
                                 md:block 
                                 absolute 
                                 top-full 
-                                left-12
+                                right-0
                                 mt-2 
                                 bg-white 
                                 rounded-xl 
-                                shadow-lg
-                                focus:outline-none 
-                                focus:ring-2 
-                                focus:ring-black 
+                                shadow-lg 
                                 overflow-hidden 
                                 transition-all 
                                 duration-300 
                                 ease-in-out 
-                                ${isSearchOpen ? 'opacity-100 visible w-[300px]' : 'opacity-0 invisible w-0'}
+                                ${isSearchOpen 
+                                    ? 'opacity-100 visible w-[300px]' 
+                                    : 'opacity-0 invisible w-0'}
                                 z-50
                             `}
                         >
@@ -116,7 +120,7 @@ const Navbar = () => {
                                         py-3 
                                         text-sm 
                                         border 
-                                        border-gray-200
+                                        border-gray-200 
                                         focus:outline-none 
                                         focus:ring-2 
                                         focus:ring-[#272222] 
@@ -145,7 +149,7 @@ const Navbar = () => {
                                         d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607z"
                                     />
                                 </svg>
-                                            
+                                
                                 {searchQuery && (
                                     <button 
                                         type="button"
@@ -184,7 +188,7 @@ const Navbar = () => {
                             <form onSubmit={handleSearchSubmit} className="relative w-full">
                                 <input 
                                     type="text" 
-                                    placeholder="Search City, Town" 
+                                    placeholder="Search Catchapp" 
                                     value={searchQuery}
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     className="
@@ -260,67 +264,39 @@ const Navbar = () => {
                 </div>
 
                  {/* Desktop Navigation */}
-                <div className="hidden md:flex justify-center items-center">
-                    <div className="flex items-center gap-12">
-                        <NavLink
-                            to="/explore/trending"
-                            className={({ isActive }) =>
-                                `rounded-[30px] py-2 px-6 font-semibold cursor-pointer transition-colors duration-300 ${
-                                    isActive ? "bg-[#000000] text-white" : "bg-[#D9D9D9] text-[#000000]"
-                                }`
-                            }
-                        >
-                            <h5>Trending</h5>
-                        </NavLink>
-                        <NavLink
-                            to="/explore/gives"
-                            className={({ isActive }) =>
-                                `flex gap-4 items-center py-2 px-6 rounded-[30px] cursor-pointer font-semibold transition-colors duration-300 ${
-                                    isActive ? "bg-[#000000] text-white" : "bg-[#D9D9D9] text-[#000000]"
-                                }`
-                            }
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="w-6 h-6"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
-                                />
-                            </svg>
-                            <h5>Gives</h5>
-                        </NavLink>
-                        <NavLink
-                            to="/explore/feeds"
-                            className={({ isActive }) =>
-                                `flex gap-4 items-center py-2 px-6 rounded-[30px] cursor-pointer font-semibold transition-colors duration-300 ${
-                                    isActive ? "bg-[#000000] text-white" : "bg-[#D9D9D9] text-[#000000]"
-                                }`
-                            }
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                strokeWidth={1.5}
-                                stroke="currentColor"
-                                className="w-6 h-6"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"
-                                />
-                            </svg>
-                            <h5>Feeds</h5>
-                        </NavLink>
-                    </div>
+               <div className="hidden md:flex justify-center items-center py-4">
+                <div className="flex items-center gap-6">
+                    <NavLink
+                        to={`/my-event/${id}`}
+                        className={
+                            isPathActive(`/my-event/${id}`)
+                                ? "bg-[#272222] text-white rounded-[30px] py-2.5 px-8 font-semibold transition-all duration-300 shadow-lg hover:bg-[#3a3535]"
+                                : "bg-[#D9D9D9] text-[#272222] rounded-[30px] py-2.5 px-8 font-semibold transition-all duration-300 hover:bg-[#c0c0c0]"
+                        }
+                    >
+                        <h5>My Event</h5>
+                    </NavLink>
+                    <NavLink
+                        to={`/my-event/${id}/analytics`}
+                        className={
+                            isPathActive(`/my-event/${id}/analytics`)
+                                ? "bg-[#272222] text-white rounded-[30px] py-2.5 px-8 font-semibold transition-all duration-300 shadow-lg hover:bg-[#3a3535] flex items-center gap-2"
+                                : "bg-[#D9D9D9] text-[#272222] rounded-[30px] py-2.5 px-8 font-semibold transition-all duration-300 hover:bg-[#c0c0c0] flex items-center gap-2"
+                        }
+                    >
+                        <h5>Event Analytics</h5>
+                    </NavLink>
+                    <NavLink
+                        to={`/my-event/${id}/edit`}
+                        className={
+                            isPathActive(`/my-event/${id}/edit`)
+                                ? "bg-[#272222] text-white rounded-[30px] py-2.5 px-8 font-semibold transition-all duration-300 shadow-lg hover:bg-[#3a3535] flex items-center gap-2"
+                                : "bg-[#D9D9D9] text-[#272222] rounded-[30px] py-2.5 px-8 font-semibold transition-all duration-300 hover:bg-[#c0c0c0] flex items-center gap-2"
+                        }
+                    >
+                        <h5>Edit Event</h5>
+                    </NavLink>
+                </div>
                 </div>
 
                 {/* Profile and Mobile Menu Toggle */}
@@ -388,9 +364,8 @@ const Navbar = () => {
                         <p className="text-[#000000] font-bold">Williams</p>
                     </div>
 
-                    {/* Navigation Links */}
                     <NavLink
-                        to="/explore/trending"
+                        to={`/my-event/${id}`}
                         className={({ isActive }) =>
                             `w-full flex items-center gap-4 py-3 px-6 rounded-[30px] cursor-pointer font-semibold transition-colors duration-300 ${
                                 isActive ? "bg-[#000000] text-white" : "bg-[#D9D9D9] text-[#000000]"
@@ -398,10 +373,10 @@ const Navbar = () => {
                         }
                         onClick={() => setIsMenuOpen(false)}
                     >
-                        <h5>Trending</h5>
+                        <h5>My Events</h5>
                     </NavLink>
                     <NavLink
-                        to="/explore/gives"
+                        to={`/my-event/${id}/analytics`}
                         className={({ isActive }) =>
                             `w-full flex items-center gap-4 py-3 px-6 rounded-[30px] cursor-pointer font-semibold transition-colors duration-300 ${
                                 isActive ? "bg-[#000000] text-white" : "bg-[#D9D9D9] text-[#000000]"
@@ -409,24 +384,13 @@ const Navbar = () => {
                         }
                         onClick={() => setIsMenuOpen(false)}
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-6 h-6"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M21 11.25v8.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5v-8.25M12 4.875A2.625 2.625 0 1 0 9.375 7.5H12m0-2.625V7.5m0-2.625A2.625 2.625 0 1 1 14.625 7.5H12m0 0V21m-8.625-9.75h18c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-18c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z"
-                            />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18 9 11.25l4.306 4.306a11.95 11.95 0 0 1 5.814-5.518l2.74-1.22m0 0-5.94-2.281m5.94 2.28-2.28 5.941" />
                         </svg>
-                        <h5>Gives</h5>
+                        <h5>Event Analytics</h5>
                     </NavLink>
                     <NavLink
-                        to="/explore/feeds"
+                        to={`/my-event/${id}/edit`}
                         className={({ isActive }) =>
                             `w-full flex items-center gap-4 py-3 px-6 rounded-[30px] cursor-pointer font-semibold transition-colors duration-300 ${
                                 isActive ? "bg-[#000000] text-white" : "bg-[#D9D9D9] text-[#000000]"
@@ -434,21 +398,10 @@ const Navbar = () => {
                         }
                         onClick={() => setIsMenuOpen(false)}
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={1.5}
-                            stroke="currentColor"
-                            className="w-6 h-6"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 0 1-.825-.242m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0 0 11.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"
-                            />
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                         </svg>
-                        <h5>Feeds</h5>
+                        <h5>Edit Event</h5>
                     </NavLink>
                 </div>
             </div>
@@ -456,4 +409,4 @@ const Navbar = () => {
     );
 };
 
-export default Navbar;
+export default AnalyticsNav;

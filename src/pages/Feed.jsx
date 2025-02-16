@@ -213,7 +213,7 @@ const SocialFeed = () => {
               </div>
               <input
                 type="text"
-                placeholder="What's on your mind?"
+                placeholder="I attended..."
                 value={newPostText}
                 onChange={(e) => setNewPostText(e.target.value)}
                 className="flex-1 px-4 py-2 bg-gray-100 rounded-full text-gray-700 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-colors"
@@ -323,7 +323,7 @@ const SocialFeed = () => {
                   <div className="text-xs text-gray-500">{post.location}</div>
                 </div>
               </div>
-              <button className="px-4 py-1.5 text-sm text-blue-600 border border-blue-600 rounded-full hover:bg-blue-50 transition-colors">
+              <button className="px-4 py-1.5 text-sm text-[#272222] border-2 border-[#272222] rounded-full hover:bg-[#272222] hover:text-white transition-colors">
                 follow
               </button>
             </div>
@@ -338,7 +338,7 @@ const SocialFeed = () => {
                   <img 
                     src={image} 
                     alt={`Post ${index + 1}`}
-                    className="w-full h-full object-cover hover:opacity-95 transition-opacity cursor-pointer"
+                    className="w-full h-full object-cover rounded-lg hover:opacity-95 transition-opacity cursor-pointer"
                   />
                 </div>
               ))}

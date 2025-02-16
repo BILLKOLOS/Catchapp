@@ -58,9 +58,7 @@ const BottomNav = () => {
                 </div>
             )}
             
-            <div className={`fixed bottom-0 right-0 w-full bg-white transition-transform duration-500 ${
-                isAtBottom ? "translate-y-0" : "translate-y-full"
-            } lg:translate-y-0`}>
+            <div className={`fixed bottom-0 right-0 w-full transition-transform duration-500`}>
                 <div className="w-full flex justify-center px-2 md:px-7 gap-4 md:gap-12 shadow-lg py-2">
                     <div className="flex justify-center items-center gap-4 md:gap-24 bg-[#D9D9D9] p-1 px-3 md:px-5 rounded-[30px] text-[#000000]">
                         {/* Navigation Icons */}
@@ -128,7 +126,7 @@ const BottomNav = () => {
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                             </svg>
                         </div>
-                        <p className="text-sm md:text-base font-bold">Host</p>
+                        <p className="text-sm md:text-base font-bold text-[#272222]">Host</p>
                     </div>
                 </div>
             </div>

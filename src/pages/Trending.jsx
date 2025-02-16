@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -272,7 +272,7 @@ const Trending = () => {
   };
 
   return (
-    <div className="w-full px-2 sm:px-4 md:max-w-2xl md:mx-auto mt-16 mb-8 space-y-6 sm:space-y-8">
+    <div className="w-full px-2 sm:px-4 md:max-w-2xl md:mx-auto mt-20 mb-8 space-y-6 sm:space-y-8">
       {eventData.map((event, index) => (
         <div key={index} className="rounded-lg md:rounded-[30px] overflow-hidden shadow-2xl">
           {/* Event Header */}

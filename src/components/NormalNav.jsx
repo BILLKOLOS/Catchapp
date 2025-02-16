@@ -26,36 +26,35 @@ const NormalNav = () => {
                <div className="flex justify-start items-center gap-4 md:gap-12">
                     <div className='flex justify-start items-center'>
                             <NavLink to="/" className="flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" className="w-14 h-14">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" className="w-12 h-12">
                                     <rect 
                                         x="20" 
                                         y="20" 
                                         width="160" 
                                         height="160" 
                                         rx="50" 
-                                        fill="#262727"
-                                        stroke="white"
+                                        fill="#D9D9D9"
+                                        stroke="#262727"
                                         stroke-width="12"
                                         className="animate-pulse"
                                     />
                                     <path
                                         d="M 100 60
-                                        A 40 40 0 1 0 140 100
-                                        L 120 100
-                                        A 20 20 0 1 1 100 80
-                                        Z"
-                                        fill="white"
+                                            A 40 40 0 1 0 140 100
+                                            L 120 100
+                                            A 20 20 0 1 1 100 80
+                                            Z"
+                                        fill="#262727"       
                                         className="animate-bounce-subtle"
                                     />
                                     <circle 
                                         cx="75" 
                                         cy="100" 
                                         r="6" 
-                                        fill="white"
+                                        fill="#262727"           
                                         className="animate-ping-subtle"
                                     />
                                 </svg>
-                                
                                 <h1 className="hidden md:block font-[Pacifico] text-xl md:text-2xl text-[#000000] cursor-pointer">Catchapp</h1>
                             </NavLink>
                     </div>
@@ -82,25 +81,26 @@ const NormalNav = () => {
                             </svg>
                         </button>
 
-                        {/* Desktop Search Input */}
+                       {/* Desktop Search Input Container */}
                         <div 
                             className={`
                                 hidden 
                                 md:block 
                                 absolute 
                                 top-full 
-                                right-0
+                                left-12
                                 mt-2 
                                 bg-white 
                                 rounded-xl 
-                                shadow-lg 
+                                shadow-lg
+                                focus:outline-none 
+                                focus:ring-2 
+                                focus:ring-black 
                                 overflow-hidden 
                                 transition-all 
                                 duration-300 
                                 ease-in-out 
-                                ${isSearchOpen 
-                                    ? 'opacity-100 visible w-[300px]' 
-                                    : 'opacity-0 invisible w-0'}
+                                ${isSearchOpen ? 'opacity-100 visible w-[300px]' : 'opacity-0 invisible w-0'}
                                 z-50
                             `}
                         >
@@ -117,7 +117,7 @@ const NormalNav = () => {
                                         py-3 
                                         text-sm 
                                         border 
-                                        border-gray-200 
+                                        border-gray-200
                                         focus:outline-none 
                                         focus:ring-2 
                                         focus:ring-[#272222] 
@@ -146,85 +146,7 @@ const NormalNav = () => {
                                         d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607z"
                                     />
                                 </svg>
-                                
-                                {searchQuery && (
-                                    <button 
-                                        type="button"
-                                        onClick={() => setSearchQuery('')}
-                                        className="
-                                            absolute 
-                                            right-3 
-                                            top-1/2 
-                                            -translate-y-1/2 
-                                            text-gray-400 
-                                            hover:text-black 
-                                            transition-colors
-                                        "
-                                    >
-                                        <svg 
-                                            xmlns="http://www.w3.org/2000/svg" 
-                                            fill="none" 
-                                            viewBox="0 0 24 24" 
-                                            strokeWidth={1.5} 
-                                            stroke="currentColor" 
-                                            className="w-5 h-5"
-                                        >
-                                            <path 
-                                                strokeLinecap="round" 
-                                                strokeLinejoin="round" 
-                                                d="M6 18 18 6M6 6l12 12" 
-                                            />
-                                        </svg>
-                                    </button>
-                                )}
-                            </form>
-                        </div>
-
-                        {/* Mobile Search Input */}
-                        <div className="w-full md:hidden">
-                            <form onSubmit={handleSearchSubmit} className="relative w-full">
-                                <input 
-                                    type="text" 
-                                    placeholder="Search Catchapp" 
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="
-                                        w-full 
-                                        pl-10 
-                                        pr-8 
-                                        py-2
-                                        text-sm 
-                                        border 
-                                        border-gray-200 
-                                        focus:outline-none 
-                                        focus:ring-2 
-                                        focus:ring-black 
-                                        rounded-xl
-                                    "
-                                />
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="
-                                        absolute 
-                                        left-3 
-                                        top-1/2 
-                                        -translate-y-1/2 
-                                        w-5 
-                                        h-5 
-                                        text-gray-400
-                                    "
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607z"
-                                    />
-                                </svg>
-                                
+                                            
                                 {searchQuery && (
                                     <button 
                                         type="button"
