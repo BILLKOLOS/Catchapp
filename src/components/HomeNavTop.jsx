@@ -12,6 +12,10 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
     const [notificationCount, setNotificationCount] = useState(0);
     const [isMessagingOpen, setIsMessagingOpen] = useState(false);
     const [MessageCount, setMessageCount] = useState(3);
+    // New state for search event popup
+    const [isSearchEventOpen, setIsSearchEventOpen] = useState(false);
+    const [selectedCity, setSelectedCity] = useState("Nairobi,kenya");
+    const [selectedTown, setSelectedTown] = useState("");
 
     // Initialize notification count on first load
     useEffect(() => {
@@ -28,9 +32,18 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
         setIsSearchOpen(!isSearchOpen);
     };
 
+    const toggleSearchEvent = () => {
+        setIsSearchEventOpen(!isSearchEventOpen);
+    };
+
     const handleSearchSubmit = (e) => {
         e.preventDefault();
         console.log('Searching for:', searchQuery);
+    };
+
+    const handleEventSearch = () => {
+        console.log('Searching for events in:', selectedCity, selectedTown);
+        setIsSearchEventOpen(false);
     };
 
     const FilterButton = ({ filter, isMobile = false }) => (
@@ -101,7 +114,7 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                             rx="50" 
                             fill="#D9D9D9"
                             stroke="#262727"
-                            stroke-width="12"
+                            strokeWidth="12"
                             className="animate-pulse"
                             />
                             <path
@@ -241,6 +254,27 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
 
                 {/* Icons Section - Now with flex-1 to help with centering */}
                 <div className="flex-1 flex justify-end gap-2 items-center">
+                    {/* Chevron Down Button - NEW */}
+                    <button 
+                        onClick={toggleSearchEvent}
+                        className="bg-[#D9D9D9] text-[#000000] p-2 rounded-full cursor-pointer mr-2 flex items-center justify-center"
+                    >
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            strokeWidth={1.5} 
+                            stroke="currentColor" 
+                            className="w-5 h-5"
+                        >
+                            <path 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round" 
+                                d="M19.5 8.25l-7.5 7.5-7.5-7.5" 
+                            />
+                        </svg>
+                    </button>
+
                     <div className="relative">
                         <button 
                             onClick={() => setIsNotificationOpen(!isNotificationOpen)}
@@ -299,6 +333,71 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                     </button>
                 </div>
             </div>
+
+            {/* Search Event Popup - NEW */}
+            {isSearchEventOpen && (
+                <div className="absolute top-16 right-16 md:right-32 bg-white rounded-2xl shadow-xl z-50 w-64 md:w-80 p-4">
+                    <div className="flex items-center mb-4">
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="w-5 h-5 mr-2 text-gray-700"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607z"
+                            />
+                        </svg>
+                        <span className="text-lg font-medium text-gray-700">search event in</span>
+                    </div>
+                    
+                    <div className="mb-4">
+                        <div className="flex items-center mb-2">
+                            <div className="mr-2 p-1 bg-gray-100 rounded">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-700">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                </svg>
+                            </div>
+                            <span className="font-medium text-gray-800">City</span>
+                            <div className="ml-auto">
+                                <div className="bg-[#272222] text-white py-2 px-4 rounded-full">
+                                    {selectedCity}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="mb-6">
+                        <div className="flex items-center mb-2">
+                            <div className="mr-2 p-1 bg-gray-100 rounded">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-700">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                </svg>
+                            </div>
+                            <span className="font-medium text-gray-800">Town</span>
+                            <div className="ml-auto">
+                                <button className="bg-[#272222] text-white py-2 px-4 rounded-full" onClick={handleEventSearch}>
+                                    search
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="flex justify-center">
+                        <div className="bg-gray-100 rounded-full p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-gray-700">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Desktop Search Input Container */}
             <div 

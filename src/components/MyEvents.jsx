@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { eventData } from "../data/event";
+import { Link } from "react-router-dom";
 
 const MyEvents = ({ activeFilter, activeSlide, activeEventId }) => {
   const formattedEvents = eventData.map(event => ({
@@ -52,6 +53,14 @@ const MyEvents = ({ activeFilter, activeSlide, activeEventId }) => {
 
   return (
     <div className="w-full px-4 md:px-6 overflow-x-hidden">
+      <Link to="/my-event/details">
+        <button className="text-[#272222] font-bold flex items-center  mb-2 gap-1">
+            My Events
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+            </svg>
+        </button>
+      </Link>
       <div className="relative w-full">
         {/* Scroll buttons */}
         <button onClick={scrollLeft} className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-gray-700 bg-opacity-50 rounded-full p-2 hover:bg-opacity-75">
@@ -70,7 +79,7 @@ const MyEvents = ({ activeFilter, activeSlide, activeEventId }) => {
           {filteredEvents.map((event) => (
               <div
                 data-event-id={event.id}
-                className={`flex-none w-full sm:w-[calc(50%-16px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-16px)] min-w-[280px] max-w-[320px] h-[258px] bg-[#272222] cursor-pointer rounded-lg md:rounded-[30px] py-4 px-5 transition-all duration-300 ${
+                className={`flex-none w-full sm:w-[calc(50%-16px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-16px)] min-w-[280px] max-w-[320px] h-[222px] bg-[#272222] cursor-pointer rounded-xl md:rounded-[30px] py-4 px-5 transition-all duration-300 ${
                   event.id === activeEventId ? 'ring-4 ring-gray-900' : ''
                 }`}
               >

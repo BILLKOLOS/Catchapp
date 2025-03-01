@@ -125,7 +125,7 @@ const MainContent = ({ activeFilter }) => {
     };
       
     return (
-        <div className="w-full px-4 mt-8 md:px-6">
+        <div className="w-full px-4 mt-12 md:mt-8 md:px-6">
             <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 mt-12 md:mt-16">
                 {/* Map Section */}
                 <div className="hidden md:flex w-full lg:w-auto">
@@ -148,7 +148,7 @@ const MainContent = ({ activeFilter }) => {
                                                 alt={event.title}
                                                 className="w-full h-[300px] md:h-[312px] object-cover rounded-lg md:rounded-[30px] cursor-pointer"
                                             />
-                                            <div className="absolute inset-0 bg-black bg-opacity-50 rounded-lg lg:rounded-[30px] p-4 md:px-8 lg:px-12 lg:py-6 text-white">
+                                            <div className="absolute inset-0 bg-black bg-opacity-50 rounded-xl lg:rounded-[30px] p-4 md:px-8 lg:px-12 lg:py-6 text-white">
                                                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
                                                     <div className="flex justify-start items-center gap-2">
                                                         <div className="border-2 lg:border-[4px] border-[#000000] rounded-full p-[2px] cursor-pointer">

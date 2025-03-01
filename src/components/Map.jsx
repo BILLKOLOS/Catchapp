@@ -1,6 +1,15 @@
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import React, { useState, useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+
+// Fix for Leaflet's icon issues
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
 
 // Custom marker icon creation function
 const createColoredIcon = (color) => {
@@ -16,14 +25,20 @@ const createColoredIcon = (color) => {
   });
 };
 
-// Create different colored markers for different types of locations
-const icons = {
-  start: createColoredIcon('#22C55E'),    // Green for start
-  checkpoint: createColoredIcon('#3B82F6'), // Blue for checkpoints
-  end: createColoredIcon('#EF4444')       // Red for end
-};
-
 const Map = () => {
+  const [isBrowser, setIsBrowser] = useState(false);
+
+  useEffect(() => {
+    setIsBrowser(true);
+  }, []);
+
+  // Create different colored markers for different types of locations
+  const icons = {
+    start: createColoredIcon('#22C55E'),    // Green for start
+    checkpoint: createColoredIcon('#3B82F6'), // Blue for checkpoints
+    end: createColoredIcon('#EF4444')       // Red for end
+  };
+
   // Sample locations - replace with your actual locations
   const locations = [
     {
@@ -47,6 +62,15 @@ const Map = () => {
   ];
 
   const route = locations.map(loc => loc.position);
+
+  // Render the map only when in browser
+  if (!isBrowser) {
+    return (
+      <div className="md:w-full lg:w-[515px] h-[348px] lg:h-[318px] bg-gray-800 rounded-[30px] flex items-center justify-center">
+        <div className="text-white">Loading map...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="">

@@ -4,7 +4,8 @@ import { Link, NavLink } from 'react-router-dom';
 import EventModal from './EventModal';
 
 const BottomNav = () => {
-    // const [isAtBottom, setIsAtBottom] = useState(false);
+    // Now active for mobile responsiveness
+    const [isAtBottom, setIsAtBottom] = useState(false);
     const [showEventModal, setShowEventModal] = useState(false);
     const [showCategories, setShowCategories] = useState(false);
 
@@ -58,7 +59,11 @@ const BottomNav = () => {
                 </div>
             )}
             
-            <div className={`fixed bottom-0 right-0 w-full transition-transform duration-500`}>
+            {/* 
+              The bottom nav will slide into view on mobile only when at the bottom.
+              On md+ screens, it remains visible.
+            */}
+            <div className={`fixed bottom-0 right-0 w-full transition-transform duration-500 ${isAtBottom ? 'translate-y-0' : 'translate-y-full'} md:translate-y-0`}>
                 
                 <div className="w-full flex justify-center px-2 md:px-7 gap-4 md:gap-12 shadow-lg py-2">
                     <div className="flex justify-center items-center gap-4 md:gap-24 bg-[#D9D9D9] p-1 px-3 md:px-5 rounded-[30px] text-[#000000]">
@@ -128,16 +133,6 @@ const BottomNav = () => {
                             </svg>
                         </div>
                         <p className="text-sm md:text-base font-bold text-[#272222]">Host</p>
-                    </div>
-                    <div className="flex justify-end items-center">
-                        <Link to="my-event/details">
-                            <button className="text-white font-bold flex items-center bg-[#272222] px-4 py-1 rounded-lg gap-1">
-                                My Events
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                                </svg>
-                            </button>
-                        </Link>
                     </div>
                 </div>
             </div>
