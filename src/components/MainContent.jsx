@@ -45,8 +45,6 @@ const MainContent = ({ activeFilter }) => {
         return () => clearInterval(interval);
     }, [filteredEvents.length, isMenuOpen]);
 
-    const prevSlide = () => setActiveSlide(activeSlide === 0 ? filteredEvents.length - 1 : activeSlide - 1);
-    const nextSlide = () => setActiveSlide(activeSlide === filteredEvents.length - 1 ? 0 : activeSlide + 1);
 
     const handleLocationClick = () => {
         navigate('/event-route');
@@ -282,29 +280,9 @@ const MainContent = ({ activeFilter }) => {
                             </div>
                         </div>
                     )}
-
-                    {/* Navigation Arrows */}
-                    <div className="flex justify-end items-center gap-2 mt-2">
-                        <button
-                            onClick={prevSlide}
-                            className="p-1 rounded-full border-[#000000] border-2 text-[#000000] hover:bg-gray-700 hover:text-white transition-all"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-3 font-bold">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5" />
-                            </svg>
-                        </button>
-                        <button
-                            onClick={nextSlide}
-                            className="p-1 rounded-full border-[#000000] border-2 text-[#000000] hover:bg-gray-700 hover:text-white transition-all"
-                        >
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-3 font-bold">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-                            </svg>
-                        </button>
-                    </div>
                 </div>
             </div>
-            <div className="flex flex-col-reverse lg:flex-row gap-4 md:gap-6 pb-3">
+            <div className="flex flex-col-reverse lg:flex-row gap-4 md:gap-6 pb-3 mt-6">
                 <LiveEvent />
                 <MyEvents activeFilter={activeFilter} activeSlide={activeSlide} activeEventId={filteredEvents[activeSlide]?.id} />
             </div>

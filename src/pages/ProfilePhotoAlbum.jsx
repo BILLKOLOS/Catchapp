@@ -1,75 +1,59 @@
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { ImagePlus, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { eventData } from '../data/event';
 
 const ProfilePhotoAlbum = () => {
-  const { profileId } = useParams();
+  const { id, albumId } = useParams(); // albumId comes from /album/:albumId
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const albums = {
-    1: {
-      name: "sarah",
-      subheading: "wedding",
-      date: "saturday, june 15",
-      time: "9:00 am - 4:00pm",
-      location: "egret center nairobi",
-      images: [
-        { src: "https://images.pexels.com/photos/1756609/pexels-photo-1756609.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "row-span-2 col-span-1", alt: "Photographer in yellow jacket" },
-        { src: "https://images.pexels.com/photos/1784280/pexels-photo-1784280.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "col-span-1", alt: "Conference room meeting" },
-        { src: "https://images.pexels.com/photos/106011/pexels-photo-106011.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "col-span-1", alt: "Office space" },
-        { src: "https://images.pexels.com/photos/30567465/pexels-photo-30567465/free-photo-of-stylish-model-in-sunglasses-and-leather-jacket.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "col-span-1", alt: "Person in yellow jacket from behind" },
-        { src: "https://images.pexels.com/photos/53265/pexels-photo-53265.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "col-span-1", alt: "Empty auditorium" },
-        { src: "https://images.pexels.com/photos/30624212/pexels-photo-30624212/free-photo-of-side-profile-portrait-of-stylish-young-man.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "col-span-1", alt: "Group gathering" },
-        { src: "https://images.pexels.com/photos/30507957/pexels-photo-30507957/free-photo-of-close-up-of-wedding-rings-with-bouquet.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "col-span-1", alt: "Group gathering" },
-        { src: "https://images.pexels.com/photos/3394225/pexels-photo-3394225.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "col-span-1", alt: "Group gathering" }
-      ]
-    },
-    2: {
-      name: "John's Birthday",
-      date: "Sunday, August 20",
-      time: "2:00 PM - 8:00 PM",
-      location: "Downtown Arena, Nairobi",
-      images: [
-        { src: "https://images.pexels.com/photos/7942526/pexels-photo-7942526.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "row-span-2 col-span-1", alt: "Birthday cake" },
-        { src: "https://images.pexels.com/photos/11625530/pexels-photo-11625530.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "row-span-1 col-span-1", alt: "Friends celebrating" },
-        { src: "https://images.pexels.com/photos/12845899/pexels-photo-12845899.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "row-span-1 col-span-1", alt: "Gift opening" },
-        { src: "https://images.pexels.com/photos/30636213/pexels-photo-30636213/free-photo-of-cosplay-group-in-san-jose-urban-setting.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "row-span-1 col-span-1", alt: "Dance floor" },
-        { src: "https://images.pexels.com/photos/30586672/pexels-photo-30586672/free-photo-of-energetic-youth-party-with-bright-lights.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "row-span-1 col-span-1", alt: "Group selfie" },
-        { src: "https://images.pexels.com/photos/30609629/pexels-photo-30609629/free-photo-of-joyful-african-wedding-celebration-ceremony.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "row-span-1 col-span-1", alt: "Surprise moment" }
-      ]
-    }
-  };
+  // Get the profile data for the organizer with id = 'id'
+  const formattedProfileData = eventData.map(event => ({
+    id: event.organizer.id,
+    username: event.organizer.name,
+    user: event.organizer.username,
+    subtext: event.organizer.bio,
+    profile: event.organizer.src,
+    following: event.organizer.followers,
+    followers: event.organizer.followers,
+    specialities: event.organizer.specialities,
+    galleryImages: event.organizer.galleryImages
+  }));
 
-  const album = albums[profileId];
+  const service = formattedProfileData.find(
+    profile => profile.id.toString() === id
+  );
+
+  if (!service) {
+    return <div>Profile not found!</div>;
+  }
+
+  // Flatten all albums from all gallery images
+  const allAlbums = service.galleryImages.flatMap(image => image.album || []);
+  
+  // Find the album with id matching albumId
+  const album = allAlbums.find(
+    alb => alb.id.toString() === albumId
+  );
+
+  if (!album) {
+    return <div className="p-8 text-center text-black">
+      Album not found. ID: {albumId}
+    </div>;
+  }
 
   const handleNextImage = (e) => {
+    if (!album?.images) return;
     e.stopPropagation();
     setCurrentImageIndex((prev) => (prev + 1) % album.images.length);
   };
 
   const handlePrevImage = (e) => {
+    if (!album?.images) return;
     e.stopPropagation();
     setCurrentImageIndex((prev) => (prev - 1 + album.images.length) % album.images.length);
   };
-
-  if (!album) {
-    return <div className="p-8 text-center text-black">Album not found</div>;
-  }
 
   return (
     <div className="bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-2 sm:p-4 md:p-6 lg:p-8">
@@ -83,7 +67,9 @@ const ProfilePhotoAlbum = () => {
               </h1>
               <div className="opacity-80 space-y-1">
                 <p className="flex flex-col sm:flex-row sm:items-center sm:space-x-2">
-                  <span className="text-xs sm:text-sm font-medium">{album.date}</span>
+                  <span className="text-xs sm:text-sm font-medium">
+                    {album.date}
+                  </span>
                   <span className="text-xs bg-white/20 px-2 py-1 rounded-full inline-block sm:inline mt-1 sm:mt-0">
                     {album.time}
                   </span>
@@ -100,7 +86,7 @@ const ProfilePhotoAlbum = () => {
         {/* Photo Grid */}
         <div className="p-2 sm:p-4 lg:p-6">
           <div className="grid grid-cols-3 grid-rows-4 gap-2 sm:gap-3 lg:gap-4 h-[400px] sm:h-[600px] lg:h-[800px]">
-            {album.images.map((image, index) => (
+            {album.images?.map((image, index) => (
               <div 
                 key={index} 
                 className={`${image.gridClass} overflow-hidden rounded-lg sm:rounded-xl shadow-md lg:shadow-lg relative group cursor-pointer`}
@@ -125,7 +111,7 @@ const ProfilePhotoAlbum = () => {
         </div>
 
         {/* Lightbox */}
-        {selectedImage && (
+        {selectedImage && album.images && (
           <div 
             className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
             onClick={() => setSelectedImage(null)}

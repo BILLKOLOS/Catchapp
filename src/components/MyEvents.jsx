@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { eventData } from "../data/event";
 
 const MyEvents = ({ activeFilter, activeSlide, activeEventId }) => {
@@ -53,9 +52,6 @@ const MyEvents = ({ activeFilter, activeSlide, activeEventId }) => {
 
   return (
     <div className="w-full px-4 md:px-6 overflow-x-hidden">
-      <h1 className="font-bold text-[#272222] text-base md:text-lg mb-4 md:mb-1">
-        My Events
-      </h1>
       <div className="relative w-full">
         {/* Scroll buttons */}
         <button onClick={scrollLeft} className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-gray-700 bg-opacity-50 rounded-full p-2 hover:bg-opacity-75">
@@ -72,10 +68,9 @@ const MyEvents = ({ activeFilter, activeSlide, activeEventId }) => {
         {/* Events container */}
         <div ref={scrollContainerRef} className="flex overflow-x-auto gap-4 md:gap-6 pb-4 scrollbar-hide">
           {filteredEvents.map((event) => (
-            <Link to={`/my-event/${event.id}`} key={event.id}>
               <div
                 data-event-id={event.id}
-                className={`flex-none w-full sm:w-[calc(50%-16px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-16px)] min-w-[280px] max-w-[320px] h-[222px] bg-[#272222] cursor-pointer rounded-lg md:rounded-[30px] py-4 px-5 transition-all duration-300 ${
+                className={`flex-none w-full sm:w-[calc(50%-16px)] md:w-[calc(33.333%-16px)] lg:w-[calc(25%-16px)] min-w-[280px] max-w-[320px] h-[258px] bg-[#272222] cursor-pointer rounded-lg md:rounded-[30px] py-4 px-5 transition-all duration-300 ${
                   event.id === activeEventId ? 'ring-4 ring-gray-900' : ''
                 }`}
               >
@@ -100,7 +95,6 @@ const MyEvents = ({ activeFilter, activeSlide, activeEventId }) => {
                   </div>
                 </div>
               </div>
-            </Link>
           ))}
         </div>
       </div>

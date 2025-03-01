@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import NotificationMenu from './Notification';
+import MessagingInterface from './MessagingInterface';
 
 const TopNav = ({ activeFilter, setActiveFilter }) => {
     const filters = ["Today", "Tomorrow", "NextMonth", "ThisYear"];
@@ -8,7 +9,20 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const searchInputRef = useRef(null);
     const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-    const [notificationCount, setNotificationCount] = useState(3);
+    const [notificationCount, setNotificationCount] = useState(0);
+    const [isMessagingOpen, setIsMessagingOpen] = useState(false);
+    const [MessageCount, setMessageCount] = useState(3);
+
+    // Initialize notification count on first load
+    useEffect(() => {
+        // This will be replaced by the actual count from NotificationMenu
+        // For demo purposes, we start with 3 unread notifications
+        setNotificationCount(3);
+    }, []);
+
+    const updateNotificationCount = (count) => {
+        setNotificationCount(count);
+    };
 
     const toggleSearch = () => {
         setIsSearchOpen(!isSearchOpen);
@@ -234,7 +248,7 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                         >
                             {notificationCount > 0 && (
                                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                                    {notificationCount}
+                                    {notificationCount > 9 ? '9+' : notificationCount}
                                 </span>
                             )}
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 md:size-6">
@@ -245,13 +259,28 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                         <NotificationMenu 
                             isOpen={isNotificationOpen}
                             onClose={() => setIsNotificationOpen(false)}
+                            updateNotificationCount={updateNotificationCount}
                         />
                     </div>
-                    <div className="bg-[#D9D9D9] text-[#000000] p-2 rounded-full cursor-pointer">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 md:size-6">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 0-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-                        </svg>
-                    </div>
+                        <div className='relative'>
+                            <button
+                                onClick={() => setIsMessagingOpen(!isMessagingOpen)}
+                                className="bg-[#D9D9D9] text-[#000000] p-2 rounded-full cursor-pointer mr-2"
+                            >
+                                {MessageCount > 0 && (
+                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                                        {MessageCount > 9 ? '9+' : MessageCount}
+                                    </span>
+                                )}
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 md:size-6">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 0-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                                </svg>
+                            </button>
+                            <MessagingInterface
+                                isOpen={isMessagingOpen}
+                                onClose={() => setIsMessagingOpen(false)}
+                        />
+                        </div>
 
                     {/* Mobile menu toggle */}
                     <button 

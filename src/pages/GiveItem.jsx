@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Outlet, useLocation, Link } from 'react-router-dom';
-import { Camera, Mail, Phone } from 'lucide-react';
+import { Mail, Phone, MapPin } from 'lucide-react';
 import ServiceProviderEdit from './ServiceProvideEdit';
+import serviceData from '../data/service';
 
 
 // Enhanced Modal Component with animations
@@ -56,78 +57,37 @@ const PhotoProfile = () => {
   const showNestedRoute = isPics || eventId;
 
   const [isHovered, setIsHovered] = useState(null);
+  const [profile, setProfile] = useState(null);
 
-  const profileData = {
-    1: {
-      username: 'mk photography',
-      subtext: "i'm a passionate photographer and inc",
-      profile:
-        'https://images.pexels.com/photos/1903308/pexels-photo-1903308.jpeg?auto=compress&cs=tinysrgb&w=600',
-      following: 234,
-      followers: 234,
-      specialties: ['Events', 'Wedding', 'Portrait', 'Session', 'Nature'],
-      galleryImages: [
-        {
-          id: 1,
-          src: 'https://images.pexels.com/photos/746386/pexels-photo-746386.jpeg?auto=compress&cs=tinysrgb&w=600',
-          location: 'Nairobi',
-          date: { day: '24', month: 'Dec' },
-          price: 24,
-          tag: 'Events'
-        },
-        {
-          id: 2,
-          src: 'https://images.pexels.com/photos/1472334/pexels-photo-1472334.jpeg?auto=compress&cs=tinysrgb&w=600',
-          location: 'Kitui',
-          date: { day: '11', month: 'Dec' },
-          price: 24,
-          tag: 'Events'
-        },
-        {
-          id: 3,
-          src: 'https://images.pexels.com/photos/240561/pexels-photo-240561.jpeg?auto=compress&cs=tinysrgb&w=600',
-          location: 'Diani',
-          date: { day: '08', month: 'Apr' },
-          price: 24,
-          tag: 'Events'
-        },
-        {
-          id: 4,
-          src: 'https://images.pexels.com/photos/307847/pexels-photo-307847.jpeg?auto=compress&cs=tinysrgb&w=600',
-          location: 'Kisumu',
-          date: { day: '16', month: 'Jul' },
-          price: 24,
-          tag: 'Events'
-        },
-        {
-          id: 5,
-          src: 'https://images.pexels.com/photos/439818/pexels-photo-439818.jpeg?auto=compress&cs=tinysrgb&w=600',
-          location: 'Nyahururu',
-          date: { day: '09', month: 'Dec' },
-          price: 24,
-          tag: 'Events'
-        },
-        {
-          id: 6,
-          src: 'https://images.pexels.com/photos/2216350/pexels-photo-2216350.jpeg?auto=compress&cs=tinysrgb&w=600',
-          location: 'Caren',
-          date: { day: '17', month: 'sep' },
-          price: 24,
-          tag: 'Events'
-        }
-      ]
-    }
-  };
+  useEffect(() => {
+    // Find the profile data when the component mounts or ID changes
+    const formattedProfileData = serviceData.flatMap(service => 
+      service.services.map(serviceItem => ({
+        id: serviceItem.id, 
+        username: serviceItem.profileData.username,
+        subtext: serviceItem.profileData.subtext,
+        profile: serviceItem.profileData.profile,
+        following: serviceItem.profileData.following,
+        followers: serviceItem.profileData.followers,
+        specialties: serviceItem.profileData.specialties,
+        galleryImages: serviceItem.profileData.galleryImages
+      }))
+    );
 
-  const service = profileData[id];
+    const foundProfile = formattedProfileData.find(
+      profile => profile.id.toString() === id
+    );
 
-  if (!service) {
-    return <div>Service not found!</div>;
+    setProfile(foundProfile);
+  }, [id]);
+
+  if (!profile) {
+    return <div className="p-4 mt-20 text-center">Loading profile...</div>;
   }
 
   // Navigate to the nested pics route
   const handlePicsClick = () => {
-    navigate('pics', { state: { galleryImages: service.galleryImages } });
+    navigate('pics', { state: { galleryImages: profile.galleryImages } });
   };
 
   const handleEventsClick = () => {
@@ -137,6 +97,12 @@ const PhotoProfile = () => {
   // Function to handle edit button click
   const handleEditClick = () => {
     setIsEditModalOpen(true);
+  };
+
+  // Handle profile updates from the edit modal
+  const handleProfileUpdate = (updatedProfile) => {
+    setProfile(updatedProfile);
+    setIsEditModalOpen(false);
   };
 
   if (eventId) {
@@ -153,34 +119,34 @@ const PhotoProfile = () => {
       <div className="w-full lg:w-80 bg-white rounded-2xl p-6 h-fit">
         <div className="relative mb-4">
           <img
-            src={service.profile}
-            alt={service.username}
+            src={profile.profile}
+            alt={profile.username}
             className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-[#272222]"
           />
-          <button 
+          {/*<button 
               onClick={handleEditClick} 
               className="absolute bottom-0 right-1/2 lg:right-20 translate-x-8 lg:translate-x-0 bg-black text-white p-2 rounded-full hover:bg-gray-800 transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
               </svg>
-            </button>
+            </button>**/}
         </div>
 
         <div className="text-center mb-6">
           <h2 className="text-xl md:text-2xl font-bold mb-1 text-[#272222]">
-            {service.username}
+            {profile.username}
           </h2>
-          <p className="text-sm text-[#272222]">{service.subtext}</p>
+          <p className="text-sm text-[#272222]">{profile.subtext}</p>
         </div>
 
         <div className="flex justify-center gap-4 mb-6">
           <div className="text-center">
-            <div className="font-bold text-[#272222]">{service.followers}</div>
+            <div className="font-bold text-[#272222]">{profile.followers}</div>
             <div className="text-sm text-[#272222] font-bold">followers</div>
           </div>
           <div className="text-center">
-            <div className="font-bold text-[#272222]">{service.following}</div>
+            <div className="font-bold text-[#272222]">{profile.following}</div>
             <div className="text-sm text-[#272222] font-bold">following</div>
           </div>
         </div>
@@ -202,7 +168,7 @@ const PhotoProfile = () => {
         <div>
           <p className="text-md text-[#272222] font-bold mb-3">specialities</p>
           <div className="flex flex-wrap gap-2">
-            {service.specialties.map((specialty) => (
+            {profile.specialties.map((specialty) => (
               <span
                 key={specialty}
                 className="px-3 py-1 text-white bg-[#272222] rounded-full text-xs"
@@ -274,56 +240,70 @@ const PhotoProfile = () => {
           <Outlet />
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-            {service.galleryImages.map((image) => (
-              <Link
-                key={`gives/service/${id}/${image.id}`}
-                to={`${image.id}`} // This creates a URL like "/profile/1/2"
-                className="relative group"
-                onMouseEnter={() => setIsHovered(image.id)}
-                onMouseLeave={() => setIsHovered(null)}
-              >
-                <div className="relative overflow-hidden rounded-md">
-                  <div className="absolute top-2 right-2 bg-[#272222] text-white font-semibold text-xs px-2 py-1 rounded-md">
-                    <div className="flex flex-col gap-1">
-                      <p>{image.date.day}</p>
-                      <p>{image.date.month}</p>
+            {profile.galleryImages.map((image) => {
+              if (image.album && image.album.length > 0) {
+                return image.album.map((album) => (
+                  <Link
+                    key={`profile/${id}/album/${album.id}`}
+                    to={`album/${album.id}`}  // relative route: /profile/:id/album/:albumId
+                    className="relative group"
+                    onMouseEnter={() => setIsHovered(image.id)}
+                    onMouseLeave={() => setIsHovered(null)}
+                  >
+                    <div className="relative overflow-hidden rounded-md">
+                      <div className="absolute top-2 right-2 bg-[#272222] text-white font-semibold text-xs px-2 py-1 rounded-md">
+                        <div className="flex flex-col gap-1">
+                          <p>{image.date.day}</p>
+                          <p>{image.date.month}</p>
+                        </div>
+                      </div>
+                      <div className="absolute flex gap-1 items-center bottom-2 right-1/2 bg-[#272222] text-white font-semibold text-xs px-2 py-1 rounded-md">
+                        <MapPin className="w-4 h-4" />
+                        <p>{image.location}</p>
+                      </div>
+                      <img
+                        src={image.src}
+                        alt={`Gallery ${image.id}`}
+                        className="w-full h-[300px] sm:h-[250px] md:h-[300px] lg:h-[312px] object-cover"
+                      />
+                      <div
+                        className={`absolute inset-0 bg-black/30 transition-opacity duration-300 ${
+                          isHovered === image.id ? 'opacity-100' : 'opacity-0'
+                        }`}
+                      ></div>
+                    </div>
+                  </Link>
+                ));
+              } else {
+                // If there is no album on this gallery image, render it normally.
+                return (
+                  <div key={image.id} className="relative group">
+                    <div className="relative overflow-hidden rounded-md">
+                      <div className="absolute top-2 right-2 bg-[#272222] text-white font-semibold text-xs px-2 py-1 rounded-md">
+                        <div className="flex flex-col gap-1">
+                          <p>{image.date.day}</p>
+                          <p>{image.date.month}</p>
+                        </div>
+                      </div>
+                      <div className="absolute flex gap-1 items-center bottom-2 right-1/2 bg-[#272222] text-white font-semibold text-xs px-2 py-1 rounded-md">
+                        <MapPin className="w-4 h-4" />
+                        <p>{image.location}</p>
+                      </div>
+                      <img
+                        src={image.src}
+                        alt={`Gallery ${image.id}`}
+                        className="w-full h-[300px] sm:h-[250px] md:h-[300px] lg:h-[312px] object-cover"
+                      />
+                      <div
+                        className={`absolute inset-0 bg-black/30 transition-opacity duration-300 ${
+                          isHovered === image.id ? 'opacity-100' : 'opacity-0'
+                        }`}
+                      ></div>
                     </div>
                   </div>
-                  <div className="absolute flex gap-1 items-center bottom-2 right-1/2 bg-[#272222] text-white font-semibold text-xs px-2 py-1 rounded-md">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-4 h-4"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z"
-                      />
-                    </svg>
-                    <p>{image.location}</p>
-                  </div>
-                  <img
-                    src={image.src}
-                    alt={`Gallery ${image.id}`}
-                    className="w-full h-[300px] sm:h-[250px] md:h-[300px] lg:h-[312px] object-cover"
-                  />
-                  <div
-                    className={`absolute inset-0 bg-black/30 transition-opacity duration-300 ${
-                      isHovered === image.id ? 'opacity-100' : 'opacity-0'
-                    }`}
-                  ></div>
-                </div>
-              </Link>
-            ))}
+                );
+              }
+            })}
           </div>
         )}
       </div>
@@ -354,10 +334,11 @@ const PhotoProfile = () => {
             </svg>
           </button>
 
-          {/* Modal content */}
+          {/* Modal content - Pass current profile data and update handler */}
           <ServiceProviderEdit 
             onClose={() => setIsEditModalOpen(false)}
-            initialData={service}
+            initialData={profile}
+            onUpdate={handleProfileUpdate}
           />
         </div>
       </Modal>

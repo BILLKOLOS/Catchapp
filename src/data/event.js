@@ -28,7 +28,7 @@ export const eventData = [
           "tag": "music",
           "album": [
             {
-              id: 1,
+              id: 10011,
               name: "sarah",
               subheading: "wedding",
               date: "saturday, june 15",
@@ -53,10 +53,19 @@ export const eventData = [
                   gridClass: "col-span-1", alt: "Group gathering" }
               ]
             },
+          ]
+        },
+        {
+          "id": 1002,
+          "src": "https://images.pexels.com/photos/1540406/pexels-photo-1540406.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "location": "Central Plaza",
+          "date": { day: "3", month: "Mar" },
+          "tag": "performance",
+          "album": [
             {
-              id: 2,
+              id: 10021,
               name: "John's Birthday",
-              date: { day: "1", month: "Dec" },
+              date: "saturday, june 15",
               time: "2:00 PM - 8:00 PM",
               location: "Downtown Arena, Nairobi",
               images: [
@@ -77,18 +86,100 @@ export const eventData = [
           ]
         },
         {
-          "id": 1002,
-          "src": "https://images.pexels.com/photos/1540406/pexels-photo-1540406.jpeg?auto=compress&cs=tinysrgb&w=600",
-          "location": "Central Plaza",
-          date: { day: "3", month: "Mar" },
-          "tag": "performance"
-        },
-        {
           "id": 1003,
           "src": "https://images.pexels.com/photos/144428/pexels-photo-144428.jpeg?auto=compress&cs=tinysrgb&w=600",
           "location": "Riverside Amphitheater",
-          date: { day: "7", month: "Apr" },
-          "tag": "concert"
+          "date": { "day": "7", "month": "Apr" },
+          "tag": "concert",
+          "album": [
+            {
+              "id": 10031,
+              "name": "Summer Festival",
+              "date": "sunday, july 20",
+              "time": "4:00 PM - 11:00 PM",
+              "location": "Riverside Park, Nairobi",
+              "images": [
+                { "src": "https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-2 col-span-1", "alt": "Festival main stage" },
+                { "src": "https://images.pexels.com/photos/1763075/pexels-photo-1763075.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-1 col-span-1", "alt": "Concert crowd" },
+                { "src": "https://images.pexels.com/photos/1190298/pexels-photo-1190298.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-1 col-span-1", "alt": "Live performance" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 1004,
+          "src": "https://images.pexels.com/photos/2747449/pexels-photo-2747449.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "location": "Cultural Center",
+          "date": { "day": "15", "month": "May" },
+          "tag": "art",
+          "album": [
+            {
+              "id": 10041,
+              "name": "Art Exhibition",
+              "date": "friday, may 15",
+              "time": "10:00 AM - 6:00 PM",
+              "location": "Cultural Center Gallery",
+              "images": [
+                { "src": "https://images.pexels.com/photos/20967/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-2 col-span-1", "alt": "Art gallery view" },
+                { "src": "https://images.pexels.com/photos/1647962/pexels-photo-1647962.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-1 col-span-1", "alt": "Sculpture display" },
+                { "src": "https://images.pexels.com/photos/1509534/pexels-photo-1509534.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-1 col-span-1", "alt": "Artist workshop" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 1005,
+          "src": "https://images.pexels.com/photos/2263436/pexels-photo-2263436.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "location": "Urban Square",
+          "date": { "day": "22", "month": "May" },
+          "tag": "dance",
+          "album": [
+            {
+              "id": 10051,
+              "name": "Dance Festival",
+              "date": "friday, may 22",
+              "time": "3:00 PM - 9:00 PM",
+              "location": "Urban Square Plaza",
+              "images": [
+                { "src": "https://images.pexels.com/photos/1701202/pexels-photo-1701202.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-2 col-span-1", "alt": "Dance performance" },
+                { "src": "https://images.pexels.com/photos/2188012/pexels-photo-2188012.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-1 col-span-1", "alt": "Street dancers" },
+                { "src": "https://images.pexels.com/photos/2820896/pexels-photo-2820896.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-1 col-span-1", "alt": "Dance workshop" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 1006,
+          "src": "https://images.pexels.com/photos/2747447/pexels-photo-2747447.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "location": "Tech Hub",
+          "date": { "day": "28", "month": "May" },
+          "tag": "technology",
+          "album": [
+            {
+              "id": 10061,
+              "name": "Tech Conference",
+              "date": "thursday, may 28",
+              "time": "9:00 AM - 5:00 PM",
+              "location": "Innovation Center",
+              "images": [
+                { "src": "https://images.pexels.com/photos/2582937/pexels-photo-2582937.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-2 col-span-1", "alt": "Conference hall" },
+                { "src": "https://images.pexels.com/photos/1181671/pexels-photo-1181671.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-1 col-span-1", "alt": "Tech presentation" },
+                { "src": "https://images.pexels.com/photos/1181472/pexels-photo-1181472.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-1 col-span-1", "alt": "Workshop session" }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -165,29 +256,145 @@ export const eventData = [
           "id": 2001,
           "src": "https://images.pexels.com/photos/3916850/pexels-photo-3916850.jpeg?auto=compress&cs=tinysrgb&w=600",
           "location": "Kilimani Sports Complex",
-          "date": "5th January 2025",
-          "tag": "soccer"
+          "date": { "day": "5", "month": "Jan" },
+          "tag": "soccer",
+          "album": [
+            {
+              "id": 20011,
+              "name": "Soccer Tournament",
+              "date": "saturday, january 5",
+              "time": "9:00 AM - 6:00 PM",
+              "location": "Kilimani Sports Complex",
+              "images": [
+                { "src": "https://images.pexels.com/photos/3621104/pexels-photo-3621104.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-2 col-span-1", "alt": "Soccer match" },
+                { "src": "https://images.pexels.com/photos/3076516/pexels-photo-3076516.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "col-span-1", "alt": "Team huddle" },
+                { "src": "https://images.pexels.com/photos/274506/pexels-photo-274506.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "col-span-1", "alt": "Soccer field" }
+              ]
+            }
+          ]
         },
         {
           "id": 2002,
           "src": "https://images.pexels.com/photos/2834917/pexels-photo-2834917.jpeg?auto=compress&cs=tinysrgb&w=600",
           "location": "National Stadium",
-          "date": "20th December 2024",
-          "tag": "athletics"
+          "date": { "day": "20", "month": "Dec" },
+          "tag": "athletics",
+          "album": [
+            {
+              "id": 20021,
+              "name": "Track & Field Championships",
+              "date": "sunday, december 20",
+              "time": "8:00 AM - 5:00 PM",
+              "location": "National Stadium",
+              "images": [
+                { "src": "https://images.pexels.com/photos/3621538/pexels-photo-3621538.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-2 col-span-1", "alt": "Sprint race" },
+                { "src": "https://images.pexels.com/photos/3764014/pexels-photo-3764014.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "col-span-1", "alt": "Long jump" },
+                { "src": "https://images.pexels.com/photos/3657156/pexels-photo-3657156.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "col-span-1", "alt": "Relay race" }
+              ]
+            }
+          ]
         },
         {
           "id": 2003,
           "src": "https://images.pexels.com/photos/2094697/pexels-photo-2094697.jpeg?auto=compress&cs=tinysrgb&w=600",
           "location": "Community Field",
-          "date": "15th February 2025",
-          "tag": "training"
+          "date": { "day": "15", "month": "Feb" },
+          "tag": "training",
+          "album": [
+            {
+              "id": 20031,
+              "name": "Sports Training Camp",
+              "date": "friday, february 15",
+              "time": "7:00 AM - 4:00 PM",
+              "location": "Community Field",
+              "images": [
+                { "src": "https://images.pexels.com/photos/3076509/pexels-photo-3076509.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-2 col-span-1", "alt": "Training session" },
+                { "src": "https://images.pexels.com/photos/3768913/pexels-photo-3768913.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "col-span-1", "alt": "Stretching exercises" },
+                { "src": "https://images.pexels.com/photos/3775566/pexels-photo-3775566.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "col-span-1", "alt": "Fitness drills" }
+              ]
+            }
+          ]
         },
         {
           "id": 2004,
           "src": "https://images.pexels.com/photos/3755440/pexels-photo-3755440.jpeg?auto=compress&cs=tinysrgb&w=600",
           "location": "Riverside Park",
-          "date": "3rd March 2025",
-          "tag": "marathon"
+          "date": { "day": "3", "month": "Mar" },
+          "tag": "marathon",
+          "album": [
+            {
+              "id": 20041,
+              "name": "City Marathon",
+              "date": "sunday, march 3",
+              "time": "6:00 AM - 2:00 PM",
+              "location": "Riverside Park",
+              "images": [
+                { "src": "https://images.pexels.com/photos/2526878/pexels-photo-2526878.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-2 col-span-1", "alt": "Marathon start" },
+                { "src": "https://images.pexels.com/photos/2403047/pexels-photo-2403047.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "col-span-1", "alt": "Runner hydration" },
+                { "src": "https://images.pexels.com/photos/2524749/pexels-photo-2524749.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "col-span-1", "alt": "Finish line" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 2005,
+          "src": "https://images.pexels.com/photos/8028917/pexels-photo-8028917.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "location": "Sports Complex",
+          "date": { "day": "10", "month": "Mar" },
+          "tag": "basketball",
+          "album": [
+            {
+              "id": 20051,
+              "name": "Basketball Tournament",
+              "date": "sunday, march 10",
+              "time": "10:00 AM - 6:00 PM",
+              "location": "Sports Complex",
+              "images": [
+                { "src": "https://images.pexels.com/photos/3763503/pexels-photo-3763503.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-2 col-span-1", "alt": "Basketball game" },
+                { "src": "https://images.pexels.com/photos/3755442/pexels-photo-3755442.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "col-span-1", "alt": "Team practice" },
+                { "src": "https://images.pexels.com/photos/3755440/pexels-photo-3755440.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "col-span-1", "alt": "Court view" }
+              ]
+            }
+          ]
+        },
+        {
+          "id": 2006,
+          "src": "https://images.pexels.com/photos/163444/sport-treadmill-tor-route-163444.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "location": "Fitness Center",
+          "date": { "day": "15", "month": "Mar" },
+          "tag": "fitness",
+          "album": [
+            {
+              "id": 20061,
+              "name": "Fitness Challenge",
+              "date": "friday, march 15",
+              "time": "8:00 AM - 4:00 PM",
+              "location": "Fitness Center",
+              "images": [
+                { "src": "https://images.pexels.com/photos/1954524/pexels-photo-1954524.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "row-span-2 col-span-1", "alt": "Workout session" },
+                { "src": "https://images.pexels.com/photos/2247179/pexels-photo-2247179.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "col-span-1", "alt": "Weight training" },
+                { "src": "https://images.pexels.com/photos/4162487/pexels-photo-4162487.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                  "gridClass": "col-span-1", "alt": "Gym equipment" }
+              ]
+            }
+          ]
         }
       ]
     },
@@ -264,29 +471,145 @@ export const eventData = [
             "id": 3001,
             "src": "https://images.pexels.com/photos/5604787/pexels-photo-5604787.jpeg?auto=compress&cs=tinysrgb&w=600",
             "location": "Kisumu Cultural Center",
-            "date": "25th September 2024",
-            "tag": "dancers"
+            "date": { "day": "25", "month": "Sep" },
+            "tag": "dancers",
+            "album": [
+              {
+                "id": 30011,
+                "name": "Traditional Dance Festival",
+                "date": "wednesday, september 25",
+                "time": "2:00 PM - 8:00 PM",
+                "location": "Kisumu Cultural Center",
+                "images": [
+                  { "src": "https://images.pexels.com/photos/5604787/pexels-photo-5604787.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "row-span-2 col-span-1", "alt": "Traditional dancers" },
+                  { "src": "https://images.pexels.com/photos/5604941/pexels-photo-5604941.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "col-span-1", "alt": "Dance performance" },
+                  { "src": "https://images.pexels.com/photos/5604806/pexels-photo-5604806.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "col-span-1", "alt": "Cultural celebration" }
+                ]
+              }
+            ]
           },
           {
             "id": 3002,
             "src": "https://images.pexels.com/photos/3810811/pexels-photo-3810811.jpeg?auto=compress&cs=tinysrgb&w=600",
             "location": "Lake Victoria Shore",
-            "date": "10th August 2024",
-            "tag": "ceremony"
+            "date": { "day": "10", "month": "Aug" },
+            "tag": "ceremony",
+            "album": [
+              {
+                "id": 30021,
+                "name": "Lakeside Ceremony",
+                "date": "saturday, august 10",
+                "time": "4:00 PM - 9:00 PM",
+                "location": "Lake Victoria Shore",
+                "images": [
+                  { "src": "https://images.pexels.com/photos/3810811/pexels-photo-3810811.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "row-span-2 col-span-1", "alt": "Ceremonial gathering" },
+                  { "src": "https://images.pexels.com/photos/3810832/pexels-photo-3810832.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "col-span-1", "alt": "Traditional rituals" },
+                  { "src": "https://images.pexels.com/photos/3810766/pexels-photo-3810766.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "col-span-1", "alt": "Cultural music" }
+                ]
+              }
+            ]
           },
           {
             "id": 3003,
             "src": "https://images.pexels.com/photos/5604806/pexels-photo-5604806.jpeg?auto=compress&cs=tinysrgb&w=600",
             "location": "Community Gathering Place",
-            "date": "5th October 2024",
-            "tag": "traditional"
+            "date": { "day": "5", "month": "Oct" },
+            "tag": "traditional",
+            "album": [
+              {
+                "id": 30031,
+                "name": "Community Celebration",
+                "date": "saturday, october 5",
+                "time": "11:00 AM - 7:00 PM",
+                "location": "Community Gathering Place",
+                "images": [
+                  { "src": "https://images.pexels.com/photos/5604806/pexels-photo-5604806.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "row-span-2 col-span-1", "alt": "Community gathering" },
+                  { "src": "https://images.pexels.com/photos/5604847/pexels-photo-5604847.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "col-span-1", "alt": "Traditional ceremony" },
+                  { "src": "https://images.pexels.com/photos/5604787/pexels-photo-5604787.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "col-span-1", "alt": "Cultural performance" }
+                ]
+              }
+            ]
           },
           {
             "id": 3004,
             "src": "https://images.pexels.com/photos/5604941/pexels-photo-5604941.jpeg?auto=compress&cs=tinysrgb&w=600",
             "location": "Victoria Gardens",
-            "date": "30th July 2024",
-            "tag": "celebration"
+            "date": { "day": "30", "month": "Jul" },
+            "tag": "celebration",
+            "album": [
+              {
+                "id": 30041,
+                "name": "Heritage Festival",
+                "date": "tuesday, july 30",
+                "time": "1:00 PM - 8:00 PM",
+                "location": "Victoria Gardens",
+                "images": [
+                  { "src": "https://images.pexels.com/photos/5604941/pexels-photo-5604941.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "row-span-2 col-span-1", "alt": "Festival celebration" },
+                  { "src": "https://images.pexels.com/photos/5604847/pexels-photo-5604847.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "col-span-1", "alt": "Heritage display" },
+                  { "src": "https://images.pexels.com/photos/5604806/pexels-photo-5604806.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "col-span-1", "alt": "Cultural showcase" }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 3005,
+            "src": "https://images.pexels.com/photos/5604847/pexels-photo-5604847.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "location": "Nyanza Heritage Center",
+            "date": { "day": "15", "month": "Nov" },
+            "tag": "heritage",
+            "album": [
+              {
+                "id": 30051,
+                "name": "Cultural Heritage Day",
+                "date": "friday, november 15",
+                "time": "10:00 AM - 6:00 PM",
+                "location": "Nyanza Heritage Center",
+                "images": [
+                  { "src": "https://images.pexels.com/photos/5604847/pexels-photo-5604847.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "row-span-2 col-span-1", "alt": "Heritage celebration" },
+                  { "src": "https://images.pexels.com/photos/5604787/pexels-photo-5604787.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "col-span-1", "alt": "Traditional performance" },
+                  { "src": "https://images.pexels.com/photos/3810811/pexels-photo-3810811.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "col-span-1", "alt": "Cultural gathering" }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 3006,
+            "src": "https://images.pexels.com/photos/3810766/pexels-photo-3810766.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "location": "Lakeside Cultural Park",
+            "date": { "day": "20", "month": "Dec" },
+            "tag": "festival",
+            "album": [
+              {
+                "id": 30061,
+                "name": "Year-End Cultural Festival",
+                "date": "friday, december 20",
+                "time": "3:00 PM - 10:00 PM",
+                "location": "Lakeside Cultural Park",
+                "images": [
+                  { "src": "https://images.pexels.com/photos/3810766/pexels-photo-3810766.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "row-span-2 col-span-1", "alt": "Festival performance" },
+                  { "src": "https://images.pexels.com/photos/3810832/pexels-photo-3810832.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "col-span-1", "alt": "Cultural rituals" },
+                  { "src": "https://images.pexels.com/photos/5604941/pexels-photo-5604941.jpeg?auto=compress&cs=tinysrgb&w=600", 
+                    "gridClass": "col-span-1", "alt": "Traditional dance" }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -363,22 +686,145 @@ export const eventData = [
             "id": 4001,
             "src": "https://images.pexels.com/photos/7176307/pexels-photo-7176307.jpeg?auto=compress&cs=tinysrgb&w=600",
             "location": "Thika Retreat Garden",
-            "date": "5th January 2025",
-            "tag": "prayer"
+            "date": { "day": "5", "month": "Jan" },
+            "tag": "prayer",
+            "album": [
+              {
+                "id": 40011,
+                "name": "New Year Prayer Retreat",
+                "date": "sunday, january 5",
+                "time": "6:00 AM - 12:00 PM",
+                "location": "Thika Retreat Garden",
+                "images": [
+                  { "src": "https://images.pexels.com/photos/7176307/pexels-photo-7176307.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "row-span-2 col-span-1", "alt": "Morning prayer gathering" },
+                  { "src": "https://images.pexels.com/photos/7002816/pexels-photo-7002816.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "col-span-1", "alt": "Group worship" },
+                  { "src": "https://images.pexels.com/photos/8955311/pexels-photo-8955311.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "col-span-1", "alt": "Outdoor meditation" }
+                ]
+              }
+            ]
           },
           {
             "id": 4002,
             "src": "https://images.pexels.com/photos/7002816/pexels-photo-7002816.jpeg?auto=compress&cs=tinysrgb&w=600",
             "location": "Riverside Chapel",
-            "date": "20th December 2024",
-            "tag": "worship"
+            "date": { "day": "20", "month": "Dec" },
+            "tag": "worship",
+            "album": [
+              {
+                "id": 40021,
+                "name": "Christmas Worship Service",
+                "date": "friday, december 20",
+                "time": "4:00 PM - 8:00 PM",
+                "location": "Riverside Chapel",
+                "images": [
+                  { "src": "https://images.pexels.com/photos/7002816/pexels-photo-7002816.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "row-span-2 col-span-1", "alt": "Christmas worship celebration" },
+                  { "src": "https://images.pexels.com/photos/7176307/pexels-photo-7176307.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "col-span-1", "alt": "Evening prayer service" },
+                  { "src": "https://images.pexels.com/photos/8955311/pexels-photo-8955311.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "col-span-1", "alt": "Congregational gathering" }
+                ]
+              }
+            ]
           },
           {
             "id": 4003,
             "src": "https://images.pexels.com/photos/8955311/pexels-photo-8955311.jpeg?auto=compress&cs=tinysrgb&w=600",
             "location": "Mountain Prayer Site",
-            "date": "15th February 2025",
-            "tag": "meditation"
+            "date": { "day": "15", "month": "Feb" },
+            "tag": "meditation",
+            "album": [
+              {
+                "id": 40031,
+                "name": "Mountain Meditation Retreat",
+                "date": "saturday, february 15",
+                "time": "5:30 AM - 6:00 PM",
+                "location": "Mountain Prayer Site",
+                "images": [
+                  { "src": "https://images.pexels.com/photos/8955311/pexels-photo-8955311.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "row-span-2 col-span-1", "alt": "Mountain meditation gathering" },
+                  { "src": "https://images.pexels.com/photos/7176307/pexels-photo-7176307.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "col-span-1", "alt": "Sunrise prayer session" },
+                  { "src": "https://images.pexels.com/photos/7002816/pexels-photo-7002816.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "col-span-1", "alt": "Group spiritual session" }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 4004,
+            "src": "https://images.pexels.com/photos/7176307/pexels-photo-7176307.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "location": "Serene Valley Center",
+            "date": { "day": "25", "month": "Mar" },
+            "tag": "retreat",
+            "album": [
+              {
+                "id": 40041,
+                "name": "Spring Spiritual Retreat",
+                "date": "tuesday, march 25",
+                "time": "7:00 AM - 5:00 PM",
+                "location": "Serene Valley Center",
+                "images": [
+                  { "src": "https://images.pexels.com/photos/7176307/pexels-photo-7176307.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "row-span-2 col-span-1", "alt": "Spring retreat gathering" },
+                  { "src": "https://images.pexels.com/photos/8955311/pexels-photo-8955311.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "col-span-1", "alt": "Morning meditation" },
+                  { "src": "https://images.pexels.com/photos/7002816/pexels-photo-7002816.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "col-span-1", "alt": "Group prayer session" }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 4005,
+            "src": "https://images.pexels.com/photos/7002816/pexels-photo-7002816.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "location": "Peace Gardens",
+            "date": { "day": "10", "month": "Apr" },
+            "tag": "fellowship",
+            "album": [
+              {
+                "id": 40051,
+                "name": "Community Fellowship Day",
+                "date": "wednesday, april 10",
+                "time": "9:00 AM - 3:00 PM",
+                "location": "Peace Gardens",
+                "images": [
+                  { "src": "https://images.pexels.com/photos/7002816/pexels-photo-7002816.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "row-span-2 col-span-1", "alt": "Community fellowship" },
+                  { "src": "https://images.pexels.com/photos/7176307/pexels-photo-7176307.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "col-span-1", "alt": "Group prayer time" },
+                  { "src": "https://images.pexels.com/photos/8955311/pexels-photo-8955311.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "col-span-1", "alt": "Outdoor worship" }
+                ]
+              }
+            ]
+          },
+          {
+            "id": 4006,
+            "src": "https://images.pexels.com/photos/8955311/pexels-photo-8955311.jpeg?auto=compress&cs=tinysrgb&w=600",
+            "location": "Hillside Sanctuary",
+            "date": { "day": "30", "month": "May" },
+            "tag": "contemplation",
+            "album": [
+              {
+                "id": 40061,
+                "name": "Silent Contemplation Day",
+                "date": "thursday, may 30",
+                "time": "6:30 AM - 7:30 PM",
+                "location": "Hillside Sanctuary",
+                "images": [
+                  { "src": "https://images.pexels.com/photos/8955311/pexels-photo-8955311.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "row-span-2 col-span-1", "alt": "Silent contemplation" },
+                  { "src": "https://images.pexels.com/photos/7002816/pexels-photo-7002816.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "col-span-1", "alt": "Peaceful gathering" },
+                  { "src": "https://images.pexels.com/photos/7176307/pexels-photo-7176307.jpeg?auto=compress&cs=tinysrgb&w=600",
+                    "gridClass": "col-span-1", "alt": "Morning devotion" }
+                ]
+              }
+            ]
           }
         ]
       },

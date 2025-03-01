@@ -1,70 +1,63 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { ImagePlus, ChevronLeft, ChevronRight, X } from 'lucide-react';
+import serviceData from '../data/service';
 
 const EventPhotoAlbum = () => {
-  const { eventId } = useParams();
+  const { id, eventId } = useParams();
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [album, setAlbum] = useState(null);
 
-  const albums = {
-    1: {
-      name: "sarah",
-      subheading: "wedding",
-      date: "saturday, june 15",
-      time: "9:00 am - 4:00pm",
-      location: "egret center nairobi",
-      images: [
-        { src: "https://images.pexels.com/photos/1756609/pexels-photo-1756609.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "row-span-2 col-span-1", alt: "Photographer in yellow jacket" },
-        { src: "https://images.pexels.com/photos/1784280/pexels-photo-1784280.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "col-span-1", alt: "Conference room meeting" },
-        { src: "https://images.pexels.com/photos/106011/pexels-photo-106011.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "col-span-1", alt: "Office space" },
-        { src: "https://images.pexels.com/photos/30567465/pexels-photo-30567465/free-photo-of-stylish-model-in-sunglasses-and-leather-jacket.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "col-span-1", alt: "Person in yellow jacket from behind" },
-        { src: "https://images.pexels.com/photos/53265/pexels-photo-53265.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "col-span-1", alt: "Empty auditorium" },
-        { src: "https://images.pexels.com/photos/30624212/pexels-photo-30624212/free-photo-of-side-profile-portrait-of-stylish-young-man.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "col-span-1", alt: "Group gathering" },
-        { src: "https://images.pexels.com/photos/30507957/pexels-photo-30507957/free-photo-of-close-up-of-wedding-rings-with-bouquet.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "col-span-1", alt: "Group gathering" },
-        { src: "https://images.pexels.com/photos/3394225/pexels-photo-3394225.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "col-span-1", alt: "Group gathering" }
-      ]
-    },
-    2: {
-      name: "John's Birthday",
-      date: "Sunday, August 20",
-      time: "2:00 PM - 8:00 PM",
-      location: "Downtown Arena, Nairobi",
-      images: [
-        { src: "https://images.pexels.com/photos/7942526/pexels-photo-7942526.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "row-span-2 col-span-1", alt: "Birthday cake" },
-        { src: "https://images.pexels.com/photos/11625530/pexels-photo-11625530.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "row-span-1 col-span-1", alt: "Friends celebrating" },
-        { src: "https://images.pexels.com/photos/12845899/pexels-photo-12845899.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "row-span-1 col-span-1", alt: "Gift opening" },
-        { src: "https://images.pexels.com/photos/30636213/pexels-photo-30636213/free-photo-of-cosplay-group-in-san-jose-urban-setting.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "row-span-1 col-span-1", alt: "Dance floor" },
-        { src: "https://images.pexels.com/photos/30586672/pexels-photo-30586672/free-photo-of-energetic-youth-party-with-bright-lights.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "row-span-1 col-span-1", alt: "Group selfie" },
-        { src: "https://images.pexels.com/photos/30609629/pexels-photo-30609629/free-photo-of-joyful-african-wedding-celebration-ceremony.jpeg?auto=compress&cs=tinysrgb&w=600", 
-          gridClass: "row-span-1 col-span-1", alt: "Surprise moment" }
-      ]
+  useEffect(() => {
+    // Find the profile data when the component mounts or ID changes
+    const formattedProfileData = serviceData.flatMap(service => 
+      service.services.map(serviceItem => ({
+        id: serviceItem.id, 
+        galleryImages: serviceItem.profileData.galleryImages
+      }))
+    );
+
+    const service = formattedProfileData.find(
+      profile => profile.id.toString() === id
+    );
+
+    if (service) {
+      // Search through all gallery images for the album
+      let foundAlbum = null;
+      
+      // Iterate through each gallery image
+      for (const galleryImage of service.galleryImages) {
+        // Check if this gallery image has albums
+        if (galleryImage.album && Array.isArray(galleryImage.album)) {
+          // Search for the album with matching ID
+          const albumMatch = galleryImage.album.find(
+            alb => alb.id.toString() === eventId
+          );
+          
+          if (albumMatch) {
+            foundAlbum = albumMatch;
+            break; // Stop searching once found
+          }
+        }
+      }
+      
+      setAlbum(foundAlbum);
     }
-  };
-
-  const album = albums[eventId];
+  }, [id, eventId]);
 
   const handleNextImage = (e) => {
     e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev + 1) % album.images.length);
+    if (album && album.images) {
+      setCurrentImageIndex((prev) => (prev + 1) % album.images.length);
+    }
   };
 
   const handlePrevImage = (e) => {
     e.stopPropagation();
-    setCurrentImageIndex((prev) => (prev - 1 + album.images.length) % album.images.length);
+    if (album && album.images) {
+      setCurrentImageIndex((prev) => (prev - 1 + album.images.length) % album.images.length);
+    }
   };
 
   if (!album) {
@@ -99,7 +92,7 @@ const EventPhotoAlbum = () => {
 
         {/* Photo Grid */}
         <div className="p-2 sm:p-4 lg:p-6">
-          <div className="grid grid-cols-3 grid-rows-4 gap-2 sm:gap-3 lg:gap-4 h-[400px] sm:h-[600px] lg:h-[800px]">
+          <div className="grid grid-cols-3 gap-2 sm:gap-3 lg:gap-4 h-[400px] sm:h-[600px] lg:h-[800px]">
             {album.images.map((image, index) => (
               <div 
                 key={index} 
@@ -111,7 +104,7 @@ const EventPhotoAlbum = () => {
               >
                 <img 
                   src={image.src} 
-                  alt={image.alt}
+                  alt={image.alt || `Image ${index + 1}`}
                   className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
@@ -147,11 +140,11 @@ const EventPhotoAlbum = () => {
             <div className="max-w-4xl max-h-[80vh] sm:max-h-[85vh] lg:max-h-[90vh] flex flex-col items-center">
               <img 
                 src={album.images[currentImageIndex].src} 
-                alt={album.images[currentImageIndex].alt}
+                alt={album.images[currentImageIndex].alt || `Image ${currentImageIndex + 1}`}
                 className="max-w-full max-h-full object-contain rounded-lg sm:rounded-xl shadow-xl sm:shadow-2xl"
               />
               <p className="text-white mt-2 sm:mt-4 text-center opacity-70 text-sm sm:text-base">
-                {album.images[currentImageIndex].alt}
+                {album.images[currentImageIndex].alt || `Image ${currentImageIndex + 1}`}
               </p>
             </div>
 

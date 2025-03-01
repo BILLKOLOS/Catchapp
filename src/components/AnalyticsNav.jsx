@@ -267,9 +267,9 @@ const AnalyticsNav = ( { id } ) => {
                <div className="hidden md:flex justify-center items-center py-4">
                 <div className="flex items-center gap-6">
                     <NavLink
-                        to={`/my-event/${id}`}
+                        to={`/my-event/details`}
                         className={
-                            isPathActive(`/my-event/${id}`)
+                            isPathActive(`/my-event/details`)
                                 ? "bg-[#272222] text-white rounded-[30px] py-2.5 px-8 font-semibold transition-all duration-300 shadow-lg hover:bg-[#3a3535]"
                                 : "bg-[#D9D9D9] text-[#272222] rounded-[30px] py-2.5 px-8 font-semibold transition-all duration-300 hover:bg-[#c0c0c0]"
                         }
@@ -277,9 +277,9 @@ const AnalyticsNav = ( { id } ) => {
                         <h5>My Event</h5>
                     </NavLink>
                     <NavLink
-                        to={`/my-event/${id}/analytics`}
+                        to={`/my-event/analytics`}
                         className={
-                            isPathActive(`/my-event/${id}/analytics`)
+                            isPathActive(`/my-event/analytics`)
                                 ? "bg-[#272222] text-white rounded-[30px] py-2.5 px-8 font-semibold transition-all duration-300 shadow-lg hover:bg-[#3a3535] flex items-center gap-2"
                                 : "bg-[#D9D9D9] text-[#272222] rounded-[30px] py-2.5 px-8 font-semibold transition-all duration-300 hover:bg-[#c0c0c0] flex items-center gap-2"
                         }
@@ -287,14 +287,14 @@ const AnalyticsNav = ( { id } ) => {
                         <h5>Event Analytics</h5>
                     </NavLink>
                     <NavLink
-                        to={`/my-event/${id}/edit`}
+                        to={`/my-event/past-events`}
                         className={
                             isPathActive(`/my-event/${id}/edit`)
                                 ? "bg-[#272222] text-white rounded-[30px] py-2.5 px-8 font-semibold transition-all duration-300 shadow-lg hover:bg-[#3a3535] flex items-center gap-2"
                                 : "bg-[#D9D9D9] text-[#272222] rounded-[30px] py-2.5 px-8 font-semibold transition-all duration-300 hover:bg-[#c0c0c0] flex items-center gap-2"
                         }
                     >
-                        <h5>Edit Event</h5>
+                        <h5>Past Events</h5>
                     </NavLink>
                 </div>
                 </div>

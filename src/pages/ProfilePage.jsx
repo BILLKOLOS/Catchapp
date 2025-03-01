@@ -46,11 +46,11 @@ const Modal = ({ isOpen, onClose, children }) => {
 
 const ProfilePage = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const { id, profileId } = useParams();
+  const { id, albumId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const isPics = location.pathname.endsWith('/profile-gallery');
-  const showNestedRoute = isPics || profileId;
+  const isPics = location.pathname.endsWith('/gallery');
+  const showNestedRoute = isPics || albumId;
   const [isHovered, setIsHovered] = useState(null);
 
   // Format the event data to match the expected structure
@@ -76,7 +76,7 @@ const ProfilePage = () => {
   }
 
   const handlePicsClick = () => {
-    navigate('profile-gallery', { state: { galleryImages: service.galleryImages } });
+    navigate('gallery', { state: { galleryImages: service.galleryImages } });
   };
 
   const handleEventsClick = () => {
@@ -88,7 +88,7 @@ const ProfilePage = () => {
     setIsEditModalOpen(true);
   };
 
-  if (profileId) {
+  if (albumId) {
     return (
       <div className="p-4 mt-20 max-w-[1440px] mx-auto">
         <Outlet />
@@ -108,14 +108,14 @@ const ProfilePage = () => {
               alt={service.username}
               className="w-24 h-24 rounded-full mx-auto object-cover border-4 border-[#272222]"
             />
-            <button 
+            {/*<button 
               onClick={handleEditClick} 
               className="absolute bottom-0 right-1/2 lg:right-20 translate-x-8 lg:translate-x-0 bg-black text-white p-2 rounded-full hover:bg-gray-800 transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-4">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
               </svg>
-            </button>
+            </button>**/}
           </div>
 
           <div className="text-center mb-6">
@@ -208,44 +208,77 @@ const ProfilePage = () => {
           </div>
 
           {/* Conditionally render Events grid or PicsGallery via Outlet */}
-          {showNestedRoute ? (
-            <Outlet />
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
-              {service.galleryImages.map((image) => (
-                <Link
-                  key={`profile/${id}/${image.id}`}
-                  to={`${image.id}`}
-                  className="relative group"
-                  onMouseEnter={() => setIsHovered(image.id)}
-                  onMouseLeave={() => setIsHovered(null)}
-                >
-                  <div className="relative overflow-hidden rounded-md">
-                    <div className="absolute top-2 right-2 bg-[#272222] text-white font-semibold text-xs px-2 py-1 rounded-md">
-                      <div className="flex flex-col gap-1">
-                        <p>{image.date.day}</p>
-                        <p>{image.date.month}</p>
+            {showNestedRoute ? (
+              <Outlet />
+            ) : (
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+                {service.galleryImages.map((image) => {
+                  // If the gallery image has albums, map through them
+                  if (image.album && image.album.length > 0) {
+                    return image.album.map((album) => (
+                      <Link
+                        key={`profile/${id}/album/${album.id}`}
+                        to={`album/${album.id}`}  // relative route: /profile/:id/album/:albumId
+                        className="relative group"
+                        onMouseEnter={() => setIsHovered(image.id)}
+                        onMouseLeave={() => setIsHovered(null)}
+                      >
+                        <div className="relative overflow-hidden rounded-md">
+                          <div className="absolute top-2 right-2 bg-[#272222] text-white font-semibold text-xs px-2 py-1 rounded-md">
+                            <div className="flex flex-col gap-1">
+                              <p>{image.date.day}</p>
+                              <p>{image.date.month}</p>
+                            </div>
+                          </div>
+                          <div className="absolute flex gap-1 items-center bottom-2 right-1/2 bg-[#272222] text-white font-semibold text-xs px-2 py-1 rounded-md">
+                            <MapPin className="w-4 h-4" />
+                            <p>{image.location}</p>
+                          </div>
+                          <img
+                            src={image.src}
+                            alt={`Gallery ${image.id}`}
+                            className="w-full h-[300px] sm:h-[250px] md:h-[300px] lg:h-[312px] object-cover"
+                          />
+                          <div
+                            className={`absolute inset-0 bg-black/30 transition-opacity duration-300 ${
+                              isHovered === image.id ? 'opacity-100' : 'opacity-0'
+                            }`}
+                          ></div>
+                        </div>
+                      </Link>
+                    ));
+                  } else {
+                    // If there is no album on this gallery image, render it normally.
+                    return (
+                      <div key={image.id} className="relative group">
+                        <div className="relative overflow-hidden rounded-md">
+                          <div className="absolute top-2 right-2 bg-[#272222] text-white font-semibold text-xs px-2 py-1 rounded-md">
+                            <div className="flex flex-col gap-1">
+                              <p>{image.date.day}</p>
+                              <p>{image.date.month}</p>
+                            </div>
+                          </div>
+                          <div className="absolute flex gap-1 items-center bottom-2 right-1/2 bg-[#272222] text-white font-semibold text-xs px-2 py-1 rounded-md">
+                            <MapPin className="w-4 h-4" />
+                            <p>{image.location}</p>
+                          </div>
+                          <img
+                            src={image.src}
+                            alt={`Gallery ${image.id}`}
+                            className="w-full h-[300px] sm:h-[250px] md:h-[300px] lg:h-[312px] object-cover"
+                          />
+                          <div
+                            className={`absolute inset-0 bg-black/30 transition-opacity duration-300 ${
+                              isHovered === image.id ? 'opacity-100' : 'opacity-0'
+                            }`}
+                          ></div>
+                        </div>
                       </div>
-                    </div>
-                    <div className="absolute flex gap-1 items-center bottom-2 right-1/2 bg-[#272222] text-white font-semibold text-xs px-2 py-1 rounded-md">
-                      <MapPin className="w-4 h-4" />
-                      <p>{image.location}</p>
-                    </div>
-                    <img
-                      src={image.src}
-                      alt={`Gallery ${image.id}`}
-                      className="w-full h-[300px] sm:h-[250px] md:h-[300px] lg:h-[312px] object-cover"
-                    />
-                    <div
-                      className={`absolute inset-0 bg-black/30 transition-opacity duration-300 ${
-                        isHovered === image.id ? 'opacity-100' : 'opacity-0'
-                      }`}
-                    ></div>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
+                    );
+                  }
+                })}
+              </div>
+            )}
         </div>
       </div>
       {/* Enhanced Modal */}

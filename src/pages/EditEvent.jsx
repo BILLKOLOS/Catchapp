@@ -22,7 +22,7 @@ const CardContent = ({ children, className = "" }) => (
   <div className={`p-6 space-y-6 ${className}`}>{children}</div>
 );
 
-const EditEvent = ({ onClose }) => {
+const EditEvent = ({ onClose, initialData }) => {
   const [previewImage, setPreviewImage] = useState('/api/placeholder/400/200');
   const navigate = useNavigate();
 
@@ -304,7 +304,7 @@ const EditEvent = ({ onClose }) => {
                 className="px-8 py-3 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:opacity-90 transition-opacity font-medium"
                 type="button"
               >
-                Create Event
+                Edit Event
               </button>
               </div>
             </div>
