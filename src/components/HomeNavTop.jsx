@@ -157,6 +157,26 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                             />
                         </svg>
                     </button>
+                    {/* Chevron Down Button - NEW */}
+                    <button 
+                        onClick={toggleSearchEvent}
+                        className="bg-[#D9D9D9] text-[#000000] p-2 rounded-full cursor-pointer mr-2 flex items-center justify-center"
+                    >
+                        <svg 
+                            xmlns="http://www.w3.org/2000/svg" 
+                            fill="none" 
+                            viewBox="0 0 24 24" 
+                            strokeWidth={1.5} 
+                            stroke="currentColor" 
+                            className="w-5 h-5"
+                        >
+                            <path 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round" 
+                                d="M19.5 8.25l-7.5 7.5-7.5-7.5" 
+                            />
+                        </svg>
+                    </button>
                 </div>
 
                 {/* Centered Filters - Now in its own container */}
@@ -254,27 +274,6 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
 
                 {/* Icons Section - Now with flex-1 to help with centering */}
                 <div className="flex-1 flex justify-end gap-2 items-center">
-                    {/* Chevron Down Button - NEW */}
-                    <button 
-                        onClick={toggleSearchEvent}
-                        className="bg-[#D9D9D9] text-[#000000] p-2 rounded-full cursor-pointer mr-2 flex items-center justify-center"
-                    >
-                        <svg 
-                            xmlns="http://www.w3.org/2000/svg" 
-                            fill="none" 
-                            viewBox="0 0 24 24" 
-                            strokeWidth={1.5} 
-                            stroke="currentColor" 
-                            className="w-5 h-5"
-                        >
-                            <path 
-                                strokeLinecap="round" 
-                                strokeLinejoin="round" 
-                                d="M19.5 8.25l-7.5 7.5-7.5-7.5" 
-                            />
-                        </svg>
-                    </button>
-
                     <div className="relative">
                         <button 
                             onClick={() => setIsNotificationOpen(!isNotificationOpen)}
@@ -336,7 +335,7 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
 
             {/* Search Event Popup - NEW */}
             {isSearchEventOpen && (
-                <div className="absolute top-16 right-16 md:right-32 bg-white rounded-2xl shadow-xl z-50 w-64 md:w-80 p-4">
+                <div className="absolute top-16 left-16 md:right-32 bg-white rounded-2xl shadow-xl z-50 w-64 md:w-80 p-4">
                     <div className="flex items-center mb-4">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"

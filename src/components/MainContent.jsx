@@ -261,11 +261,7 @@ const MainContent = ({ activeFilter }) => {
                             {/* Fixed bottom part */}
                             <div className="p-4 sm:p-6 border-t border-gray-800">
                                 {/* Request Button */}
-                                <button
-                                    className="w-full mb-4 bg-gradient-to-r from-blue-600 to-blue-400 text-white py-2 sm:py-3 rounded-lg font-medium hover:from-blue-700 hover:to-blue-500 transform hover:scale-[1.02] transition-all duration-300 focus:ring-2 focus:ring-blue-400"
-                                >
-                                    Request Invite
-                                </button>
+                                
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-2">
                                         <div className="w-2 h-2 rounded-full bg-green-400" />

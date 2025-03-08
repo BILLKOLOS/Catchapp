@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom';
 import { Star, Mail, Phone, ChevronLeft, ChevronRight } from 'lucide-react';
 import serviceData from '../data/service';
 
-const ServiceCard = ({ id, name, rating, specialization, price }) => (
+const ServiceCard = ({ id, name, rating, specialization, price, profileData }) => (
   <Link to={`/explore/gives/service/${id}`}>
     <div className="min-w-[280px] bg-[#272222] rounded-[30px] cursor-pointer p-5 shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100">
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-12 h-12 bg-white  rounded-full flex items-center justify-center text-[#000000] font-semibold text-lg">
-          {name[0]}
+        <div className=" flex items-center justify-center text-[#000000] font-semibold text-lg">
+          <img src={profileData.profile} alt="profile" className="rounded-full w-12 h-12 object-cover" />
         </div>
         <div>
           <h3 className="font-semibold text-white">{name}</h3>

@@ -73,14 +73,25 @@ const Map = () => {
   }
 
   return (
-    <div className="">
+    <div className="relative" style={{ zIndex: 10 }}>
       <div className="md:w-full lg:w-[515px] h-[348px] lg:h-[318px] bg-gray-800 rounded-[30px] overflow-hidden">
         <MapContainer
           center={locations[0].position}
           zoom={15}
           scrollWheelZoom={true}
           style={{ width: '100%', height: '100%' }}
+          zoomControl={false} // Move zoom control to prevent overlap with popups
         >
+          {/* Add zoom control in a better position */}
+          <div className="leaflet-control-container">
+            <div className="leaflet-top leaflet-right">
+              <div className="leaflet-control-zoom leaflet-bar leaflet-control">
+                <a className="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in">+</a>
+                <a className="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out">−</a>
+              </div>
+            </div>
+          </div>
+          
           {/* Dark themed map tiles */}
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

@@ -18,6 +18,41 @@ export const serviceData = [
                     following: 234,
                     followers: 234,
                     specialties: ['Events', 'Wedding', 'Portrait', 'Session', 'Nature'],
+                    // Add this to the profileData object for each service provider
+                    reviews: [
+                        {
+                        id: 1001,
+                        name: "Sarah Johnson",
+                        rating: 4.8,
+                        date: "2024-12-10",
+                        comment: "James captured our wedding beautifully! Every moment was documented with such care and professionalism. Highly recommend!",
+                        avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        },
+                        {
+                        id: 1002,
+                        name: "Michael Brown",
+                        rating: 4.5,
+                        date: "2024-11-28",
+                        comment: "Great photographer with a keen eye for detail. Made everyone comfortable during our family photoshoot.",
+                        avatar: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        },
+                        {
+                        id: 1003,
+                        name: "Emily Davis",
+                        rating: 5.0,
+                        date: "2024-11-15",
+                        comment: "Absolutely stunning photos from our corporate event! James has a gift for capturing the perfect moments.",
+                        avatar: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        },
+                        {
+                        id: 1004,
+                        name: "Daniel Wilson",
+                        rating: 4.7,
+                        date: "2024-10-25",
+                        comment: "I hired James for product photography and the results exceeded my expectations. Very responsive and professional.",
+                        avatar: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        }
+                    ],
                     galleryImages: [
                         {
                             "id": 1001,
@@ -180,7 +215,7 @@ export const serviceData = [
                             }
                         ]
                         }
-                    ]
+                    ],
                 }
             },
             {
@@ -197,6 +232,40 @@ export const serviceData = [
                     following: 456,
                     followers: 789,
                     specialties: ['Portrait', 'Events', 'Street', 'Corporate', 'Family'],
+                    reviews: [
+                        {
+                        id: 1001,
+                        name: "Sarah Johnson",
+                        rating: 4.8,
+                        date: "2024-12-10",
+                        comment: "James captured our wedding beautifully! Every moment was documented with such care and professionalism. Highly recommend!",
+                        avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        },
+                        {
+                        id: 1002,
+                        name: "Michael Brown",
+                        rating: 4.5,
+                        date: "2024-11-28",
+                        comment: "Great photographer with a keen eye for detail. Made everyone comfortable during our family photoshoot.",
+                        avatar: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        },
+                        {
+                        id: 1003,
+                        name: "Emily Davis",
+                        rating: 5.0,
+                        date: "2024-11-15",
+                        comment: "Absolutely stunning photos from our corporate event! James has a gift for capturing the perfect moments.",
+                        avatar: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        },
+                        {
+                        id: 1004,
+                        name: "Daniel Wilson",
+                        rating: 4.7,
+                        date: "2024-10-25",
+                        comment: "I hired James for product photography and the results exceeded my expectations. Very responsive and professional.",
+                        avatar: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        }
+                    ],
                     galleryImages: [
                         {
                         "id": 2001,
@@ -359,6 +428,41 @@ export const serviceData = [
                     "following": 567,
                     "followers": 892,
                     "specialties": ["Fashion", "Editorial", "Runway", "Portraits", "Studio"],
+                    // Add this to the profileData object for each service provider
+                    reviews: [
+                        {
+                        id: 1001,
+                        name: "Sarah Johnson",
+                        rating: 4.8,
+                        date: "2024-12-10",
+                        comment: "James captured our wedding beautifully! Every moment was documented with such care and professionalism. Highly recommend!",
+                        avatar: "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        },
+                        {
+                        id: 1002,
+                        name: "Michael Brown",
+                        rating: 4.5,
+                        date: "2024-11-28",
+                        comment: "Great photographer with a keen eye for detail. Made everyone comfortable during our family photoshoot.",
+                        avatar: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        },
+                        {
+                        id: 1003,
+                        name: "Emily Davis",
+                        rating: 5.0,
+                        date: "2024-11-15",
+                        comment: "Absolutely stunning photos from our corporate event! James has a gift for capturing the perfect moments.",
+                        avatar: "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        },
+                        {
+                        id: 1004,
+                        name: "Daniel Wilson",
+                        rating: 4.7,
+                        date: "2024-10-25",
+                        comment: "I hired James for product photography and the results exceeded my expectations. Very responsive and professional.",
+                        avatar: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=600"
+                        }
+                    ],
                     "galleryImages": [
                         {
                             "id": 3001,

@@ -355,10 +355,10 @@ const MessagingInterface = ({ isOpen, onClose, updateMessageCount }) => {
                 </p>
               </div>
               <div className="flex space-x-2">
-                <button className="p-2 bg-blue-600 hover:bg-blue-700 rounded-full text-white">
+                <button className="p-2 bg-[#FFB8B8] hover:bg-[# FFB8B8] rounded-full text-white">
                   <Phone className="h-5 w-5" />
                 </button>
-                <button className="p-2 bg-blue-600 hover:bg-blue-700 rounded-full text-white">
+                <button className="p-2 bg-[#FFB8B8] hover:bg-[# FFB8B8] rounded-full text-white">
                   <Video className="h-5 w-5" />
                 </button>
               </div>
