@@ -16,6 +16,8 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
     const [isSearchEventOpen, setIsSearchEventOpen] = useState(false);
     const [selectedCity, setSelectedCity] = useState("Nairobi,kenya");
     const [selectedTown, setSelectedTown] = useState("");
+    // New state for mobile search
+    const [isMobileSearchActive, setIsMobileSearchActive] = useState(false);
 
     // Initialize notification count on first load
     useEffect(() => {
@@ -32,6 +34,10 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
         setIsSearchOpen(!isSearchOpen);
     };
 
+    const toggleMobileSearch = () => {
+        setIsMobileSearchActive(!isMobileSearchActive);
+    };
+
     const toggleSearchEvent = () => {
         setIsSearchEventOpen(!isSearchEventOpen);
     };
@@ -39,6 +45,10 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
     const handleSearchSubmit = (e) => {
         e.preventDefault();
         console.log('Searching for:', searchQuery);
+        // Close mobile search after submission
+        if (isMobileSearchActive) {
+            setIsMobileSearchActive(false);
+        }
     };
 
     const handleEventSearch = () => {
@@ -98,14 +108,14 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
     );
 
     return (
-        <div className="fixed top-0 z-50 flex flex-col bg-white w-full">
+        <div className="fixed top-0 z-50 flex flex-col bg-white w-full shadow-md">
             {/* Top Section */}
-            <div className="flex justify-between items-center px-4 md:px-8 py-1">
-                {/* Logo and Search Section - Now with flex-1 to help with centering */}
-                <div className="flex-1 flex justify-start items-center gap-2 md:gap-8">
+            <div className={`flex justify-between items-center px-4 md:px-8 py-2 transition-all duration-300 ${isMobileSearchActive ? 'h-16' : 'h-14'}`}>
+                {/* Logo and Search Section */}
+                <div className={`flex-1 flex justify-start items-center gap-2 md:gap-8 ${isMobileSearchActive ? 'hidden' : 'flex'}`}>
                     {/* Logo Section */}
                     <div className='flex justify-start items-center'>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" className="w-12 h-12">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" className="w-10 h-10 md:w-12 md:h-12">
                             <rect 
                             x="20" 
                             y="20" 
@@ -157,7 +167,29 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                             />
                         </svg>
                     </button>
-                    {/* Chevron Down Button - NEW */}
+
+                    {/* Mobile Search Icon */}
+                    <button 
+                        onClick={toggleMobileSearch} 
+                        className="md:hidden text-[#000000] cursor-pointer focus:outline-none p-2 bg-gray-100 rounded-full"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={1.5}
+                            stroke="currentColor"
+                            className="w-5 h-5"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607z"
+                            />
+                        </svg>
+                    </button>
+
+                    {/* Chevron Down Button */}
                     <button 
                         onClick={toggleSearchEvent}
                         className="bg-[#D9D9D9] text-[#000000] p-2 rounded-full cursor-pointer mr-2 flex items-center justify-center"
@@ -179,8 +211,107 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                     </button>
                 </div>
 
+                {/* Mobile Search Input - Full Width when active */}
+                {isMobileSearchActive && (
+                    <form onSubmit={handleSearchSubmit} className="relative w-full flex items-center px-1">
+                        <button 
+                            type="button"
+                            onClick={toggleMobileSearch}
+                            className="p-2 mr-2 text-gray-500"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
+                            </svg>
+                        </button>
+                        <div className="relative flex-1">
+                            <input 
+                                type="text" 
+                                placeholder="Search Catchapp" 
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                autoFocus
+                                className="
+                                    w-full 
+                                    pl-10 
+                                    pr-8 
+                                    py-2 
+                                    text-sm 
+                                    border-2
+                                    text-[#272222]
+                                    border-gray-300
+                                    focus:border-black
+                                    focus:outline-none 
+                                    focus:ring-1
+                                    focus:ring-black 
+                                    rounded-xl
+                                    bg-gray-50
+                                "
+                            />
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="
+                                    absolute 
+                                    left-3 
+                                    top-1/2 
+                                    -translate-y-1/2 
+                                    w-5 
+                                    h-5 
+                                    text-gray-500
+                                "
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607z"
+                                />
+                            </svg>
+                            
+                            {searchQuery && (
+                                <button 
+                                    type="button"
+                                    onClick={() => setSearchQuery('')}
+                                    className="
+                                        absolute 
+                                        right-3 
+                                        top-1/2 
+                                        -translate-y-1/2 
+                                        text-gray-500
+                                        hover:text-black 
+                                        transition-colors
+                                    "
+                                >
+                                    <svg 
+                                        xmlns="http://www.w3.org/2000/svg" 
+                                        fill="none" 
+                                        viewBox="0 0 24 24" 
+                                        strokeWidth={1.5} 
+                                        stroke="currentColor" 
+                                        className="w-5 h-5"
+                                    >
+                                        <path 
+                                            strokeLinecap="round" 
+                                            strokeLinejoin="round" 
+                                            d="M6 18 18 6M6 6l12 12" 
+                                        />
+                                    </svg>
+                                </button>
+                            )}
+                        </div>
+                        <button 
+                            type="submit" 
+                            className="ml-2 bg-black text-white p-2 rounded-lg text-sm font-medium"
+                        >
+                            Search
+                        </button>
+                    </form>
+                )}
+
                 {/* Centered Filters - Now in its own container */}
-                <div className="flex-1 flex justify-center items-center">
+                <div className={`flex-1 flex justify-center items-center ${isMobileSearchActive ? 'hidden' : 'flex'}`}>
                     <nav 
                         className="hidden md:flex justify-center gap-3" 
                         role="navigation" 
@@ -192,95 +323,17 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                             ))}
                         </div>
                     </nav>
-
-                    {/* Mobile Search Input */}
-                    <div className="w-full mr-4 md:hidden">
-                        <form onSubmit={handleSearchSubmit} className="relative w-full">
-                                <input 
-                                    type="text" 
-                                    placeholder="Search Catchapp" 
-                                    value={searchQuery}
-                                    onChange={(e) => setSearchQuery(e.target.value)}
-                                    className="
-                                        w-full 
-                                        pl-10 
-                                        pr-8 
-                                        py-2 
-                                        text-sm 
-                                        border 
-                                        border-gray-200 
-                                        focus:outline-none 
-                                        focus:ring-2 
-                                        focus:ring-black 
-                                        rounded-xl
-                                    "
-                                />
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 24 24"
-                                    strokeWidth={1.5}
-                                    stroke="currentColor"
-                                    className="
-                                        absolute 
-                                        left-3 
-                                        top-1/2 
-                                        -translate-y-1/2 
-                                        w-5 
-                                        h-5 
-                                        text-gray-400
-                                    "
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607z"
-                                    />
-                                </svg>
-                                
-                                {searchQuery && (
-                                    <button 
-                                        type="button"
-                                        onClick={() => setSearchQuery('')}
-                                        className="
-                                            absolute 
-                                            right-3 
-                                            top-1/2 
-                                            -translate-y-1/2 
-                                            text-gray-400 
-                                            hover:text-black 
-                                            transition-colors
-                                        "
-                                    >
-                                        <svg 
-                                            xmlns="http://www.w3.org/2000/svg" 
-                                            fill="none" 
-                                            viewBox="0 0 24 24" 
-                                            strokeWidth={1.5} 
-                                            stroke="currentColor" 
-                                            className="w-5 h-5"
-                                        >
-                                            <path 
-                                                strokeLinecap="round" 
-                                                strokeLinejoin="round" 
-                                                d="M6 18 18 6M6 6l12 12" 
-                                            />
-                                        </svg>
-                                    </button>
-                                )}
-                            </form>
-                    </div>
                 </div>
 
-                {/* Icons Section - Now with flex-1 to help with centering */}
-                <div className="flex-1 flex justify-end gap-2 items-center">
+                {/* Icons Section */}
+                <div className={`flex-1 flex justify-end gap-2 items-center ${isMobileSearchActive ? 'hidden' : 'flex'}`}>
                     <div className="relative">
                         <button 
                             onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-                            className="bg-[#D9D9D9] text-[#000000] p-2 rounded-full cursor-pointer mr-2"
+                            className="bg-[#D9D9D9] text-[#000000] p-2 rounded-full cursor-pointer mr-2 hover:bg-gray-300 transition-colors"
                         >
                             {notificationCount > 0 && (
-                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full animate-pulse">
                                     {notificationCount > 9 ? '9+' : notificationCount}
                                 </span>
                             )}
@@ -295,37 +348,37 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                             updateNotificationCount={updateNotificationCount}
                         />
                     </div>
-                        <div className='relative'>
-                            <button
-                                onClick={() => setIsMessagingOpen(!isMessagingOpen)}
-                                className="bg-[#D9D9D9] text-[#000000] p-2 rounded-full cursor-pointer mr-2"
-                            >
-                                {MessageCount > 0 && (
-                                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full">
-                                        {MessageCount > 9 ? '9+' : MessageCount}
-                                    </span>
-                                )}
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 md:size-6">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 0-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-                                </svg>
-                            </button>
-                            <MessagingInterface
-                                isOpen={isMessagingOpen}
-                                onClose={() => setIsMessagingOpen(false)}
+                    <div className='relative'>
+                        <button
+                            onClick={() => setIsMessagingOpen(!isMessagingOpen)}
+                            className="bg-[#D9D9D9] text-[#000000] p-2 rounded-full cursor-pointer mr-2 hover:bg-gray-300 transition-colors"
+                        >
+                            {MessageCount > 0 && (
+                                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full animate-pulse">
+                                    {MessageCount > 9 ? '9+' : MessageCount}
+                                </span>
+                            )}
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 md:size-6">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 0-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                            </svg>
+                        </button>
+                        <MessagingInterface
+                            isOpen={isMessagingOpen}
+                            onClose={() => setIsMessagingOpen(false)}
                         />
-                        </div>
+                    </div>
 
                     {/* Mobile menu toggle */}
                     <button 
-                        className="md:hidden p-2 text-[#272222]"
+                        className="md:hidden p-2 text-[#272222] bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                     >
                          {isMenuOpen ? (
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                             </svg>
                         ) : (
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                             </svg>
                         )}
@@ -333,9 +386,9 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                 </div>
             </div>
 
-            {/* Search Event Popup - NEW */}
+            {/* Search Event Popup */}
             {isSearchEventOpen && (
-                <div className="absolute top-16 left-16 md:right-32 bg-white rounded-2xl shadow-xl z-50 w-64 md:w-80 p-4">
+                <div className="absolute top-16 left-4 md:left-16 bg-white rounded-2xl shadow-xl z-50 w-64 md:w-80 p-4">
                     <div className="flex items-center mb-4">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -432,7 +485,8 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                             pl-16 
                             pr-2 
                             py-3 
-                            text-sm 
+                            text-sm
+                            text-[#272222+]
                             border 
                             border-gray-200
                             focus:outline-none 
@@ -512,29 +566,98 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                     ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}
                 `}
             >
-                 {/* Close Button */}
-                 <button 
-                    className="absolute top-4 right-4 p-2 z-50 text-[#272222] font-bold"
-                    onClick={() => setIsMenuOpen(false)}
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>
-                </button>
+                {/* Mobile Menu Header */}
+                <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                    <div className="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" className="w-10 h-10">
+                            <rect 
+                                x="20" 
+                                y="20" 
+                                width="160" 
+                                height="160" 
+                                rx="50" 
+                                fill="#D9D9D9"
+                                stroke="#262727"
+                                strokeWidth="12"
+                            />
+                            <path
+                                d="M 100 60
+                                    A 40 40 0 1 0 140 100
+                                    L 120 100
+                                    A 20 20 0 1 1 100 80
+                                    Z"
+                                fill="#262727"
+                            />
+                            <circle 
+                                cx="75" 
+                                cy="100" 
+                                r="6" 
+                                fill="#262727"
+                            />
+                        </svg>
+                        <h1 className="font-[Pacifico] text-xl text-[#000000] ml-2">Catchapp</h1>
+                    </div>
+                    
+                    {/* Close Button */}
+                    <button 
+                        className="p-2 rounded-full bg-gray-100 text-[#272222]"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                
+                {/* Menu Content */}
                 <nav 
-                    className="flex flex-col h-full pt-20 px-6 space-y-6"
+                    className="flex flex-col px-6 py-6 space-y-6"
                     role="navigation" 
                     aria-label="Mobile time filters"
                 >
+                    <h2 className="text-lg font-semibold text-gray-800">Time Filters</h2>
                     <div className="flex flex-col gap-4">
                         {filters.map((filter) => (
                             <FilterButton key={filter} filter={filter} isMobile={true} />
                         ))}
                     </div>
+                    
+                    {/* Additional Mobile Menu Items */}
+                    <div className="pt-6 border-t border-gray-200">
+                        <h2 className="text-lg font-semibold text-[#272222] mb-4">Quick Access</h2>
+                        <div className="grid grid-cols-2 gap-4">
+                            <button className="flex items-center justify-center p-4 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                                </svg>
+                                <span className="text-[#272222]">Nearby</span>
+                            </button>
+                            <button className="flex items-center justify-center p-4 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+                                </svg>
+                                <span className="text-[#272222]">Today's Events</span>
+                            </button>
+                            <button className="flex items-center justify-center p-4 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                </svg>
+                                <span className="text-[#272222]">Profile</span>
+                            </button>
+                            <button className="flex items-center justify-center p-4 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2">
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 0 1 0-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                </svg>
+                                <span className="text-[#272222]">Settings</span>
+                            </button>
+                        </div>
+                    </div>
                 </nav>
             </div>
         </div>
-    );
+    )
 };
 
 export default TopNav;

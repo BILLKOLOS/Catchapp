@@ -156,10 +156,23 @@ const MainContent = ({ activeFilter }) => {
                                                                 <img src={event.profile} alt="profile" className="rounded-full w-10 h-10 md:w-12 md:h-12 lg:w-16 lg:h-16 object-cover" />
                                                             </Link>
                                                         </div>
-                                                        <p className="text-base lg:text-lg">{event.host}</p>
+                                                        <div>
+                                                            <span className="text-sm sm:text-base text-white font-medium">
+                                                                {event.host}
+                                                            </span>
+                                                            <div className="flex items-center gap-2 mt-1">
+                                                                <div className="w-2 h-2 rounded-full bg-green-400" />
+                                                                <span className="text-xs text-gray-200">Host</span>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <h3 className="text-xl md:text-2xl lg:text-3xl font-bold uppercase">{event.date}</h3>
+                                                    <div className="absolute top-4 sm:top-6 right-4 sm:right-6 px-3 sm:px-4 py-1 sm:py-2 bg-black/30 rounded-full backdrop-blur-sm">
+                                                        <div className="flex items-center gap-1 sm:gap-2">
+                                                            <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-purple-300" />
+                                                            <span className="text-white text-xs sm:text-sm font-medium">
+                                                                {event.date}
+                                                            </span>
+                                                        </div>
                                                     </div>
                                                 </div>
                                                 <div className="mt-8 md:mt-12">

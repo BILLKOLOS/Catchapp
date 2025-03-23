@@ -53,14 +53,15 @@ const MyEvents = ({ activeFilter, activeSlide, activeEventId }) => {
 
   return (
     <div className="w-full px-4 md:px-6 overflow-x-hidden">
-      <Link to="/my-event/details">
-        <button className="text-[#272222] font-bold flex items-center  mb-2 gap-1">
+        <Link to="/my-event/details">
+          <button className="text-[#272222] font-bold flex items-center mb-2 gap-2 relative group hover:text-[#272222] transition-colors duration-300">
             My Events
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-            </svg>
-        </button>
-      </Link>
+            <span className="arrow-container relative w-6 h-6 flex items-center justify-center">
+              <span className="block w-4 h-px bg-[#272222] group-hover:w-5 transition-all duration-300"></span>
+              <span className="absolute right-0 top-1/2 w-2 h-2 border-t-[1px] border-r-[1px] border-[#272222] transform rotate-45 -translate-y-1/2 group-hover:right-0 group-hover:scale-110 transition-all duration-300"></span>
+            </span>
+          </button>
+        </Link>
       <div className="relative w-full">
         {/* Scroll buttons */}
         <button onClick={scrollLeft} className="absolute left-0 top-1/2 transform -translate-y-1/2 z-10 bg-gray-700 bg-opacity-50 rounded-full p-2 hover:bg-opacity-75">

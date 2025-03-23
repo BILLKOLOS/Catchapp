@@ -1,140 +1,115 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const SignUpPage = () => {
+const WelcomePage = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    
-    // Simulate API call
-    setTimeout(() => {
-      // Here you would typically handle the signup process with a real API
-      localStorage.setItem('user', JSON.stringify({ email, name }));
-      setIsLoading(false);
-      navigate('/onboarding');
-    }, 1000);
-  };
-
-  const handleGoogleSignUp = () => {
-    setIsLoading(true);
-    // Simulate Google auth
-    setTimeout(() => {
-      localStorage.setItem('user', JSON.stringify({ 
-        email: 'user@gmail.com', 
-        name: 'Google User' 
-      }));
-      setIsLoading(false);
-      navigate('/onboarding');
-    }, 1000);
-  };
-  
-  const continueAsGuest = () => {
-    navigate('/home');
-  };
 
   return (
-    <div className="flex flex-col items-center justify-start min-h-screen bg-[#272222] p-6 pt-8">
-      <div className="w-full max-w-md">
-        <div className="mb-8 flex justify-center gap-4">
-          <Link 
-            to="/signup"
-            className="px-8 py-2 border border-white/30 rounded-full text-white font-medium bg-white/10"
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#272222] p-6">
+      <div className="flex flex-col items-center justify-center w-full max-w-md">
+        {/* Logo */}
+        <div className="rounded-xl border border-white/20 p-4 mb-8 bg-[#272222]/80 shadow-lg">
+          <div className="w-24 h-24 md:w-26 md:h-26">
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              viewBox="0 0 200 200" 
+              className="w-full h-full"
+            >
+              {/* Background Square with Pulse Animation */}
+              <rect 
+                x="20" 
+                y="20" 
+                width="160" 
+                height="160" 
+                rx="50" 
+                fill="#262727"
+                stroke="#D9D9D9"
+                strokeWidth="12"
+              >
+                <animate
+                  attributeName="stroke-opacity"
+                  values="0.3;0.8;0.3"
+                  dur="2s"
+                  repeatCount="indefinite"
+                  calcMode="spline"
+                  keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
+                />
+              </rect>
+
+              {/* Rotating Pac-man like shape */}
+              <g>
+                <animateTransform
+                  attributeName="transform"
+                  type="rotate"
+                  from="0 100 100"
+                  to="360 100 100"
+                  dur="1.5s"
+                  repeatCount="indefinite"
+                  calcMode="spline"
+                  keySplines="0.4 0 0.2 1"
+                />
+                <path
+                  d="M 100 60
+                    A 40 40 0 1 0 140 100
+                    L 120 100
+                    A 20 20 0 1 1 100 80
+                    Z"
+                  fill="#D9D9D9"
+                >
+                  <animate
+                    attributeName="fill-opacity"
+                    values="0.5;1;0.5"
+                    dur="1.5s"
+                    repeatCount="indefinite"
+                    calcMode="spline"
+                    keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
+                  />
+                  <animateTransform
+                    attributeName="transform"
+                    type="scale"
+                    values="0.9;1.1;0.9"
+                    dur="1.5s"
+                    repeatCount="indefinite"
+                    calcMode="spline"
+                    keySplines="0.4 0 0.2 1; 0.4 0 0.2 1"
+                    additive="sum"
+                  />
+                </path>
+              </g>
+            </svg>
+          </div>
+        </div>
+        
+        <div className="text-white text-center mb-10">
+          <p className="text-md mb-4 opacity-80">welcome to</p>
+          <h1 className="text-4xl font-cursive" style={{ fontFamily: 'cursive' }}>Catchapp</h1>
+        </div>
+        
+        <div className="flex flex-col gap-4 w-full items-center mt-6">
+          <button 
+            onClick={() => navigate('/signup')}
+            className="py-3 px-8 rounded-full bg-white text-[#272222] font-medium w-48 hover:bg-gray-100 transition-colors"
           >
-            Sign Up
-          </Link>
-          <Link 
-            to="/signin"
-            className="px-8 py-2 border border-white/30 rounded-full text-white/70 font-medium hover:bg-white/10"
+            Get Started
+          </button>
+          
+          <button 
+            onClick={() => navigate('/signin')}
+            className="py-3 px-8 rounded-full border border-white/30 text-white font-medium w-48 hover:bg-white/10 transition-colors"
           >
             Sign In
-          </Link>
-        </div>
-
-        <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
-          <h2 className="text-white text-center mb-6 text-xl">
-            Create your account
-          </h2>
-          
-          <input
-            type="text"
-            placeholder="Full Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="py-3 px-4 rounded-full bg-gray-400/10 text-white border border-gray-700 focus:border-white/40 outline-none"
-            required
-          />
-          
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="py-3 px-4 rounded-full bg-gray-400/10 text-white border border-gray-700 focus:border-white/40 outline-none"
-            required
-          />
-          
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="py-3 px-4 rounded-full bg-gray-400/10 text-white border border-gray-700 focus:border-white/40 outline-none"
-            required
-          />
-
-          <div className="pt-4 text-center text-white/80">
-            Or continue with
-          </div>
-
-          <button
-            type="button"
-            onClick={handleGoogleSignUp}
-            className="py-3 px-4 rounded-full bg-gray-400/10 text-center text-white border border-gray-700 hover:bg-gray-700/30 transition-colors flex items-center justify-center gap-2"
-          >
-            <span className="w-5 h-5 flex items-center justify-center bg-white rounded-full text-xs font-bold text-gray-800">G</span>
-            Google
           </button>
-
-          <div className="pt-6 flex justify-center">
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`px-12 py-3 rounded-full bg-white text-[#272222] font-medium ${isLoading ? 'opacity-70' : 'hover:bg-gray-100'} transition-colors relative`}
-            >
-              {isLoading ? (
-                <span className="flex items-center justify-center">
-                  <span className="animate-spin h-5 w-5 border-2 border-gray-500 border-t-transparent rounded-full mr-2"></span>
-                  Processing...
-                </span>
-              ) : (
-                'Continue'
-              )}
-            </button>
-          </div>
           
-          <div className="text-center pt-4">
-            <button
-              type="button"
-              onClick={continueAsGuest}
-              className="text-white/60 hover:text-white/90 transition-colors text-sm"
-            >
-              Skip and continue as guest
-            </button>
-          </div>
-        </form>
-        
-        <div className="mt-8 text-white/60 text-sm text-center">
-          By signing up, you agree to our <a href="#" className="underline text-white/80">Terms of Service</a> and <a href="#" className="underline text-white/80">Privacy Policy</a>
+          <button 
+            onClick={() => navigate('/onboarding')}
+            className="py-2 px-4 text-white/70 font-medium hover:underline mt-2"
+          >
+            Continue as Guest
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-export default SignUpPage;
+export default WelcomePage;
