@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Camera, Home, Settings, Calendar, Gift } from 'lucide-react';
+import { Camera, Home, Settings, Calendar, Gift, MessageCircle, ThumbsUp, Send } from 'lucide-react';
 import BottomNav from '../components/HomeNavBottom';
 import NormalNav from '../components/NormalNav';
 
 const HappeningNow = () => {
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [commentText, setCommentText] = useState("")
 
   const activeUsers = [
     { id: 1, name: 'timothy', online: true },
@@ -12,14 +13,62 @@ const HappeningNow = () => {
     { id: 3, name: 'nancy', online: true }
   ];
 
-  const chatMessages = [
-    { id: 1, message: 'hi' },
-    { id: 2, message: 'hi too' },
-    { id: 3, message: 'type' },
-    { id: 4, message: 'hae' },
-    { id: 5, message: 'hey' },
-    { id: 6, message: 'type' }
-  ];
+  // YouTube-style comments
+  const comments = [
+    {
+      id: 1,
+      user: "timothy",
+      avatar:
+        "https://images.pexels.com/photos/30392508/pexels-photo-30392508/free-photo-of-elegant-woman-in-bright-pink-blouse-posing.jpeg?auto=compress&cs=tinysrgb&w=600",
+      text: "This event is amazing! 🔥",
+      time: "2m ago",
+      likes: 12,
+    },
+    {
+      id: 2,
+      user: "andrew",
+      avatar:
+        "https://images.pexels.com/photos/29976870/pexels-photo-29976870/free-photo-of-contemplative-young-adult-in-urban-setting.jpeg?auto=compress&cs=tinysrgb&w=600",
+      text: "Can't wait to see what happens next",
+      time: "1m ago",
+      likes: 5,
+    },
+    {
+      id: 3,
+      user: "nancy",
+      avatar:
+        "https://images.pexels.com/photos/30447781/pexels-photo-30447781/free-photo-of-portrait-of-woman-in-red-sweater-with-festive-greenery.jpeg?auto=compress&cs=tinysrgb&w=600",
+      text: "Where is this happening? I want to join!",
+      time: "just now",
+      likes: 3,
+    },
+    {
+      id: 4,
+      user: "james",
+      avatar:
+        "https://images.pexels.com/photos/30039441/pexels-photo-30039441/free-photo-of-emotional-portrait-of-a-woman-in-low-light.jpeg?auto=compress&cs=tinysrgb&w=600",
+      text: "The sound quality is perfect 👌",
+      time: "5m ago",
+      likes: 8,
+    },
+    {
+      id: 5,
+      user: "sarah",
+      avatar:
+        "https://images.pexels.com/photos/15566416/pexels-photo-15566416/free-photo-of-beautiful-woman-with-necklace-on-hill.jpeg?auto=compress&cs=tinysrgb&w=600",
+      text: "I'm loving this performance!",
+      time: "3m ago",
+      likes: 15,
+    },
+  ]
+
+  const handleSubmitComment = (e) => {
+    e.preventDefault()
+    if (commentText.trim()) {
+      // In a real app, you would add the comment to the list
+      setCommentText("")
+    }
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-white">
@@ -85,28 +134,87 @@ const HappeningNow = () => {
           </div>
 
           {/* Chat Section - Mobile Toggle */}
-          <div className="w-full lg:w-64">
-            {/* Mobile Chat Toggle */}
-            <button 
+          <div className="w-full lg:w-72 h-[calc(100vh-240px)] flex flex-col">
+            {/* Mobile Toggle */}
+            <button
               onClick={() => setIsChatOpen(!isChatOpen)}
-              className="lg:hidden w-full bg-gray-400 py-2 rounded-full mb-4 flex items-center justify-center"
+              className="lg:hidden w-full bg-[#272222] text-white py-2 rounded-xl mb-2 flex items-center justify-center gap-2 shadow-md hover:bg-black transition-colors"
             >
-              {isChatOpen ? 'Close Chat' : 'Open Chat'}
+              <MessageCircle className="w-5 h-5" />
+              {isChatOpen ? "Hide Comments" : "Show Comments"}
             </button>
 
-            {/* Chat Sidebar - Responsive */}
-            <div className={`
-              bg-gray-100 rounded-[30px] p-4 
-              ${isChatOpen ? 'block' : 'hidden'} lg:block
-              h-[300px] md:h-[367px] 
-              overflow-y-auto
-            `}>
-              <div className="flex flex-col gap-2">
-                {chatMessages.map(msg => (
-                  <div key={msg.id} className="bg-white rounded-full px-4 py-2">
-                    <span className="text-[#272222]">{msg.message}</span>
+            {/* Comments Container */}
+            <div
+              className={`
+                bg-white rounded-xl shadow-lg border border-gray-100
+                ${isChatOpen ? "flex" : "hidden"} lg:flex
+                flex-col flex-1 overflow-hidden
+              `}
+            >
+              <div className="bg-[#272222] text-white p-3 flex items-center justify-between">
+                <h3 className="font-medium flex items-center gap-2">
+                  <MessageCircle className="w-4 h-4" />
+                  Comments
+                </h3>
+                <span className="text-xs bg-red-500 px-2 py-0.5 rounded-full">Live</span>
+              </div>
+
+              {/* Comments List */}
+              <div className="flex-1 overflow-y-auto p-3 space-y-4">
+                {comments.map((comment) => (
+                  <div key={comment.id} className="flex gap-3">
+                    <img
+                      src={comment.avatar || "/placeholder.svg"}
+                      alt={comment.user}
+                      className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs font-bold text-gray-800">{comment.user}</p>
+                        <span className="text-xs text-gray-500">{comment.time}</span>
+                      </div>
+                      <p className="text-sm text-gray-700 mt-1">{comment.text}</p>
+                      <div className="flex items-center gap-4 mt-1">
+                        <button className="flex items-center gap-1 text-gray-500 hover:text-gray-700">
+                          <ThumbsUp className="w-3.5 h-3.5" />
+                          <span className="text-xs">{comment.likes}</span>
+                        </button>
+                        <button className="flex items-center gap-1 text-gray-500 hover:text-gray-700">
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          <span className="text-xs">Reply</span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 ))}
+              </div>
+
+              {/* Comment Input */}
+              <div className="p-3 border-t border-gray-100">
+                <form onSubmit={handleSubmitComment} className="flex items-center gap-2">
+                  <img
+                    src="https://images.pexels.com/photos/29976870/pexels-photo-29976870/free-photo-of-contemplative-young-adult-in-urban-setting.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    alt="Your avatar"
+                    className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                  />
+                  <input
+                    type="text"
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder="Add a comment..."
+                    className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#272222]"
+                  />
+                  <button
+                    type="submit"
+                    disabled={!commentText.trim()}
+                    className={`p-2 rounded-full ${
+                      commentText.trim() ? "bg-[#272222] text-white hover:bg-black" : "bg-gray-200 text-gray-400"
+                    } transition-colors`}
+                  >
+                    <Send className="w-4 h-4" />
+                  </button>
+                </form>
               </div>
             </div>
           </div>
