@@ -74,7 +74,7 @@ const HappeningNow = () => {
     <div className="flex flex-col min-h-screen bg-white">
       <NormalNav />
       
-      <div className="bg-[#272222] max-w-[200px] mx-auto w-full px-2 py-2 mt-20 rounded-[30px]">
+      <div className="bg-[#272222] max-w-[200px] mx-auto w-full px-2 py-2 mt-16 rounded-[30px]">
         <div className="flex items-center justify-center">
           <h2 className="text-white text-[1rem] font-bold">Happening Now</h2>
         </div>

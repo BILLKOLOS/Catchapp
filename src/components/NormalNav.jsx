@@ -21,7 +21,7 @@ const NormalNav = () => {
     return (
         <div className="fixed top-0 z-50 flex flex-col bg-white w-full mb-4">
             {/* Top Section */}
-            <div className="flex justify-between items-center px-4 md:px-8 py-2">
+            <div className="flex justify-between items-center px-4 md:px-8 py-1">
                {/* Logo and Search */}
                <div className="flex justify-start items-center gap-4 md:gap-12">
                     <div className='flex justify-start items-center'>
