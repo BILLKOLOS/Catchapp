@@ -44,7 +44,7 @@ const LiveEvent = () => {
     };
 
     return (
-        <div className="relative w-full md:h-[258px] md:w-[687px] bg-[#D9D9D9] rounded-xl md:rounded-[30px] p-3">
+        <div className="relative w-full md:h-[251px] md:w-[687px] bg-[#D9D9D9] rounded-xl md:rounded-[30px] p-3">
             {/* Header */}
             <div className="px-4 md:px-24 mb-4">
                 <h4 className="text-center font-semibold bg-[#272222] text-white p-2 rounded-[30px] cursor-pointer text-sm">

@@ -5,6 +5,7 @@ import MyEvents from "./MyEvents"
 import { Link, useNavigate } from 'react-router-dom';
 import { eventData } from  "../data/event";
 import { ChevronLeft, ChevronRight, Calendar, Users, Activity, Coffee } from "lucide-react";
+import RequestInviteModal from './RequestInviteModal'
 
 const MainContent = ({ activeFilter }) => {
     // Format the event data to match the expected structure
@@ -12,6 +13,7 @@ const MainContent = ({ activeFilter }) => {
         id: event.id,
         title: event.title,
         date: event.date,
+        time: event.time, // added time
         profile_id: event.organizer.id,
         host: event.organizer.name,
         likes: event.likes,
@@ -30,6 +32,7 @@ const MainContent = ({ activeFilter }) => {
     const [selectedEventIndex, setSelectedEventIndex] = useState(null);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [activeCategory, setActiveCategory] = useState("menu");
+    const [showRequestInvite, setShowRequestInvite] = useState(false)
     
     const navigate = useNavigate();
     const filteredEvents = events.filter(event => event.type === activeFilter);
@@ -125,7 +128,7 @@ const MainContent = ({ activeFilter }) => {
     };
       
     return (
-        <div className="w-full px-4 mt-12 md:mt-8 md:px-6">
+        <div className="w-full px-4 mt-20 md:mt-2 md:px-6 md:py-0.5">
             <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 mt-12 md:mt-16">
                 {/* Map Section */}
                 <div className="hidden md:flex w-full lg:w-auto">
@@ -167,11 +170,16 @@ const MainContent = ({ activeFilter }) => {
                                                         </div>
                                                     </div>
                                                     <div className="absolute top-4 sm:top-6 right-4 sm:right-6 px-3 sm:px-4 py-1 sm:py-2 bg-black/30 rounded-full backdrop-blur-sm">
-                                                        <div className="flex items-center gap-1 sm:gap-2">
-                                                            <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-purple-300" />
-                                                            <span className="text-white text-xs sm:text-sm font-medium">
-                                                                {event.date}
-                                                            </span>
+                                                        <div className="flex flex-col items-center gap-0.5">
+                                                            <div className="flex items-center gap-1 sm:gap-2">
+                                                                <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-purple-300" />
+                                                                <span className="text-white text-xs sm:text-sm font-medium">
+                                                                    {event.date}
+                                                                </span>
+                                                            </div>
+                                                            <div className="text-purple-200 text-[10px] sm:text-xs font-semibold">
+                                                                {event.time}
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -198,7 +206,7 @@ const MainContent = ({ activeFilter }) => {
                                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
                                                                 </svg>
                                                                 <div className="border-2 border-gray-100 px-3 py-1 rounded-full bg-gray-300 bg-opacity-50">
-                                                                    <p className="text-sm">Request</p>
+                                                                    <button className="text-sm" onClick={() => setShowRequestInvite(true)}>Request</button>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -290,11 +298,14 @@ const MainContent = ({ activeFilter }) => {
                         </div>
                     )}
                 </div>
+                {/* Request Modal */}
+                {showRequestInvite && <RequestInviteModal onClose={() => setShowRequestInvite(false)} />}
             </div>
             <div className="flex flex-col-reverse lg:flex-row gap-4 md:gap-6 pb-3 mt-6">
                 <LiveEvent />
                 <MyEvents activeFilter={activeFilter} activeSlide={activeSlide} activeEventId={filteredEvents[activeSlide]?.id} />
             </div>
+            
         </div>
     );
 };

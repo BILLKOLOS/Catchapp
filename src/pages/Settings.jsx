@@ -1,4 +1,6 @@
-import { useState } from "react"
+"use client"
+
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import BottomNav from "../components/HomeNavBottom"
 import {
@@ -21,23 +23,30 @@ import {
   Globe,
   Shield,
 } from "lucide-react"
+import userSettingsData from "../data/user"
+import { USER_SETTINGS_ENDPOINTS } from "../api/user-api"
 
 const Settings = () => {
   const navigate = useNavigate()
   const [activeSection, setActiveSection] = useState("main") // main, profile, notifications, privacy, etc.
   const [profileImage, setProfileImage] = useState("/placeholder.svg?height=200&width=200")
   const [editMode, setEditMode] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  // Get the first user from the mock data (in a real app, this would be the logged-in user)
+  const currentUser = userSettingsData[0]
 
   // User profile state
   const [profile, setProfile] = useState({
-    name: "John Doe",
-    username: "@johndoe",
-    bio: "Event enthusiast and professional photographer based in Nairobi",
-    email: "john.doe@example.com",
-    phone: "+254 712 345 678",
-    location: "Nairobi, Kenya",
-    birthdate: "1990-05-15",
-    website: "www.johndoe.com",
+    name: "",
+    username: "",
+    bio: "",
+    email: "",
+    phone: "",
+    location: "",
+    birthdate: "",
+    website: "",
   })
 
   // Settings state
@@ -55,6 +64,52 @@ const Settings = () => {
       showActivity: true,
     },
   })
+
+  // Load user data from the mock data
+  useEffect(() => {
+    try {
+      if (currentUser) {
+        // Set profile data
+        setProfile({
+          name: currentUser.profile.name,
+          username: currentUser.profile.username,
+          bio: currentUser.profile.bio,
+          email: currentUser.profile.email,
+          phone: currentUser.profile.phone,
+          location: currentUser.profile.location,
+          birthdate: currentUser.profile.birthdate,
+          website: currentUser.profile.website,
+        })
+
+        // Set profile image if available
+        if (currentUser.profile.profileImage) {
+          setProfileImage(currentUser.profile.profileImage)
+        }
+
+        // Set settings data
+        setSettings({
+          darkMode: currentUser.preferences.darkMode,
+          notifications: {
+            events: currentUser.preferences.notifications.events,
+            messages: currentUser.preferences.notifications.messages,
+            updates: currentUser.preferences.notifications.updates,
+            marketing: currentUser.preferences.notifications.marketing,
+          },
+          privacy: {
+            profileVisibility: currentUser.preferences.privacy.profileVisibility,
+            showLocation: currentUser.preferences.privacy.showLocation,
+            showActivity: currentUser.preferences.privacy.showActivity,
+          },
+        })
+
+        setLoading(false)
+      }
+    } catch (err) {
+      console.error("Error loading user settings:", err)
+      setError("Failed to load user settings. Please try again.")
+      setLoading(false)
+    }
+  }, [currentUser])
 
   const handleBack = () => {
     if (activeSection === "main") {
@@ -103,40 +158,265 @@ const Settings = () => {
     }))
   }
 
-  const saveProfile = () => {
-    // Here you would typically save the profile to your backend
-    console.log("Saving profile:", profile)
-    setEditMode(false)
+  const saveProfile = async () => {
+    try {
+      setLoading(true)
+
+      // In a real app, this would be an API call
+      // Example API call:
+      // const response = await fetch(USER_SETTINGS_ENDPOINTS.UPDATE_PROFILE.replace(':userId', currentUser.id), {
+      //   method: 'PATCH',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${authToken}`
+      //   },
+      //   body: JSON.stringify(profile)
+      // });
+
+      // Simulate API call with timeout
+      await new Promise((resolve) => setTimeout(resolve, 500))
+
+      console.log("Profile saved:", profile)
+      console.log(
+        "API endpoint that would be called:",
+        USER_SETTINGS_ENDPOINTS.UPDATE_PROFILE.replace(":userId", currentUser.id),
+      )
+
+      setEditMode(false)
+      setLoading(false)
+
+      // Show success message (in a real app)
+      alert("Profile updated successfully!")
+    } catch (err) {
+      console.error("Error saving profile:", err)
+      setError("Failed to save profile. Please try again.")
+      setLoading(false)
+    }
+  }
+
+  const saveNotificationSettings = async () => {
+    try {
+      setLoading(true)
+
+      // In a real app, this would be an API call
+      // Example API call:
+      // const response = await fetch(USER_SETTINGS_ENDPOINTS.UPDATE_NOTIFICATIONS.replace(':userId', currentUser.id), {
+      //   method: 'PATCH',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${authToken}`
+      //   },
+      //   body: JSON.stringify(settings.notifications)
+      // });
+
+      // Simulate API call with timeout
+      await new Promise((resolve) => setTimeout(resolve, 500))
+
+      console.log("Notification settings saved:", settings.notifications)
+      console.log(
+        "API endpoint that would be called:",
+        USER_SETTINGS_ENDPOINTS.UPDATE_NOTIFICATIONS.replace(":userId", currentUser.id),
+      )
+
+      setLoading(false)
+
+      // Show success message (in a real app)
+      alert("Notification settings updated successfully!")
+    } catch (err) {
+      console.error("Error saving notification settings:", err)
+      setError("Failed to save notification settings. Please try again.")
+      setLoading(false)
+    }
+  }
+
+  const savePrivacySettings = async () => {
+    try {
+      setLoading(true)
+
+      // In a real app, this would be an API call
+      // Example API call:
+      // const response = await fetch(USER_SETTINGS_ENDPOINTS.UPDATE_PRIVACY.replace(':userId', currentUser.id), {
+      //   method: 'PATCH',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${authToken}`
+      //   },
+      //   body: JSON.stringify(settings.privacy)
+      // });
+
+      // Simulate API call with timeout
+      await new Promise((resolve) => setTimeout(resolve, 500))
+
+      console.log("Privacy settings saved:", settings.privacy)
+      console.log(
+        "API endpoint that would be called:",
+        USER_SETTINGS_ENDPOINTS.UPDATE_PRIVACY.replace(":userId", currentUser.id),
+      )
+
+      setLoading(false)
+
+      // Show success message (in a real app)
+      alert("Privacy settings updated successfully!")
+    } catch (err) {
+      console.error("Error saving privacy settings:", err)
+      setError("Failed to save privacy settings. Please try again.")
+      setLoading(false)
+    }
+  }
+
+  const saveAppearanceSettings = async () => {
+    try {
+      setLoading(true)
+
+      // In a real app, this would be an API call
+      // Example API call:
+      // const response = await fetch(USER_SETTINGS_ENDPOINTS.UPDATE_APPEARANCE.replace(':userId', currentUser.id), {
+      //   method: 'PATCH',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Bearer ${authToken}`
+      //   },
+      //   body: JSON.stringify({ darkMode: settings.darkMode })
+      // });
+
+      // Simulate API call with timeout
+      await new Promise((resolve) => setTimeout(resolve, 500))
+
+      console.log("Appearance settings saved:", { darkMode: settings.darkMode })
+      console.log(
+        "API endpoint that would be called:",
+        USER_SETTINGS_ENDPOINTS.UPDATE_APPEARANCE.replace(":userId", currentUser.id),
+      )
+
+      setLoading(false)
+
+      // Show success message (in a real app)
+      alert("Appearance settings updated successfully!")
+    } catch (err) {
+      console.error("Error saving appearance settings:", err)
+      setError("Failed to save appearance settings. Please try again.")
+      setLoading(false)
+    }
+  }
+
+  const uploadProfileImage = async () => {
+    try {
+      setLoading(true)
+
+      // In a real app, this would be an API call
+      // Example API call with FormData:
+      // const formData = new FormData();
+      // formData.append('image', imageFile);
+      // const response = await fetch(USER_SETTINGS_ENDPOINTS.UPLOAD_PROFILE_IMAGE.replace(':userId', currentUser.id), {
+      //   method: 'POST',
+      //   headers: {
+      //     'Authorization': `Bearer ${authToken}`
+      //   },
+      //   body: formData
+      // });
+
+      // Simulate API call with timeout
+      await new Promise((resolve) => setTimeout(resolve, 500))
+
+      console.log("Profile image uploaded")
+      console.log(
+        "API endpoint that would be called:",
+        USER_SETTINGS_ENDPOINTS.UPLOAD_PROFILE_IMAGE.replace(":userId", currentUser.id),
+      )
+
+      setLoading(false)
+
+      // Show success message (in a real app)
+      alert("Profile image updated successfully!")
+    } catch (err) {
+      console.error("Error uploading profile image:", err)
+      setError("Failed to upload profile image. Please try again.")
+      setLoading(false)
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      // In a real app, this would be an API call to logout
+      // Example:
+      // await fetch('/api/v1/auth/logout', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Authorization': `Bearer ${authToken}`
+      //   }
+      // });
+
+      console.log("User logged out")
+
+      // Redirect to login page
+      navigate("/login")
+    } catch (err) {
+      console.error("Error logging out:", err)
+      alert("Failed to log out. Please try again.")
+    }
+  }
+
+  // Show loading state
+  if (loading && !profile.name) {
+    return (
+      <div className="min-h-screen bg-gray-50 font-sans flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-[#E6C2BC] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading settings...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 font-sans flex items-center justify-center p-6">
+        <div className="text-center bg-white p-8 rounded-3xl shadow-lg max-w-md">
+          <div className="text-red-500 mb-4">
+            <X size={48} className="mx-auto" />
+          </div>
+          <h2 className="text-2xl font-bold text-[#3D4046] mb-2">Error Loading Settings</h2>
+          <p className="text-gray-600 mb-6">{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="px-6 py-3 bg-[#E6C2BC] text-[#3D4046] rounded-xl text-base font-semibold hover:bg-[#C7B4AF] transition-colors shadow-md"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    )
   }
 
   const renderMainSettings = () => (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Profile Card */}
-      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <div className="p-6 flex items-center space-x-4">
+      <div className="bg-white rounded-3xl shadow-lg overflow-hidden max-w-4xl mx-auto">
+        <div className="p-6 flex items-center space-x-6">
           <div className="relative">
             <img
               src={profileImage || "/placeholder.svg"}
               alt="Profile"
-              className="w-16 h-16 rounded-full object-cover border-2 border-[#E6C2BC]"
+              className="w-20 h-20 rounded-full object-cover border-4 border-[#E6C2BC] shadow-md"
             />
           </div>
           <div className="flex-1">
-            <h3 className="font-bold text-[#3D4046]">{profile.name}</h3>
-            <p className="text-gray-500 text-sm">{profile.username}</p>
+            <h3 className="font-extrabold text-2xl text-[#3D4046]">{profile.name}</h3>
+            <p className="text-gray-600 text-base tracking-wide">{profile.username}</p>
           </div>
           <button
             onClick={() => setActiveSection("profile")}
-            className="px-4 py-2 bg-[#E6C2BC] text-[#3D4046] rounded-lg text-sm font-medium hover:bg-[#C7B4AF] transition-colors"
+            className="px-6 py-3 bg-[#E6C2BC] text-[#3D4046] rounded-xl text-base font-semibold hover:bg-[#C7B4AF] transition-colors shadow-md"
           >
-            Edit Profile
+            <Edit size={18} />
           </button>
         </div>
       </div>
 
       {/* Settings List */}
-      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <div className="divide-y divide-gray-100">
+      <div className="bg-white rounded-3xl shadow-lg overflow-hidden max-w-4xl mx-auto">
+        <div className="divide-y divide-gray-200">
           <SettingItem
             icon={<Bell className="text-[#E6C2BC]" />}
             title="Notifications"
@@ -164,65 +444,86 @@ const Settings = () => {
       </div>
 
       {/* Logout Button */}
-      <button className="w-full py-3 bg-gray-100 text-[#3D4046] font-medium rounded-xl flex items-center justify-center space-x-2 hover:bg-gray-200 transition-colors">
-        <LogOut size={18} />
-        <span>Log Out</span>
+      <button
+        onClick={handleLogout}
+        className="w-full max-w-4xl mx-auto py-4 bg-gray-100 text-[#3D4046] font-semibold rounded-2xl flex items-center justify-center space-x-3 hover:bg-gray-200 transition-colors shadow-sm"
+      >
+        <LogOut size={20} />
+        <span className="text-lg">Log Out</span>
       </button>
     </div>
   )
 
   const renderProfileSettings = () => (
-    <div className="space-y-6">
+    <div className="space-y-8 max-w-4xl mx-auto">
       {/* Profile Header */}
-      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <div className="p-6 relative">
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-[#3D4046]">Profile Information</h2>
+      <div className="bg-white rounded-3xl shadow-lg overflow-hidden">
+        <div className="p-8 relative">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-extrabold text-[#3D4046]">Profile Information</h2>
             {!editMode ? (
               <button
                 onClick={() => setEditMode(true)}
-                className="flex items-center space-x-1 text-[#E6C2BC] hover:text-[#C7B4AF]"
+                className="flex items-center space-x-2 text-[#E6C2BC] hover:text-[#C7B4AF] text-lg font-semibold"
               >
-                <Edit size={16} />
-                <span>Edit</span>
+                <Edit size={18} />
+                <span className="hidden md:block">Edit</span>
               </button>
             ) : (
-              <div className="flex space-x-2">
+              <div className="flex space-x-4">
                 <button
                   onClick={() => setEditMode(false)}
-                  className="p-2 text-gray-500 hover:text-gray-700 rounded-full hover:bg-gray-100"
+                  className="p-3 text-gray-600 hover:text-gray-800 rounded-full hover:bg-gray-100 transition"
+                  aria-label="Cancel edit"
                 >
-                  <X size={18} />
+                  <X size={22} />
                 </button>
                 <button
                   onClick={saveProfile}
-                  className="p-2 text-[#E6C2BC] hover:text-[#C7B4AF] rounded-full hover:bg-gray-100"
+                  className="p-3 text-[#E6C2BC] hover:text-[#C7B4AF] rounded-full hover:bg-gray-100 transition"
+                  aria-label="Save profile"
+                  disabled={loading}
                 >
-                  <Save size={18} />
+                  {loading ? (
+                    <div className="w-5 h-5 border-2 border-[#E6C2BC] border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <Save size={22} />
+                  )}
                 </button>
               </div>
             )}
           </div>
 
           {/* Profile Image */}
-          <div className="flex justify-center mb-6">
-            <div className="relative">
+          <div className="flex justify-center mb-8">
+            <div className="relative group">
               <img
                 src={profileImage || "/placeholder.svg"}
                 alt="Profile"
-                className="w-24 h-24 rounded-full object-cover border-2 border-[#E6C2BC]"
+                className="w-28 h-28 rounded-full object-cover border-4 border-[#E6C2BC] shadow-lg"
               />
               {editMode && (
-                <label className="absolute bottom-0 right-0 bg-[#E6C2BC] p-2 rounded-full cursor-pointer shadow-md">
-                  <Camera size={16} className="text-white" />
-                  <input type="file" className="hidden" accept="image/*" onChange={handleImageChange} />
+                <label
+                  className="absolute bottom-0 right-0 bg-[#E6C2BC] p-3 rounded-full cursor-pointer shadow-lg opacity-90 group-hover:opacity-100 transition-opacity"
+                  aria-label="Change profile image"
+                >
+                  <Camera size={20} className="text-white" />
+                  <input
+                    type="file"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={(e) => {
+                      handleImageChange(e)
+                      uploadProfileImage()
+                    }}
+                  />
                 </label>
               )}
             </div>
           </div>
 
           {/* Profile Fields */}
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <ProfileField
               icon={<User />}
               label="Full Name"
@@ -288,12 +589,26 @@ const Settings = () => {
   )
 
   const renderNotificationSettings = () => (
-    <div className="space-y-6">
-      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <div className="p-6">
-          <h2 className="text-xl font-bold text-[#3D4046] mb-6">Notification Preferences</h2>
+    <div className="space-y-8 max-w-4xl mx-auto">
+      <div className="bg-white rounded-3xl shadow-lg overflow-hidden">
+        <div className="p-8">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-extrabold text-[#3D4046]">Notification Preferences</h2>
+            <button
+              onClick={saveNotificationSettings}
+              className="px-6 py-3 bg-[#E6C2BC] text-[#3D4046] rounded-xl text-base font-semibold hover:bg-[#C7B4AF] transition-colors shadow-md flex items-center space-x-2"
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-[#3D4046] border-t-transparent rounded-full animate-spin mr-2"></div>
+              ) : (
+                <Save size={18} className="mr-2" />
+              )}
+              <span className="hidden md:block">Save Changes</span>
+            </button>
+          </div>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             <ToggleSetting
               title="Event Invitations & Updates"
               description="Get notified about event invites and changes"
@@ -325,15 +640,29 @@ const Settings = () => {
   )
 
   const renderPrivacySettings = () => (
-    <div className="space-y-6">
-      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <div className="p-6">
-          <h2 className="text-xl font-bold text-[#3D4046] mb-6">Privacy & Security</h2>
+    <div className="space-y-8 max-w-4xl mx-auto">
+      <div className="bg-white rounded-3xl shadow-lg overflow-hidden">
+        <div className="p-8">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-extrabold text-[#3D4046]">Privacy & Security</h2>
+            <button
+              onClick={savePrivacySettings}
+              className="px-6 py-3 bg-[#E6C2BC] text-[#3D4046] rounded-xl text-base font-semibold hover:bg-[#C7B4AF] transition-colors shadow-md flex items-center space-x-2"
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-[#3D4046] border-t-transparent rounded-full animate-spin mr-2"></div>
+              ) : (
+                <Save size={18} className="mr-2" />
+              )}
+              <span className="hidden md:block">Save Changes</span>
+            </button>
+          </div>
 
-          <div className="space-y-6">
+          <div className="space-y-8">
             <div>
-              <h3 className="font-medium text-[#3D4046] mb-3">Profile Visibility</h3>
-              <div className="space-y-2">
+              <h3 className="font-semibold text-[#3D4046] mb-4 text-lg">Profile Visibility</h3>
+              <div className="space-y-3">
                 <RadioOption
                   label="Public"
                   description="Anyone can view your profile"
@@ -355,7 +684,7 @@ const Settings = () => {
               </div>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
               <ToggleSetting
                 title="Show Location"
                 description="Allow others to see your location on events"
@@ -370,8 +699,8 @@ const Settings = () => {
               />
             </div>
 
-            <button className="w-full py-3 bg-gray-100 text-[#3D4046] font-medium rounded-xl flex items-center justify-center space-x-2 hover:bg-gray-200 transition-colors">
-              <Shield size={18} className="text-[#E6C2BC]" />
+            <button className="w-full py-4 bg-gray-100 text-[#3D4046] font-semibold rounded-2xl flex items-center justify-center space-x-3 hover:bg-gray-200 transition-colors shadow-sm">
+              <Shield size={20} className="text-[#E6C2BC]" />
               <span>Change Password</span>
             </button>
           </div>
@@ -381,12 +710,26 @@ const Settings = () => {
   )
 
   const renderAppearanceSettings = () => (
-    <div className="space-y-6">
-      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <div className="p-6">
-          <h2 className="text-xl font-bold text-[#3D4046] mb-6">Appearance</h2>
+    <div className="space-y-8 max-w-4xl mx-auto">
+      <div className="bg-white rounded-3xl shadow-lg overflow-hidden">
+        <div className="p-8">
+          <div className="flex justify-between items-center mb-8">
+            <h2 className="text-3xl font-extrabold text-[#3D4046]">Appearance</h2>
+            <button
+              onClick={saveAppearanceSettings}
+              className="px-6 py-3 bg-[#E6C2BC] text-[#3D4046] rounded-xl text-base font-semibold hover:bg-[#C7B4AF] transition-colors shadow-md flex items-center space-x-2"
+              disabled={loading}
+            >
+              {loading ? (
+                <div className="w-5 h-5 border-2 border-[#3D4046] border-t-transparent rounded-full animate-spin mr-2"></div>
+              ) : (
+                <Save size={18} className="mr-2" />
+              )}
+              <span clssName="hidden md:block">Save Changes</span>
+            </button>
+          </div>
 
-          <div className="space-y-4">
+          <div className="space-y-6">
             <ToggleSetting
               title="Dark Mode"
               description="Use dark theme throughout the app"
@@ -395,12 +738,12 @@ const Settings = () => {
             />
 
             <div>
-              <h3 className="font-medium text-[#3D4046] mb-3">Theme Color</h3>
-              <div className="flex space-x-4 mt-2">
+              <h3 className="font-semibold text-[#3D4046] mb-4 text-lg">Theme Color</h3>
+              <div className="flex space-x-6 mt-3">
                 {["#E6C2BC", "#C7B4AF", "#3D4046", "#6B7280", "#4F46E5"].map((color) => (
                   <button
                     key={color}
-                    className={`w-10 h-10 rounded-full transition-all ${color === "#E6C2BC" ? "ring-2 ring-offset-2 ring-gray-400" : ""}`}
+                    className={`w-12 h-12 rounded-full transition-all shadow-md ${color === "#E6C2BC" ? "ring-4 ring-offset-2 ring-gray-400" : ""}`}
                     style={{ backgroundColor: color }}
                     aria-label={`Select ${color} theme`}
                   />
@@ -414,48 +757,48 @@ const Settings = () => {
   )
 
   const renderHelpSettings = () => (
-    <div className="space-y-6">
-      <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
-        <div className="p-6">
-          <h2 className="text-xl font-bold text-[#3D4046] mb-6">Help & Support</h2>
+    <div className="space-y-8 max-w-4xl mx-auto">
+      <div className="bg-white rounded-3xl shadow-lg overflow-hidden">
+        <div className="p-8">
+          <h2 className="text-3xl font-extrabold text-[#3D4046] mb-8">Help & Support</h2>
 
-          <div className="space-y-4">
-            <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-              <div className="flex items-center space-x-3">
-                <HelpCircle size={20} className="text-[#E6C2BC]" />
-                <span className="font-medium text-[#3D4046]">FAQs</span>
+          <div className="space-y-6">
+            <button className="w-full flex items-center justify-between p-5 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors shadow-sm">
+              <div className="flex items-center space-x-4">
+                <HelpCircle size={24} className="text-[#E6C2BC]" />
+                <span className="font-semibold text-[#3D4046] text-lg">FAQs</span>
               </div>
-              <ChevronRight size={18} className="text-gray-400" />
+              <ChevronRight size={20} className="text-gray-400" />
             </button>
 
-            <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-              <div className="flex items-center space-x-3">
-                <Mail size={20} className="text-[#E6C2BC]" />
-                <span className="font-medium text-[#3D4046]">Contact Support</span>
+            <button className="w-full flex items-center justify-between p-5 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors shadow-sm">
+              <div className="flex items-center space-x-4">
+                <Mail size={24} className="text-[#E6C2BC]" />
+                <span className="font-semibold text-[#3D4046] text-lg">Contact Support</span>
               </div>
-              <ChevronRight size={18} className="text-gray-400" />
+              <ChevronRight size={20} className="text-gray-400" />
             </button>
 
-            <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-              <div className="flex items-center space-x-3">
-                <Globe size={20} className="text-[#E6C2BC]" />
-                <span className="font-medium text-[#3D4046]">Terms of Service</span>
+            <button className="w-full flex items-center justify-between p-5 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors shadow-sm">
+              <div className="flex items-center space-x-4">
+                <Globe size={24} className="text-[#E6C2BC]" />
+                <span className="font-semibold text-[#3D4046] text-lg">Terms of Service</span>
               </div>
-              <ChevronRight size={18} className="text-gray-400" />
+              <ChevronRight size={20} className="text-gray-400" />
             </button>
 
-            <button className="w-full flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-              <div className="flex items-center space-x-3">
-                <Shield size={20} className="text-[#E6C2BC]" />
-                <span className="font-medium text-[#3D4046]">Privacy Policy</span>
+            <button className="w-full flex items-center justify-between p-5 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors shadow-sm">
+              <div className="flex items-center space-x-4">
+                <Shield size={24} className="text-[#E6C2BC]" />
+                <span className="font-semibold text-[#3D4046] text-lg">Privacy Policy</span>
               </div>
-              <ChevronRight size={18} className="text-gray-400" />
+              <ChevronRight size={20} className="text-gray-400" />
             </button>
           </div>
         </div>
       </div>
 
-      <div className="text-center text-gray-500 text-sm">
+      <div className="text-center text-gray-500 text-sm mt-6">
         <p>App Version 1.0.0</p>
       </div>
     </div>
@@ -496,19 +839,26 @@ const Settings = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 font-sans">
+    <div
+      className={`min-h-screen ${settings.darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-[#3D4046]"} font-sans`}
+    >
       {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center">
-          <button onClick={handleBack} className="p-2 -ml-2 rounded-full hover:bg-gray-100">
-            <ArrowLeft size={20} className="text-[#3D4046]" />
+      <div className={`${settings.darkMode ? "bg-gray-800" : "bg-white"} shadow-md`}>
+        <div className="max-w-5xl mx-auto px-6 py-5 flex items-center">
+          <button
+            onClick={handleBack}
+            className={`p-3 -ml-3 rounded-full ${settings.darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"} transition`}
+          >
+            <ArrowLeft size={24} className={settings.darkMode ? "text-white" : "text-[#3D4046]"} />
           </button>
-          <h1 className="text-xl font-bold text-[#3D4046] ml-2">{getSectionTitle()}</h1>
+          <h1 className={`text-2xl font-extrabold ${settings.darkMode ? "text-white" : "text-[#3D4046]"} ml-4`}>
+            {getSectionTitle()}
+          </h1>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto p-4 pt-6 pb-24">{renderContent()}</div>
+      <main className="max-w-5xl mx-auto p-6 pt-8 pb-28">{renderContent()}</main>
 
       <BottomNav />
     </div>
@@ -516,87 +866,124 @@ const Settings = () => {
 }
 
 // Helper Components
+import PropTypes from "prop-types"
+
 const SettingItem = ({ icon, title, onClick, toggle = false, isActive, onToggle }) => (
   <button
-    className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors"
+    className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-colors rounded-2xl"
     onClick={toggle ? onToggle : onClick}
   >
-    <div className="flex items-center space-x-3">
+    <div className="flex items-center space-x-4">
       {icon}
-      <span className="font-medium text-[#3D4046]">{title}</span>
+      <span className="font-semibold text-[#3D4046] text-lg">{title}</span>
     </div>
     {toggle ? (
-      <div className={`w-10 h-6 rounded-full p-1 transition-colors ${isActive ? "bg-[#E6C2BC]" : "bg-gray-200"}`}>
+      <div className={`w-12 h-7 rounded-full p-1 transition-colors ${isActive ? "bg-[#E6C2BC]" : "bg-gray-200"}`}>
         <div
-          className={`w-4 h-4 rounded-full bg-white transform transition-transform ${isActive ? "translate-x-4" : "translate-x-0"}`}
+          className={`w-5 h-5 rounded-full bg-white transform transition-transform ${isActive ? "translate-x-5" : "translate-x-0"}`}
         ></div>
       </div>
     ) : (
-      <ChevronRight size={18} className="text-gray-400" />
+      <ChevronRight size={20} className="text-gray-400" />
     )}
   </button>
 )
 
+SettingItem.propTypes = {
+  icon: PropTypes.node.isRequired,
+  title: PropTypes.string.isRequired,
+  onClick: PropTypes.func,
+  toggle: PropTypes.bool,
+  isActive: PropTypes.bool,
+  onToggle: PropTypes.func,
+}
+
 const ProfileField = ({ icon, label, value, editable, onChange, multiline = false, type = "text" }) => (
-  <div className="space-y-1">
-    <div className="flex items-center space-x-2 text-gray-500">
+  <div className="space-y-2">
+    <div className="flex items-center space-x-3 text-gray-600">
       {icon && <span className="text-[#E6C2BC]">{icon}</span>}
-      <label className="text-sm">{label}</label>
+      <label className="text-base font-semibold">{label}</label>
     </div>
     {editable ? (
       multiline ? (
         <textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E6C2BC] focus:border-transparent"
-          rows={3}
+          className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#E6C2BC] focus:border-transparent resize-none"
+          rows={4}
         />
       ) : (
         <input
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#E6C2BC] focus:border-transparent"
+          className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#E6C2BC] focus:border-transparent"
         />
       )
     ) : (
-      <p className="font-medium text-[#3D4046]">{value}</p>
+      <p className="font-semibold text-[#3D4046] text-lg">{value}</p>
     )}
   </div>
 )
 
+ProfileField.propTypes = {
+  icon: PropTypes.node,
+  label: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  editable: PropTypes.bool,
+  onChange: PropTypes.func,
+  multiline: PropTypes.bool,
+  type: PropTypes.string,
+}
+
 const ToggleSetting = ({ title, description, isActive, onToggle }) => (
   <div className="flex items-center justify-between">
     <div>
-      <h3 className="font-medium text-[#3D4046]">{title}</h3>
-      <p className="text-sm text-gray-500">{description}</p>
+      <h3 className="font-semibold text-[#3D4046] text-lg">{title}</h3>
+      <p className="text-base text-gray-600">{description}</p>
     </div>
     <button
       onClick={onToggle}
-      className={`w-12 h-6 rounded-full p-1 transition-colors ${isActive ? "bg-[#E6C2BC]" : "bg-gray-200"}`}
+      className={`w-14 h-7 rounded-full p-1 transition-colors ${isActive ? "bg-[#E6C2BC]" : "bg-gray-200"}`}
+      aria-pressed={isActive}
+      aria-label={`Toggle ${title}`}
     >
       <div
-        className={`w-4 h-4 rounded-full bg-white transform transition-transform ${isActive ? "translate-x-6" : "translate-x-0"}`}
+        className={`w-6 h-6 rounded-full bg-white transform transition-transform ${isActive ? "translate-x-7" : "translate-x-0"}`}
       ></div>
     </button>
   </div>
 )
 
+ToggleSetting.propTypes = {
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  isActive: PropTypes.bool,
+  onToggle: PropTypes.func,
+}
+
 const RadioOption = ({ label, description, checked, onChange }) => (
-  <label className="flex items-start space-x-3 cursor-pointer">
-    <div className="flex items-center h-5">
+  <label className="flex items-start space-x-4 cursor-pointer">
+    <div className="flex items-center h-6">
       <input
         type="radio"
         checked={checked}
         onChange={onChange}
-        className="h-4 w-4 text-[#E6C2BC] border-gray-300 focus:ring-[#E6C2BC]"
+        className="h-5 w-5 text-[#E6C2BC] border-gray-300 focus:ring-[#E6C2BC]"
       />
     </div>
     <div className="flex-1">
-      <p className="font-medium text-[#3D4046]">{label}</p>
-      <p className="text-sm text-gray-500">{description}</p>
+      <p className="font-semibold text-[#3D4046] text-lg">{label}</p>
+      <p className="text-base text-gray-600">{description}</p>
     </div>
   </label>
 )
+
+RadioOption.propTypes = {
+  label: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  checked: PropTypes.bool,
+  onChange: PropTypes.func,
+}
 
 export default Settings

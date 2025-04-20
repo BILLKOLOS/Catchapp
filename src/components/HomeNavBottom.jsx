@@ -116,105 +116,106 @@ const BottomNav = () => {
       )}
 
       {/* Bottom Navigation Bar */}
-      <div
-        className={`
+      {isAtBottom && (
+        <div
+          className={`
                     fixed bottom-0 left-0 right-0 z-40
                     transition-transform duration-500 ease-in-out
-                    ${isAtBottom ? "translate-y-0" : "translate-y-full md:translate-y-0"}
                 `}
-      >
-        <div className="max-w-7xl mx-auto px-4 py-3">
-          <div className="flex items-center justify-between">
-            {/* Main Navigation */}
-            <div className="flex items-center gap-2 md:gap-3 bg-gray-100/90 backdrop-blur-md p-1.5 md:p-2 rounded-full shadow-md w-auto md:w-[400px] lg:w-[500px]">
-              {/* Home */}
-              <NavLink
-                to="/"
-                className={({ isActive }) => `
+        >
+          <div className="max-w-7xl mx-auto px-4 py-3">
+            <div className="flex items-center justify-between gap-4">
+              {/* Main Navigation */}
+              <div className="flex items-center gap-2 md:gap-3 bg-gray-100/90 backdrop-blur-md p-1.5 md:p-2 rounded-full shadow-md w-auto md:w-[400px] lg:w-[500px]">
+                {/* Home */}
+                <NavLink
+                  to="/"
+                  className={({ isActive }) => `
                                     p-2 md:p-2.5 rounded-full flex items-center justify-center
                                     transition-all duration-200
                                     ${isActive ? "bg-[#272222] text-white" : "text-gray-700 hover:bg-gray-200"}
                                 `}
-              >
-                <Home className="w-5 h-5 md:w-6 md:h-6" />
-              </NavLink>
+                >
+                  <Home className="w-5 h-5 md:w-6 md:h-6" />
+                </NavLink>
 
-              {/* Category Selector */}
-              <div
-                className="flex items-center gap-1.5 px-3 md:px-4 py-1.5 md:py-2 flex-grow max-w-[150px] md:max-w-[180px]
+                {/* Category Selector */}
+                <div
+                  className="flex items-center gap-1.5 px-3 md:px-4 py-1.5 md:py-2 flex-grow max-w-[150px] md:max-w-[180px]
                                           border border-gray-300 rounded-full cursor-pointer
                                           hover:bg-gray-200 transition-all duration-200"
-                onClick={toggleCategories}
-              >
-                <span className="text-xs md:text-sm font-medium text-gray-800">{selectedCategory}</span>
-                {showCategories ? (
-                  <ChevronUp className="w-3 h-3 text-gray-600" />
-                ) : (
-                  <ChevronDown className="w-3 h-3 text-gray-600" />
-                )}
-              </div>
+                  onClick={toggleCategories}
+                >
+                  <span className="text-xs md:text-sm font-medium text-gray-800">{selectedCategory}</span>
+                  {showCategories ? (
+                    <ChevronUp className="w-3 h-3 text-gray-600" />
+                  ) : (
+                    <ChevronDown className="w-3 h-3 text-gray-600" />
+                  )}
+                </div>
 
-              {/* Calendar */}
-              <NavLink
-                to="/explore/trending"
-                className={({ isActive }) => `
+                {/* Calendar */}
+                <NavLink
+                  to="/explore/trending"
+                  className={({ isActive }) => `
                                     p-2 md:p-2.5 rounded-full flex items-center justify-center
                                     transition-all duration-200
                                     ${isActive ? "bg-[#272222] text-white" : "text-gray-700 hover:bg-gray-200"}
                                 `}
-              >
-                <Calendar className="w-5 h-5 md:w-6 md:h-6" />
-              </NavLink>
+                >
+                  <Calendar className="w-5 h-5 md:w-6 md:h-6" />
+                </NavLink>
 
-              {/* Settings */}
-              <NavLink
-                to="/settings"
-                className={({ isActive }) => `
+                {/* Settings */}
+                <NavLink
+                  to="/settings"
+                  className={({ isActive }) => `
                                     p-2 md:p-2.5 rounded-full flex items-center justify-center
                                     transition-all duration-200
                                     ${isActive ? "bg-[#272222] text-white" : "text-gray-700 hover:bg-gray-200"}
                                 `}
-              >
-                <Settings className="w-5 h-5 md:w-6 md:h-6" />
-              </NavLink>
+                >
+                  <Settings className="w-5 h-5 md:w-6 md:h-6" />
+                </NavLink>
 
-              {/* Profile */}
-              <NavLink
-                to="/profile"
-                className={({ isActive }) => `
+                {/* Profile */}
+                <NavLink
+                  to="/profile"
+                  className={({ isActive }) => `
                                     rounded-full flex items-center justify-center
                                     transition-all duration-200 p-0.5
                                     ${isActive ? "ring-2 ring-[#272222]" : "hover:ring-2 hover:ring-gray-300"}
                                 `}
-              >
-                <div className="relative">
-                  <img
-                    src={profile || "/placeholder.svg"}
-                    alt="Profile"
-                    className="object-cover rounded-full w-7 h-7 md:w-8 md:h-8"
-                  />
-                  <span className="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full border-[1px] border-white"></span>
-                </div>
-              </NavLink>
-            </div>
+                >
+                  <div className="relative">
+                    <img
+                      src={profile || "/placeholder.svg"}
+                      alt="Profile"
+                      className="object-cover rounded-full w-7 h-7 md:w-8 md:h-8"
+                    />
+                    <span className="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full border-[1px] border-white"></span>
+                  </div>
+                </NavLink>
+              </div>
 
-            {/* Host Button */}
-            <div
-              className="flex items-center gap-1.5 md:gap-2 cursor-pointer group"
-              onClick={() => setShowEventModal(true)}
-            >
+              {/* Host Button */}
               <div
-                className="bg-[#272222] text-white p-2.5 md:p-3 rounded-full 
+                className="flex items-center gap-4 cursor-pointer group"
+                onClick={() => setShowEventModal(true)}
+              >
+                <div
+                  className="bg-[#272222] text-white p-2.5 md:p-3 rounded-full 
                                           shadow-md group-hover:bg-black transition-all duration-200
                                           transform group-hover:scale-105"
-              >
-                <Plus className="w-5 h-5 md:w-6 md:h-6" />
+                >
+                  <Plus className="w-5 h-5 md:w-6 md:h-6" />
+                </div>
+                <span className="text-xs md:text-sm font-bold text-[#272222] group-hover:text-black">Host</span>
               </div>
-              <span className="text-xs md:text-sm font-bold text-[#272222] group-hover:text-black">Host</span>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Event Modal */}
       {showEventModal && <EventModal onClose={() => setShowEventModal(false)} />}

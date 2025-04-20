@@ -128,26 +128,26 @@ const MessagingInterface = ({ isOpen, onClose, updateMessageCount }) => {
     
     return (
       <div 
-        className={`flex items-start space-x-2 md:space-x-4 p-3 md:p-4 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 ${!readStatus[id] ? 'bg-blue-50' : ''}`}
+        className={`flex items-start space-x-2 md:space-x-4 p-3 md:p-4 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 ${!readStatus[id] ? 'bg-[#E6C2BC]/10' : ''}`}
         onClick={() => markAsRead(id)}
       >
         {user && (
           <SimpleAvatar src={avatar} user={user} online={online} />
         )}
         {!user && (
-          <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-blue-100 flex items-center justify-center">
+          <div className="flex-shrink-0 w-8 h-8 md:w-10 md:h-10 rounded-full bg-[#E6C2BC]/20 flex items-center justify-center">
             {icon}
           </div>
         )}
         <div className="flex-1 min-w-0">
           <div className="flex items-center space-x-2">
-            {user && <p className={`font-medium text-xs md:text-sm ${!readStatus[id] ? 'text-blue-800' : 'text-gray-900'}`}>{user}</p>}
+            {user && <p className={`font-medium text-xs md:text-sm ${!readStatus[id] ? 'text-[#3D4046]' : 'text-gray-900'}`}>{user}</p>}
             {icon && <span className="flex-shrink-0">{icon}</span>}
             {!readStatus[id] && (
-              <span className="w-2 h-2 rounded-full bg-blue-600"></span>
+              <span className="w-2 h-2 rounded-full bg-[#E6C2BC]"></span>
             )}
           </div>
-          <p className={`text-xs md:text-sm ${!readStatus[id] ? 'text-blue-700 font-medium' : 'text-gray-600'} mt-0.5 line-clamp-3 md:line-clamp-2`}>{message}</p>
+          <p className={`text-xs md:text-sm ${!readStatus[id] ? 'text-[#3D4046] font-medium' : 'text-gray-600'} mt-0.5 line-clamp-3 md:line-clamp-2`}>{message}</p>
           <div className="flex items-center space-x-2 mt-1">
             <p className="text-xs text-gray-500">{time}</p>
             {online && (
@@ -207,7 +207,7 @@ const MessagingInterface = ({ isOpen, onClose, updateMessageCount }) => {
                       onClick={() => setActiveCategory(category.id)}
                       className={`flex items-center space-x-1 md:space-x-2 px-2 md:px-6 py-2 md:py-3 transition-colors relative ${
                         activeCategory === category.id 
-                          ? 'text-blue-600' 
+                          ? 'text-[#C7B4AF]' 
                           : 'text-gray-600 hover:text-gray-900'
                       }`}
                     >
@@ -215,15 +215,15 @@ const MessagingInterface = ({ isOpen, onClose, updateMessageCount }) => {
                       <span className="font-medium text-xs md:text-sm hidden xs:inline">{category.title}</span>
                       <span className={`text-xs px-1.5 md:px-2 py-0.5 rounded-full ${
                         unreadCount > 0
-                          ? 'bg-blue-500 text-white'
+                          ? 'bg-[#E6C2BC] text-white'
                           : activeCategory === category.id 
-                            ? 'bg-blue-100 text-blue-600' 
+                            ? 'bg-[#E6C2BC]/20 text-[#3D4046]' 
                             : 'bg-gray-100 text-gray-600'
                       }`}>
                         {unreadCount > 0 ? unreadCount : messages[category.id].length}
                       </span>
                       {activeCategory === category.id && (
-                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600" />
+                        <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#E6C2BC]" />
                       )}
                     </button>
                   );
@@ -240,21 +240,20 @@ const MessagingInterface = ({ isOpen, onClose, updateMessageCount }) => {
             </div>
           </div>
 
-          {/* Rest of your component remains unchanged */}
           {/* Header */}
-          <div className="bg-[#272222] px-3 md:px-6 py-2 md:py-4">
+          <div className="bg-[#3D4046] px-3 md:px-6 py-2 md:py-4">
             <div className="flex justify-between items-center">
               <div>
                 <h2 className="text-lg md:text-xl font-bold text-white">Messages</h2>
-                <p className="text-blue-100 text-xs md:text-sm mt-0.5 md:mt-1">
+                <p className="text-[#E6C2BC] text-xs md:text-sm mt-0.5 md:mt-1">
                   {countUnreadByCategory(activeCategory)} unread of {messages[activeCategory].length} {activeCategory} messages
                 </p>
               </div>
               <div className="flex space-x-2">
-                <button className="p-1.5 md:p-2 bg-[#FFB8B8] hover:bg-[#FFB8B8] rounded-full text-white">
+                <button className="p-1.5 md:p-2 bg-[#E6C2BC] hover:bg-[#C7B4AF] rounded-full text-white">
                   <Phone className="h-4 w-4 md:h-5 md:w-5" />
                 </button>
-                <button className="p-1.5 md:p-2 bg-[#FFB8B8] hover:bg-[#FFB8B8] rounded-full text-white md:inline-flex hidden">
+                <button className="p-1.5 md:p-2 bg-[#E6C2BC] hover:bg-[#C7B4AF] rounded-full text-white md:inline-flex hidden">
                   <Video className="h-4 w-4 md:h-5 md:w-5" />
                 </button>
                 <button 
@@ -276,7 +275,7 @@ const MessagingInterface = ({ isOpen, onClose, updateMessageCount }) => {
                 placeholder="Search messages..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-8 md:pl-10 pr-4 py-1.5 md:py-2 bg-gray-50 rounded-lg border border-gray-200 text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-8 md:pl-10 pr-4 py-1.5 md:py-2 bg-gray-50 rounded-lg border border-gray-200 text-xs md:text-sm focus:outline-none focus:ring-2 focus:ring-[#E6C2BC] focus:border-transparent"
               />
               {searchQuery && (
                 <button 
@@ -318,7 +317,7 @@ const MessagingInterface = ({ isOpen, onClose, updateMessageCount }) => {
           <div className="px-3 md:px-4 py-2 md:py-3 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
             <button 
               onClick={markAllAsRead}
-              className="text-xs md:text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors"
+              className="text-xs md:text-sm font-medium text-[#C7B4AF] hover:text-[#3D4046] transition-colors"
             >
               Mark all as read
             </button>

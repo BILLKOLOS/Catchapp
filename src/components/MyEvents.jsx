@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react"
 import { eventData } from "../data/event"
 import { Link, useNavigate } from "react-router-dom"
 import { ChevronLeft, ChevronRight } from "lucide-react"
+import RequestInviteModal from './RequestInviteModal'
 
 const MyEvents = ({ activeFilter, activeSlide, activeEventId }) => {
   const navigate = useNavigate()
@@ -22,6 +23,7 @@ const MyEvents = ({ activeFilter, activeSlide, activeEventId }) => {
   const [events] = useState(formattedEvents)
   const [isScrollable, setIsScrollable] = useState(false)
   const [scrollPosition, setScrollPosition] = useState(0)
+  const [showRequestInvite, setShowRequestInvite] = useState(false)
 
   const scrollContainerRef = useRef(null)
   const filteredEvents = events.filter((event) => event.type === activeFilter)
@@ -197,7 +199,7 @@ const MyEvents = ({ activeFilter, activeSlide, activeEventId }) => {
                       <p className="text-gray-300 text-[10px] md:text-xs">{event.attendees}</p>
                     </div>
                     <div className="border border-gray-400 px-2 py-1 rounded-[30px] bg-white/10 backdrop-blur-sm cursor-pointer hover:bg-white/20 transition-all duration-200">
-                      <p className="text-white text-[10px] md:text-xs whitespace-nowrap">Request</p>
+                      <button className="text-sm cursor-pointer z-99" onClick={() => setShowRequestInvite(true)}>Request</button>
                     </div>
                   </div>
                 </div>
@@ -219,6 +221,8 @@ const MyEvents = ({ activeFilter, activeSlide, activeEventId }) => {
           scrollbar-width: none;
         }
       `}</style>
+       {/* Request Modal */}
+       {showRequestInvite && <RequestInviteModal onClose={() => setShowRequestInvite(false)} />}
     </div>
   )
 }

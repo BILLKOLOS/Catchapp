@@ -73,11 +73,11 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                 ${isMobile ? 'w-full py-3' : 'w-auto'}
                 ${activeFilter === filter
                     ? "bg-[#272222] text-white hover:bg-[#3a3535]"
-                    : "bg-[#D9D9D9] text-[#272222] hover:bg-[#c0c0c0]"
+                    : "bg-gray-100 text-[#272222] hover:bg-gray-200"
                 }
                 focus:outline-none
                 focus:ring-2
-                focus:ring-offset-2
+                focus:ring-offset-1
                 focus:ring-[#272222]
                 disabled:opacity-50
                 disabled:cursor-not-allowed
@@ -110,12 +110,12 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
     return (
         <div className="fixed top-0 z-50 flex flex-col bg-white w-full shadow-md">
             {/* Top Section */}
-            <div className={`flex justify-between items-center px-4 md:px-8 py-2 transition-all duration-300 ${isMobileSearchActive ? 'h-16' : 'h-14'}`}>
+            <div className={`flex justify-between items-center px-4 md:px-8 py-1.5 transition-all duration-300 border-b border-gray-100 ${isMobileSearchActive ? 'h-16' : 'h-16'}`}>
                 {/* Logo and Search Section */}
-                <div className={`flex-1 flex justify-start items-center gap-2 md:gap-8 ${isMobileSearchActive ? 'hidden' : 'flex'}`}>
+                <div className={`flex-1 flex justify-start items-center gap-2 md:gap-6 ${isMobileSearchActive ? 'hidden' : 'flex'}`}>
                     {/* Logo Section */}
                     <div className='flex justify-start items-center'>
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" className="w-10 h-10 md:w-12 md:h-12">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" className="w-10 h-10 md:w-10 md:h-10">
                             <rect 
                             x="20" 
                             y="20" 
@@ -150,15 +150,15 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                     {/* Desktop Search Icon Only */}
                     <button 
                         onClick={toggleSearch} 
-                        className="hidden md:block text-[#000000] cursor-pointer focus:outline-none"
+                        className="hidden md:flex items-center justify-center w-10 h-10 bg-gray-50 rounded-full hover:bg-gray-100 transition-all text-[#000000] cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-200"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
-                            strokeWidth={1.5}
+                            strokeWidth={2}
                             stroke="currentColor"
-                            className="w-6 h-6"
+                            className="w-5 h-5"
                         >
                             <path
                                 strokeLinecap="round"
@@ -171,13 +171,13 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                     {/* Mobile Search Icon */}
                     <button 
                         onClick={toggleMobileSearch} 
-                        className="md:hidden text-[#000000] cursor-pointer focus:outline-none p-2 bg-gray-100 rounded-full"
+                        className="md:hidden flex items-center justify-center w-10 h-10 bg-gray-50 rounded-full hover:bg-gray-100 transition-all text-[#000000] cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-200"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
-                            strokeWidth={1.5}
+                            strokeWidth={2}
                             stroke="currentColor"
                             className="w-5 h-5"
                         >
@@ -192,13 +192,13 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                     {/* Chevron Down Button */}
                     <button 
                         onClick={toggleSearchEvent}
-                        className="bg-[#D9D9D9] text-[#000000] p-2 rounded-full cursor-pointer mr-2 flex items-center justify-center"
+                        className="flex items-center justify-center w-10 h-10 text-[#000000] p-2 bg-gray-50 rounded-full hover:bg-gray-100 transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-200"
                     >
                         <svg 
                             xmlns="http://www.w3.org/2000/svg" 
                             fill="none" 
                             viewBox="0 0 24 24" 
-                            strokeWidth={1.5} 
+                            strokeWidth={2} 
                             stroke="currentColor" 
                             className="w-5 h-5"
                         >
@@ -219,7 +219,7 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                             onClick={toggleMobileSearch}
                             className="p-2 mr-2 text-gray-500"
                         >
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                             </svg>
                         </button>
@@ -234,24 +234,25 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                                     w-full 
                                     pl-10 
                                     pr-8 
-                                    py-2 
+                                    py-3
                                     text-sm 
-                                    border-2
+                                    border
                                     text-[#272222]
-                                    border-gray-300
+                                    border-gray-200
                                     focus:border-black
                                     focus:outline-none 
                                     focus:ring-1
                                     focus:ring-black 
-                                    rounded-xl
+                                    rounded-full
                                     bg-gray-50
+                                    shadow-sm
                                 "
                             />
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
-                                strokeWidth={1.5}
+                                strokeWidth={2}
                                 stroke="currentColor"
                                 className="
                                     absolute 
@@ -288,7 +289,7 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                                         xmlns="http://www.w3.org/2000/svg" 
                                         fill="none" 
                                         viewBox="0 0 24 24" 
-                                        strokeWidth={1.5} 
+                                        strokeWidth={2} 
                                         stroke="currentColor" 
                                         className="w-5 h-5"
                                     >
@@ -303,7 +304,7 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                         </div>
                         <button 
                             type="submit" 
-                            className="ml-2 bg-black text-white p-2 rounded-lg text-sm font-medium"
+                            className="ml-2 bg-black text-white px-4 py-2 rounded-full text-sm font-medium"
                         >
                             Search
                         </button>
@@ -326,18 +327,18 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                 </div>
 
                 {/* Icons Section */}
-                <div className={`flex-1 flex justify-end gap-2 items-center ${isMobileSearchActive ? 'hidden' : 'flex'}`}>
+                <div className={`flex-1 flex justify-end gap-3 items-center ${isMobileSearchActive ? 'hidden' : 'flex'}`}>
                     <div className="relative">
                         <button 
                             onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-                            className="bg-[#D9D9D9] text-[#000000] p-2 rounded-full cursor-pointer mr-2 hover:bg-gray-300 transition-colors"
+                            className="flex items-center justify-center w-10 h-10 bg-gray-50 text-[#000000] rounded-full cursor-pointer hover:bg-gray-100 transition-all focus:outline-none focus:ring-2 focus:ring-gray-200"
                         >
                             {notificationCount > 0 && (
                                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full animate-pulse">
                                     {notificationCount > 9 ? '9+' : notificationCount}
                                 </span>
                             )}
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 md:size-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
                             </svg>
                         </button>
@@ -351,14 +352,14 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                     <div className='relative'>
                         <button
                             onClick={() => setIsMessagingOpen(!isMessagingOpen)}
-                            className="bg-[#D9D9D9] text-[#000000] p-2 rounded-full cursor-pointer mr-2 hover:bg-gray-300 transition-colors"
+                            className="flex items-center justify-center w-10 h-10 bg-gray-50 text-[#000000] rounded-full cursor-pointer hover:bg-gray-100 transition-all focus:outline-none focus:ring-2 focus:ring-gray-200"
                         >
                             {MessageCount > 0 && (
                                 <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full animate-pulse">
                                     {MessageCount > 9 ? '9+' : MessageCount}
                                 </span>
                             )}
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-5 md:size-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 0-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
                             </svg>
                         </button>
@@ -370,15 +371,15 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
 
                     {/* Mobile menu toggle */}
                     <button 
-                        className="md:hidden p-2 text-[#272222] bg-gray-100 rounded-full hover:bg-gray-200 transition-colors"
+                        className="md:hidden flex items-center justify-center w-10 h-10 text-[#272222] bg-gray-50 rounded-full hover:bg-gray-100 transition-all focus:outline-none focus:ring-2 focus:ring-gray-200"
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
                     >
                          {isMenuOpen ? (
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                             </svg>
                         ) : (
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                             </svg>
                         )}
@@ -388,13 +389,13 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
 
             {/* Search Event Popup */}
             {isSearchEventOpen && (
-                <div className="absolute top-16 left-4 md:left-16 bg-white rounded-2xl shadow-xl z-50 w-64 md:w-80 p-4">
-                    <div className="flex items-center mb-4">
+                <div className="absolute top-16 left-4 md:left-16 bg-white rounded-2xl shadow-lg z-50 w-64 md:w-80 p-5 border border-gray-100">
+                    <div className="flex items-center mb-5">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
                             fill="none"
                             viewBox="0 0 24 24"
-                            strokeWidth={1.5}
+                            strokeWidth={2}
                             stroke="currentColor"
                             className="w-5 h-5 mr-2 text-gray-700"
                         >
@@ -404,20 +405,20 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                                 d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607z"
                             />
                         </svg>
-                        <span className="text-lg font-medium text-gray-700">search event in</span>
+                        <span className="text-lg font-medium text-gray-700">Search event in</span>
                     </div>
                     
-                    <div className="mb-4">
+                    <div className="mb-5">
                         <div className="flex items-center mb-2">
-                            <div className="mr-2 p-1 bg-gray-100 rounded">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-700">
+                            <div className="mr-2 p-2 bg-gray-100 rounded-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-gray-700">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                                 </svg>
                             </div>
                             <span className="font-medium text-gray-800">City</span>
                             <div className="ml-auto">
-                                <div className="bg-[#272222] text-white py-2 px-4 rounded-full">
+                                <div className="bg-[#272222] text-white py-2 px-4 rounded-full text-sm">
                                     {selectedCity}
                                 </div>
                             </div>
@@ -426,24 +427,24 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                     
                     <div className="mb-6">
                         <div className="flex items-center mb-2">
-                            <div className="mr-2 p-1 bg-gray-100 rounded">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-700">
+                            <div className="mr-2 p-2 bg-gray-100 rounded-full">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-4 h-4 text-gray-700">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                                 </svg>
                             </div>
                             <span className="font-medium text-gray-800">Town</span>
                             <div className="ml-auto">
-                                <button className="bg-[#272222] text-white py-2 px-4 rounded-full" onClick={handleEventSearch}>
-                                    search
+                                <button className="bg-[#272222] text-white py-2 px-4 rounded-full text-sm hover:bg-black transition-colors" onClick={handleEventSearch}>
+                                    Search
                                 </button>
                             </div>
                         </div>
                     </div>
                     
                     <div className="flex justify-center">
-                        <div className="bg-gray-100 rounded-full p-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 text-gray-700">
+                        <div className="bg-gray-50 rounded-full p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 text-gray-700">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
                         </div>
@@ -461,8 +462,10 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                     left-12
                     mt-2 
                     bg-white 
-                    rounded-xl 
+                    rounded-full
                     shadow-lg
+                    border
+                    border-gray-100
                     focus:outline-none 
                     focus:ring-2 
                     focus:ring-black 
@@ -482,33 +485,31 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="
                             w-full 
-                            pl-16 
-                            pr-2 
-                            py-3 
+                            pl-12 
+                            pr-12
+                            py-3
                             text-sm
-                            text-[#272222+]
-                            border 
-                            border-gray-200
+                            text-[#272222]
+                            border-none
                             focus:outline-none 
-                            focus:ring-2 
-                            focus:ring-[#272222] 
-                            rounded-xl
+                            focus:ring-0
+                            bg-white
                         "
                     />
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
                         viewBox="0 0 24 24"
-                        strokeWidth={1.5}
+                        strokeWidth={2}
                         stroke="currentColor"
                         className="
                             absolute 
-                            left-3 
+                            left-4
                             top-1/2 
                             -translate-y-1/2 
                             w-5 
                             h-5 
-                            text-gray-400
+                            text-gray-500
                         "
                     >
                         <path
@@ -524,10 +525,10 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                             onClick={() => setSearchQuery('')}
                             className="
                                 absolute 
-                                right-3 
+                                right-4
                                 top-1/2 
                                 -translate-y-1/2 
-                                text-gray-400 
+                                text-gray-500
                                 hover:text-black 
                                 transition-colors
                             "
@@ -536,7 +537,7 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                                 xmlns="http://www.w3.org/2000/svg" 
                                 fill="none" 
                                 viewBox="0 0 24 24" 
-                                strokeWidth={1.5} 
+                                strokeWidth={2} 
                                 stroke="currentColor" 
                                 className="w-5 h-5"
                             >
@@ -567,7 +568,7 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                 `}
             >
                 {/* Mobile Menu Header */}
-                <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <div className="flex items-center justify-between p-4 border-b border-gray-100">
                     <div className="flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" className="w-10 h-10">
                             <rect 
@@ -600,10 +601,10 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                     
                     {/* Close Button */}
                     <button 
-                        className="p-2 rounded-full bg-gray-100 text-[#272222]"
+                        className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-50 text-[#272222]"
                         onClick={() => setIsMenuOpen(false)}
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                         </svg>
                     </button>
@@ -623,11 +624,11 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                     </div>
                     
                     {/* Additional Mobile Menu Items */}
-                    <div className="pt-6 border-t border-gray-200">
+                    <div className="pt-6 border-t border-gray-100">
                         <h2 className="text-lg font-semibold text-[#272222] mb-4">Quick Access</h2>
                         <div className="grid grid-cols-2 gap-4">
-                            <button className="flex items-center justify-center p-4 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 mr-2">
+                            <button className="flex items-center justify-center p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5 mr-2">
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
                                 </svg>

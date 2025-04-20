@@ -1,18 +1,21 @@
 import { useState } from "react"
 import { ChevronLeft, ChevronRight, Calendar, MapPin, Heart, Share } from "lucide-react"
 import { eventData } from "../data/event"
+import RequestInviteModal from "../components/RequestInviteModal"
 
 const Trending = () => {
   const [activeCategory, setActiveCategory] = useState("menu")
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [selectedEventIndex, setSelectedEventIndex] = useState(null)
   const [likedEvents, setLikedEvents] = useState({})
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   // Format the event data to match the expected structure
   const events = eventData.map((event) => ({
     id: event.id,
     title: event.title,
     date: event.date,
+    time: event.time, // added time
     profile_id: event.organizer.id,
     host: event.organizer.name,
     likes: event.likes,
@@ -161,7 +164,7 @@ const Trending = () => {
   }
 
   return (
-    <div className="w-full px-2 sm:px-4 md:max-w-2xl md:mx-auto mt-8 md:mt-16 mb-8 space-y-6 sm:space-y-8 font-sans">
+    <div className="w-full px-2 sm:px-4 md:max-w-2xl md:mx-auto mt-20 md:mt-20 mb-8 space-y-6 sm:space-y-8 font-sans">
       {events.map((event, index) => (
         <div
           key={index}
@@ -194,9 +197,12 @@ const Trending = () => {
                   </div>
                 </div>
 
-                <div className="px-3 py-1.5 bg-black/30 backdrop-blur-sm rounded-full flex items-center gap-2">
-                  <Calendar className="w-3.5 h-3.5 text-purple-300" />
-                  <span className="text-white text-xs font-medium">{event.date}</span>
+                <div className="px-3 py-1.5 bg-black/30 backdrop-blur-sm rounded-full flex flex-col items-center gap-0.5">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-3.5 h-3.5 text-purple-300" />
+                    <span className="text-white text-xs font-medium">{event.date}</span>
+                  </div>
+                  <div className="text-purple-200 text-[10px] font-semibold">{event.time}</div>
                 </div>
               </div>
 
@@ -229,7 +235,7 @@ const Trending = () => {
                   <button className="w-9 h-9 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 transition-all">
                     <Share className="w-4.5 h-4.5 text-white" />
                   </button>
-                  <button className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm hover:bg-white/30 transition-all">
+                  <button className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm hover:bg-white/30 transition-all" onClick={() => setIsModalOpen(true)}>
                     Request
                   </button>
                 </div>
@@ -306,10 +312,9 @@ const Trending = () => {
           )}
         </div>
       ))}
+      {isModalOpen && <RequestInviteModal onClose={() => setIsModalOpen(false)}/>}
     </div>
   )
 }
 
 export default Trending
-
-

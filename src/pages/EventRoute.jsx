@@ -1,40 +1,37 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
+import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import NormalNav from '../components/NormalNav';
 import BottomNav from '../components/HomeNavBottom';
 
-// We need to handle Leaflet icon imports differently for SSR/Vercel
+// Fix for Leaflet's icon issues (similar to Map.jsx)
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+// Custom marker icon creation function
+const createColoredIcon = (color) => {
+  return new L.Icon({
+    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+};
+
 const EventRoute = () => {
-  // Set up Leaflet icons after component mounts (client-side only)
+  const [isClient, setIsClient] = useState(false);
+
   useEffect(() => {
-    import('leaflet').then((L) => {
-      delete L.Icon.Default.prototype._getIconUrl;
-      L.Icon.Default.mergeOptions({
-        iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-        iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-      });
-  
-      window.createColoredIcon = (color) => {
-        return new L.Icon({
-          iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
-          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-          iconSize: [25, 41],
-          iconAnchor: [12, 41],
-          popupAnchor: [1, -34],
-          shadowSize: [41, 41]
-        });
-      };
-  
-      window.leafletIcons = {
-        start: window.createColoredIcon('green'),
-        checkpoint: window.createColoredIcon('blue'),
-        end: window.createColoredIcon('red')
-      };
-    });
+    setIsClient(true);
   }, []);
-  
+
   const locations = [
     {
       position: [-1.0398, 37.0827],
@@ -72,33 +69,26 @@ const EventRoute = () => {
       default: return 'bg-gray-500';
     }
   };
-  
-  // Conditional rendering to ensure map only renders on client side
-  const [isClient, setIsClient] = React.useState(false);
-  
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-[100vh]">
       <NormalNav />
 
       {/* Event Route Header */}
-      <div className="bg-[#272222] rounded-full px-6 py-2 text-center mt-20 max-w-[200px] mx-auto text-white">
+      <div className="bg-[#272222] rounded-full px-6 py-2 text-center mt-16 max-w-[200px] mx-auto text-white">
         Event Route
       </div>
 
       {/* Main Map Content */}
-      <div className="relative p-4">
-        <div className="bg-[#0a2955] max-w-[967px] mx-auto rounded-3xl p-4 shadow-lg">
+      <div className="relative p-2">
+        <div className="bg-[#272222] max-w-[900px] mx-auto rounded-3xl p-4 shadow-lg">
           {/* Location List */}
-          <div className="bg-[#051630] rounded-2xl p-4 mb-4">
+          <div className="bg-[#272222] rounded-2xl p-3 mb-3">
             <div className="flex flex-wrap gap-2">
               {locations.map((loc, index) => (
-                <div 
-                  key={index} 
-                  className="flex items-center space-x-2 text-white px-3 py-1 bg-[#102a56] rounded-full"
+                <div
+                  key={index}
+                  className="flex items-center space-x-2 text-white px-3 py-1 bg-[#272222] rounded-full border border-gray-600"
                 >
                   <div className={`w-2 h-2 rounded-full ${getMarkerColor(loc.type)}`} />
                   <span>{loc.name}</span>
@@ -108,17 +98,17 @@ const EventRoute = () => {
           </div>
 
           {/* Map Container - only rendered on client side */}
-          <div className="w-full h-[467px] rounded-2xl overflow-hidden">
+          <div className="w-full h-[350px] rounded-2xl overflow-hidden border border-gray-700">
             {isClient ? (
               <MapContainer
                 center={locations[0].position}
                 zoom={14}
                 scrollWheelZoom={true}
-                style={{ height: '100%', width: '100%', background: '#051630' }}
+                style={{ height: '100%', width: '100%', background: '#272222' }}
               >
                 <TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
                 />
 
                 {/* Markers for each location */}
@@ -126,7 +116,11 @@ const EventRoute = () => {
                   <Marker
                     key={index}
                     position={loc.position}
-                    icon={window.leafletIcons ? window.leafletIcons[loc.type] : null}
+                    icon={createColoredIcon(
+                      loc.type === 'start' ? 'green' :
+                      loc.type === 'checkpoint' ? 'blue' :
+                      loc.type === 'end' ? 'red' : 'gray'
+                    )}
                   >
                     <Popup className="text-black">
                       <div className="font-semibold">{loc.name}</div>
@@ -147,14 +141,14 @@ const EventRoute = () => {
                 />
               </MapContainer>
             ) : (
-              <div className="flex items-center justify-center w-full h-full bg-[#051630] text-white">
+              <div className="flex items-center justify-center w-full h-full bg-[#272222] text-white">
                 Loading map...
               </div>
             )}
           </div>
 
           {/* Legend */}
-          <div className="mt-4 bg-[#051630] rounded-xl p-3">
+          <div className="mt-3 bg-[#272222] rounded-xl p-3 border border-gray-700">
             <div className="flex flex-wrap gap-4 justify-center text-white text-sm">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-green-500" />
