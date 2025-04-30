@@ -1,35 +1,35 @@
 import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import NormalNav from '../components/NormalNav';
 import BottomNav from '../components/HomeNavBottom';
-
-// Fix for Leaflet's icon issues (similar to Map.jsx)
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
-
-// Custom marker icon creation function
-const createColoredIcon = (color) => {
-  return new L.Icon({
-    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  });
-};
+import * as L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
 const EventRoute = () => {
+  const [MapComponents, setMapComponents] = useState(null);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
+    // Dynamically import Leaflet components on client side only
+    if (typeof window !== 'undefined') {
+      import('react-leaflet').then((components) => {
+        // Fix for default marker icons
+        delete L.Icon.Default.prototype._getIconUrl;
+        L.Icon.Default.mergeOptions({
+          iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+          iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+          shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        });
+
+        setMapComponents({
+          MapContainer: components.MapContainer,
+          TileLayer: components.TileLayer,
+          Marker: components.Marker,
+          Popup: components.Popup,
+          Polyline: components.Polyline
+        });
+      });
+    }
   }, []);
 
   const locations = [
@@ -70,6 +70,18 @@ const EventRoute = () => {
     }
   };
 
+  // Custom icon creation
+  const createColoredIcon = (color) => {
+    return new L.Icon({
+      iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-${color}.png`,
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+  };
+
   return (
     <div className="min-h-[100vh]">
       <NormalNav />
@@ -99,38 +111,42 @@ const EventRoute = () => {
 
           {/* Map Container - only rendered on client side */}
           <div className="w-full h-[350px] rounded-2xl overflow-hidden border border-gray-700">
-            {isClient ? (
-              <MapContainer
+            {isClient && MapComponents ? (
+              <MapComponents.MapContainer
                 center={locations[0].position}
                 zoom={14}
                 scrollWheelZoom={true}
                 style={{ height: '100%', width: '100%', background: '#272222' }}
               >
-                <TileLayer
+                <MapComponents.TileLayer
                   attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                   url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
                 />
 
                 {/* Markers for each location */}
-                {locations.map((loc, index) => (
-                  <Marker
-                    key={index}
-                    position={loc.position}
-                    icon={createColoredIcon(
-                      loc.type === 'start' ? 'green' :
-                      loc.type === 'checkpoint' ? 'blue' :
-                      loc.type === 'end' ? 'red' : 'gray'
-                    )}
-                  >
-                    <Popup className="text-black">
-                      <div className="font-semibold">{loc.name}</div>
-                      <div className="text-sm">{loc.description}</div>
-                    </Popup>
-                  </Marker>
-                ))}
+                {locations.map((loc, index) => {
+                  const icon = createColoredIcon(
+                    loc.type === 'start' ? 'green' :
+                    loc.type === 'checkpoint' ? 'blue' :
+                    loc.type === 'end' ? 'red' : 'gray'
+                  );
+                  
+                  return (
+                    <MapComponents.Marker
+                      key={index}
+                      position={loc.position}
+                      icon={icon}
+                    >
+                      <MapComponents.Popup className="text-black">
+                        <div className="font-semibold">{loc.name}</div>
+                        <div className="text-sm">{loc.description}</div>
+                      </MapComponents.Popup>
+                    </MapComponents.Marker>
+                  );
+                })}
 
                 {/* Route line */}
-                <Polyline
+                <MapComponents.Polyline
                   positions={route}
                   pathOptions={{
                     color: '#3B82F6',
@@ -139,7 +155,7 @@ const EventRoute = () => {
                     dashArray: '10, 10'
                   }}
                 />
-              </MapContainer>
+              </MapComponents.MapContainer>
             ) : (
               <div className="flex items-center justify-center w-full h-full bg-[#272222] text-white">
                 Loading map...

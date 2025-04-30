@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import { Camera, Home, MessageCircle, ThumbsUp, Send } from 'lucide-react';
-import BottomNav from '../components/HomeNavBottom';
-import NormalNav from '../components/NormalNav';
+import { Camera, MessageCircle, ThumbsUp, Send } from 'lucide-react';
+import BottomNav from '../components/HomeNavBottom'
 
 const HappeningNow = () => {
-  const [isChatOpen, setIsChatOpen] = useState(true);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [commentText, setCommentText] = useState("");
-  const [isFullScreen, setIsFullScreen] = useState(false);
 
   const activeUsers = [
-    { id: 1, name: 'timothy', online: true, avatar: "https://images.pexels.com/photos/30392508/pexels-photo-30392508/free-photo-of-elegant-woman-in-bright-pink-blouse-posing.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { id: 2, name: 'andrew', online: true, avatar: "https://images.pexels.com/photos/29976870/pexels-photo-29976870/free-photo-of-contemplative-young-adult-in-urban-setting.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { id: 3, name: 'nancy', online: true, avatar: "https://images.pexels.com/photos/30447781/pexels-photo-30447781/free-photo-of-portrait-of-woman-in-red-sweater-with-festive-greenery.jpeg?auto=compress&cs=tinysrgb&w=600" }
+    { id: 1, name: 'timothy', online: true },
+    { id: 2, name: 'andrew', online: true },
+    { id: 3, name: 'nancy', online: true },
+    { id: 4, name: 'james', online: true },
+    { id: 5, name: 'sarah', online: true }
   ];
 
   const comments = [
@@ -65,232 +65,218 @@ const HappeningNow = () => {
     }
   };
 
-  const toggleFullScreen = () => {
-    setIsFullScreen(!isFullScreen);
-  };
-
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      {!isFullScreen && <NormalNav />}
-      
-      <main className={`flex-1 max-w-5xl mx-auto mb-16 w-full px-2 ${isFullScreen ? 'pt-0' : 'pt-16 md:pt-20'}`}>
-        {!isFullScreen && (
-          <div className="flex justify-between items-center mb-3">
-            <div className="bg-red-600 px-3 py-1 rounded-lg">
-              <h2 className="text-white text-sm font-medium">LIVE</h2>
-            </div>
-            <h2 className="text-gray-800 font-semibold">Happening Now</h2>
-            <div className="w-16"></div> {/* Empty div for spacing */}
-          </div>
-        )}
-        
-        <div className={`flex ${isFullScreen ? 'flex-col' : 'flex-col lg:flex-row'} gap-3`}>
-          {/* Video Section - YouTube Style */}
-          <div className={`${isFullScreen ? 'w-full h-screen' : 'w-full lg:w-2/3'} bg-black rounded-lg overflow-hidden relative`}>
-            {/* Video Player */}
-            <div className="relative w-full h-0 pb-9/16">
-              <img
-                src="https://images.pexels.com/photos/30433578/pexels-photo-30433578/free-photo-of-vibrant-concert-crowd-with-stage-lights.jpeg?auto=compress&cs=tinysrgb&w=600"
-                alt="Stream"
-                className="absolute top-0 left-0 w-full h-full object-cover"
-              />
-              
-              {/* Video Overlay Controls */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src="https://images.pexels.com/photos/30447781/pexels-photo-30447781/free-photo-of-portrait-of-woman-in-red-sweater-with-festive-greenery.jpeg?auto=compress&cs=tinysrgb&w=600"
-                      alt="User"
-                      className="w-8 h-8 object-cover rounded-full"
-                    />
-                    <div>
-                      <p className="text-white text-sm font-medium">wesley</p>
-                      <p className="text-gray-300 text-xs">Nairobi, Kasarani</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={toggleFullScreen}
-                      className="bg-black/40 text-white p-2 rounded-full hover:bg-black/60"
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-5 h-5">
-                        {isFullScreen ? (
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M9 9V4.5M9 9H4.5M15 9H19.5M15 9V4.5M15 15V19.5M15 15H19.5M9 15H4.5M9 15V19.5" />
-                        ) : (
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
-                        )}
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Live indicator */}
-              <div className="absolute top-3 left-3 bg-red-600 text-white text-xs px-2 py-1 rounded flex items-center gap-1">
-                <span className="w-2 h-2 bg-white rounded-full animate-pulse"></span>
-                LIVE
-              </div>
-              
-              {/* Viewer count */}
-              <div className="absolute top-3 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                132 watching
-              </div>
-            </div>
-          </div>
-          
-          {/* Comments Section - YouTube Style */}
-          {!isFullScreen && (
-            <div className="w-full lg:w-1/3 h-auto lg:h-80 flex flex-col">
-              {/* Mobile Toggle for Comments */}
-              <div className="lg:hidden flex justify-between items-center mb-2">
-                <button
-                  onClick={() => setIsChatOpen(!isChatOpen)}
-                  className="text-gray-800 text-sm font-medium flex items-center gap-2"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  {isChatOpen ? "Hide chat" : "Show chat"}
-                </button>
-                <span className="text-xs text-gray-500">132 watching</span>
-              </div>
-              
-              {/* Comments Container - YouTube Style */}
-              {isChatOpen && (
-                <div className="flex flex-col h-full border border-gray-200 rounded-lg bg-white overflow-hidden">
-                  {/* Active Users - YouTube Style */}
-                  <div className="p-2 border-b border-gray-200">
-                    <div className="flex gap-1 overflow-x-auto hide-scrollbar">
-                      {activeUsers.map(user => (
-                        <div key={user.id} className="flex-shrink-0">
-                          <div className="relative">
-                            <img
-                              src={user.avatar}
-                              className="w-7 h-7 rounded-full object-cover border-2 border-white"
-                              alt={user.name}
+    <div className="flex flex-col min-h-screen">
+      {/* Header - Made Sticky */}
+      <header className="sticky top-0 z-10 bg-white shadow-sm">
+        <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+          {/* Logo Section */}
+          <div className='flex justify-start items-center'>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" className="w-10 h-10 md:w-10 md:h-10">
+                            <rect 
+                            x="20" 
+                            y="20" 
+                            width="160" 
+                            height="160" 
+                            rx="50" 
+                            fill="#D9D9D9"
+                            stroke="#262727"
+                            strokeWidth="12"
+                            className="animate-pulse"
                             />
-                            <span className="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full border border-white"></span>
-                          </div>
-                        </div>
-                      ))}
-                      <div className="flex-shrink-0 w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center text-xs text-gray-600">
-                        +12
-                      </div>
+                            <path
+                            d="M 100 60
+                                A 40 40 0 1 0 140 100
+                                L 120 100
+                                A 20 20 0 1 1 100 80
+                                Z"
+                            fill="#262727"       
+                            className="animate-bounce-subtle"
+                            />
+                            <circle 
+                            cx="75" 
+                            cy="100" 
+                            r="6" 
+                            fill="#262727"           
+                            className="animate-ping-subtle"
+                            />
+                    </svg>
+                        <h1 className="hidden md:block font-[Pacifico] text-xl md:text-2xl text-[#000000]">Catchapp</h1>
                     </div>
-                  </div>
-                  
-                  {/* Comments List */}
-                  <div className="flex-1 overflow-y-auto p-2 space-y-3 bg-gray-50">
-                    {comments.map((comment) => (
-                      <div key={comment.id} className="flex gap-2">
-                        <img
-                          src={comment.avatar}
-                          alt={comment.user}
-                          className="w-6 h-6 rounded-full object-cover flex-shrink-0"
-                        />
-                        <div className="flex-1">
-                          <div className="flex items-baseline gap-2">
-                            <p className="text-xs font-medium text-gray-700">{comment.user}</p>
-                            <span className="text-xs text-gray-400">{comment.time}</span>
-                          </div>
-                          <p className="text-xs text-gray-800">{comment.text}</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <button className="flex items-center gap-1 text-gray-400 hover:text-gray-600">
-                              <ThumbsUp className="w-3 h-3" />
-                              <span className="text-xs">{comment.likes}</span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {/* Comment Input - YouTube Style */}
-                  <div className="p-2 bg-white border-t border-gray-200">
-                    <form onSubmit={handleSubmitComment} className="flex items-center gap-2">
-                      <img
-                        src="https://images.pexels.com/photos/29976870/pexels-photo-29976870/free-photo-of-contemplative-young-adult-in-urban-setting.jpeg?auto=compress&cs=tinysrgb&w=600"
-                        alt="Your avatar"
-                        className="w-6 h-6 rounded-full object-cover flex-shrink-0"
-                      />
-                      <input
-                        type="text"
-                        value={commentText}
-                        onChange={(e) => setCommentText(e.target.value)}
-                        placeholder="Chat..."
-                        className="flex-1 bg-gray-100 rounded-full px-3 py-1 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500"
-                      />
-                      <button
-                        type="submit"
-                        disabled={!commentText.trim()}
-                        className={`p-1 rounded-full ${
-                          commentText.trim() ? "bg-blue-500 text-white hover:bg-blue-600" : "bg-gray-200 text-gray-400"
-                        } transition-colors`}
-                      >
-                        <Send className="w-3 h-3" />
-                      </button>
-                    </form>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+          <div className="bg-[#272222] rounded-full px-4 py-1.5">
+            <h2 className="text-white text-sm font-medium">Happening Now</h2>
+          </div>
+          <div className="w-6 h-6"></div> {/* Empty div for flex alignment */}
         </div>
-        
-        {/* Video Info Section (displayed below video) */}
-        {!isFullScreen && (
-          <div className="mt-3 p-3 bg-white rounded-lg border border-gray-200">
-            <h1 className="text-lg font-bold text-gray-900">Live Music Performance at Kasarani Stadium</h1>
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mt-2 gap-3">
-              <div className="flex items-center gap-3">
-                <img 
-                  src="https://images.pexels.com/photos/30447781/pexels-photo-30447781/free-photo-of-portrait-of-woman-in-red-sweater-with-festive-greenery.jpeg?auto=compress&cs=tinysrgb&w=600" 
-                  alt="Channel" 
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div>
-                  <p className="font-medium text-sm text-[#272222]">Wesley's Channel</p>
-                  <p className="text-xs text-[#272222]">23.4K subscribers</p>
+      </header>
+      
+      <main className="flex-1 max-w-6xl mx-auto w-full px-4 py-4">
+        {/* Active Users - Horizontal Scrollable */}
+        <div className="mb-4 -mx-4">
+          <div className="px-4">
+            <div className="flex justify-center gap-2 pb-0">
+              {activeUsers.map(user => (
+                <div key={user.id} className="flex flex-col items-center">
+                  <div className="relative">
+                    <img
+                      src="https://images.pexels.com/photos/30392508/pexels-photo-30392508/free-photo-of-elegant-woman-in-bright-pink-blouse-posing.jpeg?auto=compress&cs=tinysrgb&w=600"
+                      className="w-14 h-14 rounded-full object-cover border-2 border-gray-900"
+                      alt={user.name}
+                    />
+                    <span className="absolute bottom-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-white"></span>
+                  </div>
+                  <span className="text-xs mt-1">{user.name}</span>
                 </div>
-                <button className="bg-red-600 text-white text-sm px-4 py-1 rounded-full ml-2">
-                  Subscribe
-                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content - Responsive Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          {/* Stream Section - Takes 2/3 on large screens */}
+          <div className="lg:col-span-2">
+            <div className="bg-white rounded-2xl shadow-md overflow-hidden">
+              {/* Stream Header */}
+              <div className="bg-[#272222] text-white p-3 flex justify-between items-center">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="https://images.pexels.com/photos/30447781/pexels-photo-30447781/free-photo-of-portrait-of-woman-in-red-sweater-with-festive-greenery.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    alt="Stream host"
+                    className="w-8 h-8 rounded-full object-cover"
+                  />
+                  <span className="font-medium">wesley</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="bg-red-500 h-2 w-2 rounded-full"></span>
+                  <span className="text-xs">Nairobi, Kasarani</span>
+                </div>
               </div>
               
-              <div className="flex items-center gap-2">
-                <button className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full">
-                  <ThumbsUp className="w-4 h-4 text-[#272222]" />
-                  <span className="text-sm text-[#272222]">12K</span>
-                </button>
-                <button className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 text-[#272222]">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 15h2.25m8.024-9.75c.011.05.028.1.052.148.591 1.2.924 2.55.924 3.977a8.96 8.96 0 01-.999 4.125m.023-8.25c-.076-.365.183-.75.575-.75h.908c.889 0 1.713.518 1.972 1.368.339 1.11.521 2.287.521 3.507 0 1.553-.295 3.036-.831 4.398C20.613 14.547 19.833 15 19 15h-1.053c-.472 0-.745-.556-.5-.96a8.95 8.95 0 00.303-.54m.023-8.25H16.48a4.5 4.5 0 01-1.423-.23l-3.114-1.04a4.5 4.5 0 00-1.423-.23H6.504c-.618 0-1.217.247-1.605.729A11.95 11.95 0 002.25 12c0 .434.023.863.068 1.285C2.427 14.306 3.346 15 4.372 15h3.126c.618 0 .991.724.725 1.282A7.471 7.471 0 007.5 19.5a2.25 2.25 0 002.25 2.25.75.75 0 00.75-.75v-.633c0-.573.11-1.14.322-1.672.304-.76.93-1.33 1.653-1.715a9.04 9.04 0 002.86-2.4c.498-.634 1.226-1.08 2.032-1.08h.384" />
-                  </svg>
-                </button>
-                <button className="flex items-center gap-1 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 text-[#272222]">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 7.5l9.566 5.314m0 0a2.25 2.25 0 103.935 2.186 2.25 2.25 0 00-3.935-2.186z" />
-                  </svg>
-                  <span className="text-sm text-[#272222]">Share</span>
-                </button>
+              {/* Stream Content */}
+              <div className="relative aspect-video bg-gray-800]">
+                <img
+                  src="https://images.pexels.com/photos/30433578/pexels-photo-30433578/free-photo-of-vibrant-concert-crowd-with-stage-lights.jpeg?auto=compress&cs=tinysrgb&w=600"
+                  alt="Stream"
+                  className="w-full h-full object-cover"
+                />
+                
+                {/* Stream Controls */}
+                <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-4">
+                  <button className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
+                    <Camera className="w-6 h-6 text-white" />
+                  </button>
+                  <button className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 text-white">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z" />
+                    </svg>
+                  </button>
+                </div>
+                
+                {/* Viewer Count */}
+                <div className="absolute top-4 right-4 bg-black/50 backdrop-blur-sm px-3 py-1 rounded-full text-white text-xs">
+                  2.4k watching
+                </div>
               </div>
-            </div>
-            
-            <div className="mt-3 bg-gray-50 p-2 rounded-lg">
-              <div className="flex items-center justify-between">
-                <p className="text-sm font-medium text-[#272222]">132 watching now • Started streaming 42 minutes ago</p>
-                <button className="text-xs text-blue-600">Show more</button>
+              
+              {/* Stream Info */}
+              <div className="p-4">
+                <h3 className="font-bold">Live Concert at Kasarani Stadium</h3>
+                <p className="text-sm text-gray-600 mt-1">Join us for this amazing live performance featuring top artists!</p>
               </div>
             </div>
           </div>
-        )}
+
+          {/* Chat Section - Mobile Toggle & Fixed 1/3 on large screens */}
+          <div className="relative">
+            {/* Mobile Toggle Button */}
+            <button
+              onClick={() => setIsChatOpen(!isChatOpen)}
+              className="lg:hidden w-full bg-gray-900 text-white py-2 rounded-xl mb-2 flex items-center justify-center gap-2 shadow-md"
+            >
+              <MessageCircle className="w-5 h-5" />
+              {isChatOpen ? "Hide Comments" : "Show Comments"}
+            </button>
+
+            {/* Comments Container */}
+            <div
+              className={`
+                bg-white rounded-xl shadow-md border border-gray-100
+                ${isChatOpen ? "block" : "hidden"} lg:block
+                h-[500px] lg:h-full
+              `}
+            >
+              <div className="bg-[#272222] text-white p-3 flex items-center justify-between">
+                <h3 className="font-medium flex items-center gap-2">
+                  <MessageCircle className="w-4 h-4" />
+                  Live Comments
+                </h3>
+                <span className="text-xs bg-red-500 px-2 py-0.5 rounded-full">Live</span>
+              </div>
+
+              {/* Comments List */}
+              <div className="h-[calc(100%-110px)] overflow-y-auto p-3 space-y-4">
+                {comments.map((comment) => (
+                  <div key={comment.id} className="flex gap-3">
+                    <img
+                      src={comment.avatar}
+                      alt={comment.user}
+                      className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                    />
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs font-bold text-gray-800">{comment.user}</p>
+                        <span className="text-xs text-gray-500">{comment.time}</span>
+                      </div>
+                      <p className="text-sm text-gray-700 mt-1">{comment.text}</p>
+                      <div className="flex items-center gap-4 mt-1">
+                        <button className="flex items-center gap-1 text-gray-500 hover:text-gray-700">
+                          <ThumbsUp className="w-3.5 h-3.5" />
+                          <span className="text-xs">{comment.likes}</span>
+                        </button>
+                        <button className="flex items-center gap-1 text-gray-500 hover:text-gray-700">
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          <span className="text-xs">Reply</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Comment Input */}
+              <div className="p-3 border-t border-gray-100">
+                <div className="flex items-center gap-2">
+                  <img
+                    src="https://images.pexels.com/photos/29976870/pexels-photo-29976870/free-photo-of-contemplative-young-adult-in-urban-setting.jpeg?auto=compress&cs=tinysrgb&w=600"
+                    alt="Your avatar"
+                    className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                  />
+                  <input
+                    type="text"
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    placeholder="Add a comment..."
+                    className="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900"
+                  />
+                  <button
+                    onClick={handleSubmitComment}
+                    disabled={!commentText.trim()}
+                    className={`p-2 rounded-full ${
+                      commentText.trim() ? "bg-gray-900 text-white hover:bg-black" : "bg-gray-200 text-gray-400"
+                    } transition-colors`}
+                  >
+                    <Send className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
 
-      {!isFullScreen && (
-        <footer className="mt-auto">
-          <BottomNav />
-        </footer>
-      )}
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 };

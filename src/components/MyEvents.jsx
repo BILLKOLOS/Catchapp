@@ -38,7 +38,7 @@ const MyEvents = ({ activeFilter, activeSlide, activeEventId }) => {
 
   // Handle event card click to navigate to event details
   const handleEventClick = (eventId) => {
-    navigate(`/my-event/details/${eventId}`)
+    navigate(`/details/${eventId}`)
   }
 
   // Check if container is scrollable

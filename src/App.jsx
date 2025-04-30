@@ -100,9 +100,10 @@ const App = () => {
               <Route path="album/:albumId" element={<ProfilePhotoAlbum />} />
             </Route>
             <Route path="/happening-now" element={<HappeningNow />} />
+            <Route path="details/:eventId" element={<EventDetail />} />
             <Route path="/my-event" element={<MyEvent />}>
               <Route path="details" element={<MyOrganizerEvents organizerId={organizerId} />} />
-              <Route path="details/:eventId" element={<EventDetail />} />
+              
               <Route path="analytics" element={<EventAnalytics />} />
               {/*<Route path=":id/edit" element={<EditEvent onClose={() => navigate(-1)} />} />*/}
             </Route>

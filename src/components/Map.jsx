@@ -74,7 +74,7 @@ const Map = () => {
 
   return (
     <div className="relative" style={{ zIndex: 10 }}>
-      <div className="md:w-full lg:w-[515px] h-[348px] lg:h-[318px] bg-gray-800 rounded-[30px] overflow-hidden">
+      <div className="w-full md:w-[515px] h-[348px] md:h-[318px] bg-gray-800 rounded-[30px] overflow-hidden">
         <MapContainer
           center={locations[0].position}
           zoom={15}
