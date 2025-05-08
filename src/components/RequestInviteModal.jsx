@@ -1,112 +1,56 @@
-import PropTypes from "prop-types"
-import { useState } from "react"
-import { X } from 'lucide-react'
+"use client"
 
-const RequestInviteModal = ({ onClose, onSubmit }) => {
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [message, setMessage] = useState("")
+import { useEffect } from "react"
+import { X } from "lucide-react"
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    if (onSubmit) {
-      onSubmit({ name, email, message })
-    }
-  }
+const RequestInviteModal = ({ onClose }) => {
+  // Close the modal automatically after 3 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose()
+    }, 3000)
+
+    return () => clearTimeout(timer)
+  }, [onClose])
 
   return (
-    <>
-      {/* Modal Backdrop with blur effect */}
-      <div className="fixed inset-0 bg-[#272222] bg-opacity-80 backdrop-blur-sm z-40" onClick={onClose} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="relative bg-[#272222] rounded-2xl p-6 max-w-md w-full shadow-xl animate-fadeIn">
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 p-2 rounded-full bg-gray-800/50 hover:bg-gray-700 transition-colors"
+        >
+          <X className="w-4 h-4 text-gray-300" />
+        </button>
 
-      {/* Modal Content */}
-      <div className="fixed inset-0 z-50 overflow-y-auto">
-        <div className="flex min-h-full items-center justify-center p-4">
-          <div className="relative w-full max-w-md bg-[#1e1e1e] rounded-2xl shadow-2xl p-6">
-            {/* Close Button */}
-            <button
-              onClick={onClose}
-              className="absolute right-4 top-4 text-gray-400 hover:text-white transition-colors"
-              type="button"
+        <div className="flex flex-col items-center text-center">
+          <div className="w-16 h-16 bg-purple-500/20 rounded-full flex items-center justify-center mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-8 w-8 text-purple-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              <X size={24} />
-            </button>
-
-            <h2 className="text-2xl font-bold text-white mb-4 text-center">
-              Request an Invite
-            </h2>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-300" htmlFor="name">
-                  Name
-                </label>
-                <input
-                  id="name"
-                  type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                  className="w-full p-2.5 bg-[#333333] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Your full name"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-300" htmlFor="email">
-                  Email
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full p-2.5 bg-[#333333] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Your email address"
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium mb-1 text-gray-300" htmlFor="message">
-                  Message (optional)
-                </label>
-                <textarea
-                  id="message"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  rows={4}
-                  className="w-full p-2.5 bg-[#333333] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Any additional information"
-                />
-              </div>
-
-              <div className="flex justify-end gap-4 pt-4">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="px-6 py-2 rounded-lg border border-gray-700 text-gray-300 hover:bg-gray-800 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="px-6 py-2 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:opacity-90 transition-opacity font-medium"
-                >
-                  Send Request
-                </button>
-              </div>
-            </form>
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+            </svg>
           </div>
+
+          <h3 className="text-xl font-bold text-white mb-2">Request Received!</h3>
+          <p className="text-gray-300 mb-4">
+            Your request has been received. Please wait for the approval from the event organizer.
+          </p>
+
+          <button
+            onClick={onClose}
+            className="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+          >
+            Got it
+          </button>
         </div>
       </div>
-    </>
+    </div>
   )
-}
-
-RequestInviteModal.propTypes = {
-  onClose: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func,
 }
 
 export default RequestInviteModal

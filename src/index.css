@@ -5,11 +5,88 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 47.4% 11.2%;
+
+  --muted: 210 40% 96.1%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 47.4% 11.2%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 47.4% 11.2%;
+
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+
+  --primary: 350 50% 82%;
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 210 40% 96.1%;
+  --secondary-foreground: 222.2 47.4% 11.2%;
+
+  --accent: 210 40% 96.1%;
+  --accent-foreground: 222.2 47.4% 11.2%;
+
+  --destructive: 0 100% 50%;
+  --destructive-foreground: 210 40% 98%;
+
+  --ring: 215 20.2% 65.1%;
+
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 224 71% 4%;
+  --foreground: 213 31% 91%;
+
+  --muted: 223 47% 11%;
+  --muted-foreground: 215.4 16.3% 56.9%;
+
+  --popover: 224 71% 4%;
+  --popover-foreground: 215 20.2% 65.1%;
+
+  --card: 224 71% 4%;
+  --card-foreground: 213 31% 91%;
+
+  --border: 216 34% 17%;
+  --input: 216 34% 17%;
+
+  --primary: 350 50% 82%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+
+  --secondary: 222.2 47.4% 11.2%;
+  --secondary-foreground: 210 40% 98%;
+
+  --accent: 216 34% 17%;
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 63% 31%;
+  --destructive-foreground: 210 40% 98%;
+
+  --ring: 216 34% 17%;
+
+  --radius: 0.5rem;
+}
+
+body {
+  margin: 0;
+  font-family: "Jost", "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 @layer base {
-  html {
-    font-family: "Jost", "Inter", system-ui, sans-serif;
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
+
 
 .slider-container {
   width: 100%;
@@ -50,3 +127,124 @@
   background: #555;
 }
 
+/* OpenLayers custom styles */
+.ol-popup {
+  position: absolute;
+  background-color: white;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #cccccc;
+  bottom: 12px;
+  left: -50px;
+  min-width: 180px;
+}
+
+.ol-popup:after,
+.ol-popup:before {
+  top: 100%;
+  border: solid transparent;
+  content: " ";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.ol-popup:after {
+  border-top-color: white;
+  border-width: 10px;
+  left: 48px;
+  margin-left: -10px;
+}
+
+.ol-popup:before {
+  border-top-color: #cccccc;
+  border-width: 11px;
+  left: 48px;
+  margin-left: -11px;
+}
+
+.ol-popup-closer {
+  text-decoration: none;
+  position: absolute;
+  top: 2px;
+  right: 8px;
+  font-size: 16px;
+}
+
+.ol-popup-closer:after {
+  content: "✖";
+}
+
+/* Custom controls styling */
+.ol-control {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  padding: 2px;
+}
+
+.ol-control button {
+  display: block;
+  margin: 1px;
+  padding: 0;
+  color: white;
+  font-size: 1.14em;
+  font-weight: bold;
+  text-decoration: none;
+  text-align: center;
+  height: 1.375em;
+  width: 1.375em;
+  line-height: .4em;
+  background-color: rgba(0, 60, 136, 0.5);
+  border: none;
+  border-radius: 2px;
+}
+
+.ol-control button:hover,
+.ol-control button:focus {
+  background-color: rgba(0, 60, 136, 0.7);
+}
+
+.ol-zoom {
+  top: .5em;
+  left: .5em;
+}
+
+.ol-rotate {
+  top: .5em;
+  right: .5em;
+  transition: opacity .25s linear, visibility 0s linear;
+}
+
+.ol-rotate.ol-hidden {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .25s linear, visibility 0s linear .25s;
+}
+
+.ol-zoom-extent {
+  top: 4.643em;
+  left: .5em;
+}
+
+/* Dark theme for map */
+.dark-map {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+/* Make sure the controls are not inverted */
+.dark-map .ol-control {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+/* Make sure the attribution is visible */
+.ol-attribution {
+  background: rgba(255, 255, 255, 0.8) !important;
+}
+
+.ol-attribution.ol-uncollapsible {
+  bottom: 0;
+  right: 0;
+  border-radius: 4px 0 0;
+}

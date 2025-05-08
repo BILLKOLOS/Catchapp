@@ -24,6 +24,8 @@ import SignInPage from "./pages/SignInPage.jsx"
 import OnboardingPage from "./pages/OnboardingPage.jsx"
 import EventDetail from "./pages/EventDetail.jsx"
 import Settings from "./pages/Settings"
+import { RequestProvider } from "./context/RequestContext"
+import { ThemeProvider } from "./context/theme-provider.jsx"
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true)
@@ -69,50 +71,54 @@ const App = () => {
   }
 
   return (
-    <Router>
-      <div className={`relative ${isLoading ? "blur-md" : ""} transition-all duration-300`}>
-        <div className="text-white">
-          <Routes>
-            {/* Root redirect based on user history */}
-            <Route path="/" element={<Navigate to={getInitialRoute()} />} />
+    <ThemeProvider>
+      <RequestProvider>
+        <Router>
+          <div className={`relative ${isLoading ? "blur-md" : ""} transition-all duration-300`}>
+            <div className="text-white">
+              <Routes>
+                {/* Root redirect based on user history */}
+                <Route path="/" element={<Navigate to={getInitialRoute()} />} />
 
-            {/* Auth & Onboarding Flow */}
-            <Route path="/welcome" element={<WelcomePage />} />
-            <Route path="/signup" element={<SignUpPage />} />
-            <Route path="/signin" element={<SignInPage />} />
-            <Route path="/onboarding" element={<OnboardingPage onComplete={completeOnboarding} />} />
+                {/* Auth & Onboarding Flow */}
+                <Route path="/welcome" element={<WelcomePage />} />
+                <Route path="/signup" element={<SignUpPage />} />
+                <Route path="/signin" element={<SignInPage />} />
+                <Route path="/onboarding" element={<OnboardingPage onComplete={completeOnboarding} />} />
 
-            {/* Main App Routes */}
-            <Route path="/home" element={<Home />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/explore" element={<Explore />}>
-              <Route path="trending" element={<Trending />} />
-              <Route path="gives" element={<ServiceCard />} />
-              <Route path="gives/service/:id" element={<PhotoProfile />}>
-                <Route path="pics" element={<PicsGallery />} />
-                <Route path="reviews" element={<Reviews />} />
-                <Route path="album/:eventId" element={<EventPhotoAlbum />} />
-              </Route>
-              <Route path="feeds" element={<SocialFeed />} />
-            </Route>
-            <Route path="/profile/:id" element={<ProfilePage />}>
-              <Route path="gallery" element={<ProfileGallery />} />
-              <Route path="album/:albumId" element={<ProfilePhotoAlbum />} />
-            </Route>
-            <Route path="/happening-now" element={<HappeningNow />} />
-            <Route path="details/:eventId" element={<EventDetail />} />
-            <Route path="/my-event" element={<MyEvent />}>
-              <Route path="details" element={<MyOrganizerEvents organizerId={organizerId} />} />
-              
-              <Route path="analytics" element={<EventAnalytics />} />
-              {/*<Route path=":id/edit" element={<EditEvent onClose={() => navigate(-1)} />} />*/}
-            </Route>
-            <Route path="/event-route" element={<EventRoute />} />
-          </Routes>
-        </div>
-      </div>
-      {isLoading && <LoadingSpinner />}
-    </Router>
+                {/* Main App Routes */}
+                <Route path="/home" element={<Home />} />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/explore" element={<Explore />}>
+                  <Route path="trending" element={<Trending />} />
+                  <Route path="gives" element={<ServiceCard />} />
+                  <Route path="gives/service/:id" element={<PhotoProfile />}>
+                    <Route path="pics" element={<PicsGallery />} />
+                    <Route path="reviews" element={<Reviews />} />
+                    <Route path="album/:eventId" element={<EventPhotoAlbum />} />
+                  </Route>
+                  <Route path="feeds" element={<SocialFeed />} />
+                </Route>
+                <Route path="/profile/:id" element={<ProfilePage />}>
+                  <Route path="gallery" element={<ProfileGallery />} />
+                  <Route path="album/:albumId" element={<ProfilePhotoAlbum />} />
+                </Route>
+                <Route path="/happening-now" element={<HappeningNow />} />
+                <Route path="details/:eventId" element={<EventDetail />} />
+                <Route path="/my-event" element={<MyEvent />}>
+                  <Route path="details" element={<MyOrganizerEvents organizerId={organizerId} />} />
+                  
+                  <Route path="analytics" element={<EventAnalytics />} />
+                  {/*<Route path=":id/edit" element={<EditEvent onClose={() => navigate(-1)} />} />*/}
+                </Route>
+                <Route path="/event-route" element={<EventRoute />} />
+              </Routes>
+            </div>
+          </div>
+          {isLoading && <LoadingSpinner />}
+        </Router>
+      </RequestProvider>
+    </ThemeProvider>
   )
 }
 

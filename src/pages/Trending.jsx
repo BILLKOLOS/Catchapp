@@ -1,6 +1,8 @@
 import { useState } from "react"
-import { ChevronLeft, ChevronRight, Calendar, MapPin, Heart, Share, ArrowLeft } from "lucide-react"
+import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, Heart, Share, ArrowLeft, Users } from "lucide-react"
 import { eventData } from "../data/event"
+import BottomNav from '../components/HomeNavBottom'
+import { useRequest } from "../context/RequestContext"
 import RequestInviteModal from "../components/RequestInviteModal"
 import { useNavigate } from 'react-router-dom'
 
@@ -10,6 +12,8 @@ const Trending = () => {
   const [selectedEventIndex, setSelectedEventIndex] = useState(null)
   const [likedEvents, setLikedEvents] = useState({})
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { isRequested, setRequestedEvent } = useRequest()
+  const [showRequestInvite, setShowRequestInvite] = useState(false)
   
   const navigate = useNavigate()
 
@@ -18,7 +22,7 @@ const Trending = () => {
     id: event.id,
     title: event.title,
     date: event.date,
-    time: event.time, // added time
+    time: event.time || "7:00 PM", // default time if not provided
     profile_id: event.organizer.id,
     host: event.organizer.name,
     likes: event.likes,
@@ -48,6 +52,11 @@ const Trending = () => {
       ...prev,
       [event.id]: !prev[event.id],
     }))
+  }
+
+  const openRequestModal = (e) => {
+    e.stopPropagation()
+    setIsModalOpen(true)
   }
 
   const getCategoryIcon = (categoryName) => {
@@ -182,19 +191,24 @@ const Trending = () => {
         {events.map((event, index) => (
           <div
             key={index}
-            className="rounded-2xl md:rounded-[30px] overflow-hidden shadow-xl transform transition hover:scale-[1.01]"
+            className="rounded-2xl md:rounded-[30px] overflow-hidden shadow-xl transform transition hover:scale-[1.01] bg-white"
           >
-            {/* Event Header */}
+            {/* Event Header - Updated to match event details style */}
             <div
-              className="relative h-[266px] md:h-[312px] bg-cover bg-center cursor-pointer"
+              className="relative h-[300px] md:h-[350px] bg-cover bg-center cursor-pointer"
               style={{ backgroundImage: `url(${event.image})` }}
               onClick={() => toggleMenu(index)}
             >
               {/* Overlay gradient */}
               <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/30" />
 
-              <div className="relative z-10 h-full p-4 sm:p-6 flex flex-col justify-between">
+              <div className="relative z-10 h-full p-4 sm:p-6 flex flex-col gap-2 justify-end">
                 {/* Top section with host info */}
+
+                {/* Center content - title */}
+                <div className="my-4">
+                  <h1 className="text-2xl sm:text-3xl text-white font-bold mb-2 tracking-tight">{event.title}</h1>
+                </div>
                 <div className="flex justify-between">
                   <div className="flex items-center gap-3">
                     <img
@@ -210,32 +224,27 @@ const Trending = () => {
                       </div>
                     </div>
                   </div>
-
-                  <div className="px-3 py-1.5 bg-black/30 backdrop-blur-sm rounded-full flex flex-col items-center gap-0.5">
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 text-purple-300" />
-                      <span className="text-white text-xs font-medium">{event.date}</span>
-                    </div>
-                    <div className="text-purple-200 text-[10px] font-semibold">{event.time}</div>
-                  </div>
                 </div>
 
-                {/* Center content - title & description */}
-                <div className="my-4">
-                  <h1 className="text-xl sm:text-2xl text-white font-bold mb-2 tracking-tight">{event.title}</h1>
-                  <p className="text-sm text-white/90 font-medium leading-relaxed max-w-md line-clamp-2">
-                    {event.description}
-                  </p>
+                {/* Event details row */}
+                <div className="flex flex-wrap gap-4 text-white mb-4">
+                  <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                    <Calendar className="w-3.5 h-3.5 text-purple-300" />
+                    <span className="text-xs text-gray-200">{event.date}</span>
+                  </div>
+                  <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                    <Clock className="w-3.5 h-3.5 text-purple-300" />
+                    <span className="text-xs text-gray-200">{event.time}</span>
+                  </div>
+                  {/* Location moved to menu */}
+                  <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                    <Users className="w-3.5 h-3.5 text-purple-300" />
+                    <span className="text-xs text-gray-200">{event.capacity}</span>
+                  </div>
                 </div>
 
                 {/* Bottom action bar */}
                 <div className="flex items-center justify-between">
-                  {/* Location */}
-                  <div className="inline-flex items-center gap-2 px-3 py-1 bg-black/40 backdrop-blur-sm rounded-full">
-                    <MapPin className="w-3.5 h-3.5 text-purple-300" />
-                    <span className="text-xs text-gray-200">{event.location}</span>
-                  </div>
-
                   {/* Action buttons */}
                   <div className="flex items-center gap-3">
                     <button
@@ -249,8 +258,36 @@ const Trending = () => {
                     <button className="w-9 h-9 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm hover:bg-black/50 transition-all">
                       <Share className="w-4.5 h-4.5 text-white" />
                     </button>
-                    <button className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white text-sm hover:bg-white/30 transition-all">
-                      Request
+                    <button
+                      className={`px-3 py-1 ${
+                        isRequested(event.id)
+                          ? "bg-purple-500/30 hover:bg-purple-600/40"
+                          : "bg-white/20 hover:bg-white/30"
+                      } rounded-full backdrop-blur-sm transition-colors flex items-center gap-1.5`}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        if (isRequested(event.id)) return
+                        setRequestedEvent(event.id, true)
+                        setShowRequestInvite(true)
+                      }}
+                    >
+                      {isRequested(event.id) && (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3 w-3 text-purple-300 animate-pulse"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                      )}
+                      <span className="text-sm">{isRequested(event.id) ? "Requested" : "Request"}</span>
                     </button>
                   </div>
                 </div>
@@ -297,6 +334,20 @@ const Trending = () => {
                   </button>
                 </div>
 
+                {/* About Event Section - Now inside menu */}
+                <div className="mb-6 animate-fadeIn">
+                  <h2 className="text-lg font-bold text-white mb-3">About This Event</h2>
+                  <p className="text-gray-300 text-sm leading-relaxed">
+                    {events[selectedEventIndex]?.description}
+                  </p>
+                  
+                  {/* Location - Now inside menu */}
+                  <div className="mt-4 flex items-center gap-2 text-gray-300">
+                    <MapPin className="w-4 h-4 text-purple-300" />
+                    <span className="text-sm">{events[selectedEventIndex]?.location}</span>
+                  </div>
+                </div>
+
                 {/* Category dots indicator */}
                 {events[selectedEventIndex]?.categories && (
                   <div className="flex justify-center gap-1.5 py-2 mb-4">
@@ -326,7 +377,9 @@ const Trending = () => {
             )}
           </div>
         ))}
-        {isModalOpen && <RequestInviteModal onClose={() => setIsModalOpen(false)}/>}
+        <BottomNav />
+        {/* Request Modal */}
+        {showRequestInvite && <RequestInviteModal onClose={() => setShowRequestInvite(false)} />}
       </div>
     </>
   )

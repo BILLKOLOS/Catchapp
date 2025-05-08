@@ -1,7 +1,9 @@
 import { useState, useRef } from 'react';
 import { Link } from "react-router-dom";
+import { useTheme } from "../context/theme-provider";
 
 const LiveEvent = () => {
+    const { theme } = useTheme();
     const [currentIndex, setCurrentIndex] = useState(0);
     const containerRef = useRef(null);
 
@@ -44,10 +46,10 @@ const LiveEvent = () => {
     };
 
     return (
-        <div className="relative w-full md:h-[251px] md:w-[515px] bg-[#D9D9D9] rounded-xl md:rounded-[30px] p-3">
+        <div className={`relative w-full md:h-[251px] md:w-[564px] ${theme === 'dark' ? 'bg-gray-800' : 'bg-[#D9D9D9]'} rounded-xl md:rounded-[30px] p-3`}>
             {/* Header */}
             <div className="px-4 md:px-24 mb-4">
-                <h4 className="text-center font-semibold bg-[#272222] text-white p-2 rounded-[30px] cursor-pointer text-sm">
+                <h4 className={`text-center font-semibold ${theme === 'dark' ? 'bg-gray-900' : 'bg-[#272222]'} text-white p-2 rounded-[30px] cursor-pointer text-sm`}>
                     Happening Now
                 </h4>
             </div>
@@ -74,17 +76,17 @@ const LiveEvent = () => {
                             >
                                 <div className="flex justify-between items-center w-full">
                                     <div className="flex justify-start items-center gap-2 md:gap-4">
-                                        <div className="border-2 md:border-[4px] border-[#000000] rounded-full p-[1px] cursor-pointer">
+                                        <div className={`border-2 md:border-[4px] ${theme === 'dark' ? 'border-gray-700' : 'border-[#000000]'} rounded-full p-[1px] cursor-pointer`}>
                                             <img 
-                                                src={person.image} 
+                                                src={person.image || "/placeholder.svg"} 
                                                 alt={`${person.name} profile`} 
                                                 className="object-cover rounded-full w-10 h-10 md:w-16 md:h-16" 
                                             /> 
                                         </div>
-                                        <p className="text-sm md:text-md font-bold text-[#272222]">{person.name}</p>
+                                        <p className={`text-sm md:text-md font-bold ${theme === 'dark' ? 'text-white' : 'text-[#272222]'}`}>{person.name}</p>
                                     </div>
                                     <div className="px-2 md:px-4">
-                                        <p className="border-[1px] md:border-[2px] text-[#272222] border-[#000000] rounded-full p-[2px] cursor-pointer text-center w-[80px] md:w-[134px] text-xs md:text-sm hover:bg-[#272222] hover:text-white">
+                                        <p className={`border-[1px] md:border-[2px] ${theme === 'dark' ? 'text-white border-gray-600 hover:bg-gray-700' : 'text-[#272222] border-[#000000] hover:bg-[#272222] hover:text-white'} rounded-full p-[2px] cursor-pointer text-center w-[80px] md:w-[134px] text-xs md:text-sm transition-colors`}>
                                             live
                                         </p>
                                     </div>
@@ -100,7 +102,9 @@ const LiveEvent = () => {
                         <span 
                             key={index} 
                             className={`h-2 w-2 rounded-full 
-                                ${currentIndex === index ? 'bg-[#272222]' : 'bg-gray-300'}`}
+                                ${currentIndex === index 
+                                    ? (theme === 'dark' ? 'bg-white' : 'bg-[#272222]') 
+                                    : (theme === 'dark' ? 'bg-gray-600' : 'bg-gray-300')}`}
                         />
                     ))}
                 </div>

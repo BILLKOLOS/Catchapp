@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import BottomNav from "../components/HomeNavBottom"
@@ -25,14 +23,19 @@ import {
 } from "lucide-react"
 import userSettingsData from "../data/user"
 import { USER_SETTINGS_ENDPOINTS } from "../api/user-api"
+import { useTheme } from "../context/theme-provider.jsx"
 
 const Settings = () => {
   const navigate = useNavigate()
+  const { theme, setTheme } = useTheme()
   const [activeSection, setActiveSection] = useState("main") // main, profile, notifications, privacy, etc.
   const [profileImage, setProfileImage] = useState("/placeholder.svg?height=200&width=200")
   const [editMode, setEditMode] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const [isLoading, setIsLoading] = useState(true)
+  const [hasVisitedBefore, setHasVisitedBefore] = useState(false)
+  const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false)
 
   // Get the first user from the mock data (in a real app, this would be the logged-in user)
   const currentUser = userSettingsData[0]
@@ -67,6 +70,24 @@ const Settings = () => {
 
   // Load user data from the mock data
   useEffect(() => {
+    // Check if user has visited the app before
+    const visitedBefore = localStorage.getItem("visitedBefore")
+    const onboardingCompleted = localStorage.getItem("onboardingCompleted")
+    const savedTheme = localStorage.getItem("theme")
+
+    if (visitedBefore === "true") {
+      setHasVisitedBefore(true)
+    }
+
+    if (onboardingCompleted === "true") {
+      setHasCompletedOnboarding(true)
+    }
+
+    // Initialize theme from localStorage
+    if (savedTheme === "dark") {
+      setSettings((prev) => ({ ...prev, darkMode: true }))
+    }
+
     try {
       if (currentUser) {
         // Set profile data
@@ -88,7 +109,7 @@ const Settings = () => {
 
         // Set settings data
         setSettings({
-          darkMode: currentUser.preferences.darkMode,
+          darkMode: savedTheme === "dark" ? true : currentUser.preferences.darkMode,
           notifications: {
             events: currentUser.preferences.notifications.events,
             messages: currentUser.preferences.notifications.messages,
@@ -109,7 +130,14 @@ const Settings = () => {
       setError("Failed to load user settings. Please try again.")
       setLoading(false)
     }
-  }, [currentUser])
+
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+      localStorage.setItem("visitedBefore", "true")
+    }, 1500) // Reduced loading time for better UX
+
+    return () => clearTimeout(timer)
+  }, [])
 
   const handleBack = () => {
     if (activeSection === "main") {
@@ -199,16 +227,6 @@ const Settings = () => {
       setLoading(true)
 
       // In a real app, this would be an API call
-      // Example API call:
-      // const response = await fetch(USER_SETTINGS_ENDPOINTS.UPDATE_NOTIFICATIONS.replace(':userId', currentUser.id), {
-      //   method: 'PATCH',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': `Bearer ${authToken}`
-      //   },
-      //   body: JSON.stringify(settings.notifications)
-      // });
-
       // Simulate API call with timeout
       await new Promise((resolve) => setTimeout(resolve, 500))
 
@@ -234,16 +252,6 @@ const Settings = () => {
       setLoading(true)
 
       // In a real app, this would be an API call
-      // Example API call:
-      // const response = await fetch(USER_SETTINGS_ENDPOINTS.UPDATE_PRIVACY.replace(':userId', currentUser.id), {
-      //   method: 'PATCH',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': `Bearer ${authToken}`
-      //   },
-      //   body: JSON.stringify(settings.privacy)
-      // });
-
       // Simulate API call with timeout
       await new Promise((resolve) => setTimeout(resolve, 500))
 
@@ -269,16 +277,6 @@ const Settings = () => {
       setLoading(true)
 
       // In a real app, this would be an API call
-      // Example API call:
-      // const response = await fetch(USER_SETTINGS_ENDPOINTS.UPDATE_APPEARANCE.replace(':userId', currentUser.id), {
-      //   method: 'PATCH',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': `Bearer ${authToken}`
-      //   },
-      //   body: JSON.stringify({ darkMode: settings.darkMode })
-      // });
-
       // Simulate API call with timeout
       await new Promise((resolve) => setTimeout(resolve, 500))
 
@@ -304,17 +302,6 @@ const Settings = () => {
       setLoading(true)
 
       // In a real app, this would be an API call
-      // Example API call with FormData:
-      // const formData = new FormData();
-      // formData.append('image', imageFile);
-      // const response = await fetch(USER_SETTINGS_ENDPOINTS.UPLOAD_PROFILE_IMAGE.replace(':userId', currentUser.id), {
-      //   method: 'POST',
-      //   headers: {
-      //     'Authorization': `Bearer ${authToken}`
-      //   },
-      //   body: formData
-      // });
-
       // Simulate API call with timeout
       await new Promise((resolve) => setTimeout(resolve, 500))
 
@@ -338,14 +325,6 @@ const Settings = () => {
   const handleLogout = async () => {
     try {
       // In a real app, this would be an API call to logout
-      // Example:
-      // await fetch('/api/v1/auth/logout', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Authorization': `Bearer ${authToken}`
-      //   }
-      // });
-
       console.log("User logged out")
 
       // Redirect to login page
@@ -356,13 +335,22 @@ const Settings = () => {
     }
   }
 
+  const toggleDarkMode = () => {
+    // Toggle the dark mode setting
+    const newDarkMode = !settings.darkMode
+    setSettings((prev) => ({ ...prev, darkMode: newDarkMode }))
+
+    // Apply the theme to localStorage for app-wide persistence
+    setTheme(newDarkMode ? "dark" : "light")
+  }
+
   // Show loading state
   if (loading && !profile.name) {
     return (
-      <div className="min-h-screen bg-gray-50 font-sans flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-[#E6C2BC] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading settings...</p>
+          <p className="text-gray-600 dark:text-gray-300">Loading settings...</p>
         </div>
       </div>
     )
@@ -371,13 +359,13 @@ const Settings = () => {
   // Show error state
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 font-sans flex items-center justify-center p-6">
-        <div className="text-center bg-white p-8 rounded-3xl shadow-lg max-w-md">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 font-sans flex items-center justify-center p-6">
+        <div className="text-center bg-white dark:bg-gray-800 p-8 rounded-3xl shadow-lg max-w-md">
           <div className="text-red-500 mb-4">
             <X size={48} className="mx-auto" />
           </div>
-          <h2 className="text-2xl font-bold text-[#3D4046] mb-2">Error Loading Settings</h2>
-          <p className="text-gray-600 mb-6">{error}</p>
+          <h2 className="text-2xl font-bold text-[#3D4046] dark:text-white mb-2">Error Loading Settings</h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">{error}</p>
           <button
             onClick={() => window.location.reload()}
             className="px-6 py-3 bg-[#E6C2BC] text-[#3D4046] rounded-xl text-base font-semibold hover:bg-[#C7B4AF] transition-colors shadow-md"
@@ -392,7 +380,7 @@ const Settings = () => {
   const renderMainSettings = () => (
     <div className="space-y-8">
       {/* Profile Card */}
-      <div className="bg-white rounded-3xl shadow-lg overflow-hidden max-w-4xl mx-auto">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg overflow-hidden max-w-4xl mx-auto">
         <div className="p-6 flex items-center space-x-6">
           <div className="relative">
             <img
@@ -402,8 +390,8 @@ const Settings = () => {
             />
           </div>
           <div className="flex-1">
-            <h3 className="font-extrabold text-2xl text-[#3D4046]">{profile.name}</h3>
-            <p className="text-gray-600 text-base tracking-wide">{profile.username}</p>
+            <h3 className="font-extrabold text-2xl text-[#3D4046] dark:text-white">{profile.name}</h3>
+            <p className="text-gray-600 dark:text-gray-300 text-base tracking-wide">{profile.username}</p>
           </div>
           <button
             onClick={() => setActiveSection("profile")}
@@ -415,8 +403,8 @@ const Settings = () => {
       </div>
 
       {/* Settings List */}
-      <div className="bg-white rounded-3xl shadow-lg overflow-hidden max-w-4xl mx-auto">
-        <div className="divide-y divide-gray-200">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg overflow-hidden max-w-4xl mx-auto">
+        <div className="divide-y divide-gray-200 dark:divide-gray-700">
           <SettingItem
             icon={<Bell className="text-[#E6C2BC]" />}
             title="Notifications"
@@ -433,7 +421,7 @@ const Settings = () => {
             onClick={() => setActiveSection("appearance")}
             toggle
             isActive={settings.darkMode}
-            onToggle={() => setSettings((prev) => ({ ...prev, darkMode: !prev.darkMode }))}
+            onToggle={toggleDarkMode}
           />
           <SettingItem
             icon={<HelpCircle className="text-[#E6C2BC]" />}
@@ -446,7 +434,7 @@ const Settings = () => {
       {/* Logout Button */}
       <button
         onClick={handleLogout}
-        className="w-full max-w-4xl mx-auto py-4 bg-gray-100 text-[#3D4046] font-semibold rounded-2xl flex items-center justify-center space-x-3 hover:bg-gray-200 transition-colors shadow-sm"
+        className="w-full max-w-4xl mx-auto py-4 bg-gray-100 dark:bg-gray-700 text-[#3D4046] dark:text-white font-semibold rounded-2xl flex items-center justify-center space-x-3 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors shadow-sm"
       >
         <LogOut size={20} />
         <span className="text-lg">Log Out</span>
@@ -457,10 +445,10 @@ const Settings = () => {
   const renderProfileSettings = () => (
     <div className="space-y-8 max-w-4xl mx-auto">
       {/* Profile Header */}
-      <div className="bg-white rounded-3xl shadow-lg overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg overflow-hidden">
         <div className="p-8 relative">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-extrabold text-[#3D4046]">Profile Information</h2>
+            <h2 className="text-3xl font-extrabold text-[#3D4046] dark:text-white">Profile Information</h2>
             {!editMode ? (
               <button
                 onClick={() => setEditMode(true)}
@@ -473,14 +461,14 @@ const Settings = () => {
               <div className="flex space-x-4">
                 <button
                   onClick={() => setEditMode(false)}
-                  className="p-3 text-gray-600 hover:text-gray-800 rounded-full hover:bg-gray-100 transition"
+                  className="p-3 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                   aria-label="Cancel edit"
                 >
                   <X size={22} />
                 </button>
                 <button
                   onClick={saveProfile}
-                  className="p-3 text-[#E6C2BC] hover:text-[#C7B4AF] rounded-full hover:bg-gray-100 transition"
+                  className="p-3 text-[#E6C2BC] hover:text-[#C7B4AF] rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
                   aria-label="Save profile"
                   disabled={loading}
                 >
@@ -590,17 +578,17 @@ const Settings = () => {
 
   const renderNotificationSettings = () => (
     <div className="space-y-8 max-w-4xl mx-auto">
-      <div className="bg-white rounded-3xl shadow-lg overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg overflow-hidden">
         <div className="p-8">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-extrabold text-[#3D4046]">Notification Preferences</h2>
+            <h2 className="text-3xl font-extrabold text-[#3D4046] dark:text-white">Notification Preferences</h2>
             <button
               onClick={saveNotificationSettings}
               className="px-6 py-3 bg-[#E6C2BC] text-[#3D4046] rounded-xl text-base font-semibold hover:bg-[#C7B4AF] transition-colors shadow-md flex items-center space-x-2"
               disabled={loading}
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-[#3D4046] border-t-transparent rounded-full animate-spin mr-2"></div>
+                <div className="w-5 h-5 border-2 border-[#3D4046] dark:border-white border-t-transparent rounded-full animate-spin mr-2"></div>
               ) : (
                 <Save size={18} className="mr-2" />
               )}
@@ -641,17 +629,17 @@ const Settings = () => {
 
   const renderPrivacySettings = () => (
     <div className="space-y-8 max-w-4xl mx-auto">
-      <div className="bg-white rounded-3xl shadow-lg overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg overflow-hidden">
         <div className="p-8">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-extrabold text-[#3D4046]">Privacy & Security</h2>
+            <h2 className="text-3xl font-extrabold text-[#3D4046] dark:text-white">Privacy & Security</h2>
             <button
               onClick={savePrivacySettings}
               className="px-6 py-3 bg-[#E6C2BC] text-[#3D4046] rounded-xl text-base font-semibold hover:bg-[#C7B4AF] transition-colors shadow-md flex items-center space-x-2"
               disabled={loading}
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-[#3D4046] border-t-transparent rounded-full animate-spin mr-2"></div>
+                <div className="w-5 h-5 border-2 border-[#3D4046] dark:border-white border-t-transparent rounded-full animate-spin mr-2"></div>
               ) : (
                 <Save size={18} className="mr-2" />
               )}
@@ -661,7 +649,7 @@ const Settings = () => {
 
           <div className="space-y-8">
             <div>
-              <h3 className="font-semibold text-[#3D4046] mb-4 text-lg">Profile Visibility</h3>
+              <h3 className="font-semibold text-[#3D4046] dark:text-white mb-4 text-lg">Profile Visibility</h3>
               <div className="space-y-3">
                 <RadioOption
                   label="Public"
@@ -699,7 +687,7 @@ const Settings = () => {
               />
             </div>
 
-            <button className="w-full py-4 bg-gray-100 text-[#3D4046] font-semibold rounded-2xl flex items-center justify-center space-x-3 hover:bg-gray-200 transition-colors shadow-sm">
+            <button className="w-full py-4 bg-gray-100 dark:bg-gray-700 text-[#3D4046] dark:text-white font-semibold rounded-2xl flex items-center justify-center space-x-3 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors shadow-sm">
               <Shield size={20} className="text-[#E6C2BC]" />
               <span>Change Password</span>
             </button>
@@ -711,21 +699,21 @@ const Settings = () => {
 
   const renderAppearanceSettings = () => (
     <div className="space-y-8 max-w-4xl mx-auto">
-      <div className="bg-white rounded-3xl shadow-lg overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg overflow-hidden">
         <div className="p-8">
           <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-extrabold text-[#3D4046]">Appearance</h2>
+            <h2 className="text-3xl font-extrabold text-[#3D4046] dark:text-white">Appearance</h2>
             <button
               onClick={saveAppearanceSettings}
               className="px-6 py-3 bg-[#E6C2BC] text-[#3D4046] rounded-xl text-base font-semibold hover:bg-[#C7B4AF] transition-colors shadow-md flex items-center space-x-2"
               disabled={loading}
             >
               {loading ? (
-                <div className="w-5 h-5 border-2 border-[#3D4046] border-t-transparent rounded-full animate-spin mr-2"></div>
+                <div className="w-5 h-5 border-2 border-[#3D4046] dark:border-white border-t-transparent rounded-full animate-spin mr-2"></div>
               ) : (
                 <Save size={18} className="mr-2" />
               )}
-              <span clssName="hidden md:block">Save Changes</span>
+              <span className="hidden md:block">Save Changes</span>
             </button>
           </div>
 
@@ -734,11 +722,11 @@ const Settings = () => {
               title="Dark Mode"
               description="Use dark theme throughout the app"
               isActive={settings.darkMode}
-              onToggle={() => setSettings((prev) => ({ ...prev, darkMode: !prev.darkMode }))}
+              onToggle={toggleDarkMode}
             />
 
             <div>
-              <h3 className="font-semibold text-[#3D4046] mb-4 text-lg">Theme Color</h3>
+              <h3 className="font-semibold text-[#3D4046] dark:text-white mb-4 text-lg">Theme Color</h3>
               <div className="flex space-x-6 mt-3">
                 {["#E6C2BC", "#C7B4AF", "#3D4046", "#6B7280", "#4F46E5"].map((color) => (
                   <button
@@ -758,47 +746,47 @@ const Settings = () => {
 
   const renderHelpSettings = () => (
     <div className="space-y-8 max-w-4xl mx-auto">
-      <div className="bg-white rounded-3xl shadow-lg overflow-hidden">
+      <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg overflow-hidden">
         <div className="p-8">
-          <h2 className="text-3xl font-extrabold text-[#3D4046] mb-8">Help & Support</h2>
+          <h2 className="text-3xl font-extrabold text-[#3D4046] dark:text-white mb-8">Help & Support</h2>
 
           <div className="space-y-6">
-            <button className="w-full flex items-center justify-between p-5 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors shadow-sm">
+            <button className="w-full flex items-center justify-between p-5 bg-gray-50 dark:bg-gray-700 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors shadow-sm">
               <div className="flex items-center space-x-4">
                 <HelpCircle size={24} className="text-[#E6C2BC]" />
-                <span className="font-semibold text-[#3D4046] text-lg">FAQs</span>
+                <span className="font-semibold text-[#3D4046] dark:text-white text-lg">FAQs</span>
               </div>
-              <ChevronRight size={20} className="text-gray-400" />
+              <ChevronRight size={20} className="text-gray-400 dark:text-gray-500" />
             </button>
 
-            <button className="w-full flex items-center justify-between p-5 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors shadow-sm">
+            <button className="w-full flex items-center justify-between p-5 bg-gray-50 dark:bg-gray-700 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors shadow-sm">
               <div className="flex items-center space-x-4">
                 <Mail size={24} className="text-[#E6C2BC]" />
-                <span className="font-semibold text-[#3D4046] text-lg">Contact Support</span>
+                <span className="font-semibold text-[#3D4046] dark:text-white text-lg">Contact Support</span>
               </div>
-              <ChevronRight size={20} className="text-gray-400" />
+              <ChevronRight size={20} className="text-gray-400 dark:text-gray-500" />
             </button>
 
-            <button className="w-full flex items-center justify-between p-5 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors shadow-sm">
+            <button className="w-full flex items-center justify-between p-5 bg-gray-50 dark:bg-gray-700 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors shadow-sm">
               <div className="flex items-center space-x-4">
                 <Globe size={24} className="text-[#E6C2BC]" />
-                <span className="font-semibold text-[#3D4046] text-lg">Terms of Service</span>
+                <span className="font-semibold text-[#3D4046] dark:text-white text-lg">Terms of Service</span>
               </div>
-              <ChevronRight size={20} className="text-gray-400" />
+              <ChevronRight size={20} className="text-gray-400 dark:text-gray-500" />
             </button>
 
-            <button className="w-full flex items-center justify-between p-5 bg-gray-50 rounded-2xl hover:bg-gray-100 transition-colors shadow-sm">
+            <button className="w-full flex items-center justify-between p-5 bg-gray-50 dark:bg-gray-700 rounded-2xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors shadow-sm">
               <div className="flex items-center space-x-4">
                 <Shield size={24} className="text-[#E6C2BC]" />
-                <span className="font-semibold text-[#3D4046] text-lg">Privacy Policy</span>
+                <span className="font-semibold text-[#3D4046] dark:text-white text-lg">Privacy Policy</span>
               </div>
-              <ChevronRight size={20} className="text-gray-400" />
+              <ChevronRight size={20} className="text-gray-400 dark:text-gray-500" />
             </button>
           </div>
         </div>
       </div>
 
-      <div className="text-center text-gray-500 text-sm mt-6">
+      <div className="text-center text-gray-500 dark:text-gray-400 text-sm mt-6">
         <p>App Version 1.0.0</p>
       </div>
     </div>
@@ -839,21 +827,17 @@ const Settings = () => {
   }
 
   return (
-    <div
-      className={`min-h-screen ${settings.darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-[#3D4046]"} font-sans`}
-    >
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-[#3D4046] dark:text-white font-sans transition-colors duration-200">
       {/* Header */}
-      <div className={`${settings.darkMode ? "bg-gray-800" : "bg-white"} shadow-md`}>
+      <div className="bg-white dark:bg-gray-800 shadow-md">
         <div className="max-w-5xl mx-auto px-6 py-5 flex items-center">
           <button
             onClick={handleBack}
-            className={`p-3 -ml-3 rounded-full ${settings.darkMode ? "hover:bg-gray-700" : "hover:bg-gray-100"} transition`}
+            className="p-3 -ml-3 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition"
           >
-            <ArrowLeft size={24} className={settings.darkMode ? "text-white" : "text-[#3D4046]"} />
+            <ArrowLeft size={24} className="text-[#3D4046] dark:text-white" />
           </button>
-          <h1 className={`text-2xl font-extrabold ${settings.darkMode ? "text-white" : "text-[#3D4046]"} ml-4`}>
-            {getSectionTitle()}
-          </h1>
+          <h1 className="text-2xl font-extrabold text-[#3D4046] dark:text-white ml-4">{getSectionTitle()}</h1>
         </div>
       </div>
 
@@ -866,41 +850,32 @@ const Settings = () => {
 }
 
 // Helper Components
-import PropTypes from "prop-types"
-
 const SettingItem = ({ icon, title, onClick, toggle = false, isActive, onToggle }) => (
   <button
-    className="w-full flex items-center justify-between p-5 hover:bg-gray-50 transition-colors rounded-2xl"
+    className="w-full flex items-center justify-between p-5 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors rounded-2xl"
     onClick={toggle ? onToggle : onClick}
   >
     <div className="flex items-center space-x-4">
       {icon}
-      <span className="font-semibold text-[#3D4046] text-lg">{title}</span>
+      <span className="font-semibold text-[#3D4046] dark:text-white text-lg">{title}</span>
     </div>
     {toggle ? (
-      <div className={`w-12 h-7 rounded-full p-1 transition-colors ${isActive ? "bg-[#E6C2BC]" : "bg-gray-200"}`}>
+      <div
+        className={`w-12 h-7 rounded-full p-1 transition-colors ${isActive ? "bg-[#E6C2BC]" : "bg-gray-200 dark:bg-gray-600"}`}
+      >
         <div
           className={`w-5 h-5 rounded-full bg-white transform transition-transform ${isActive ? "translate-x-5" : "translate-x-0"}`}
         ></div>
       </div>
     ) : (
-      <ChevronRight size={20} className="text-gray-400" />
+      <ChevronRight size={20} className="text-gray-400 dark:text-gray-500" />
     )}
   </button>
 )
 
-SettingItem.propTypes = {
-  icon: PropTypes.node.isRequired,
-  title: PropTypes.string.isRequired,
-  onClick: PropTypes.func,
-  toggle: PropTypes.bool,
-  isActive: PropTypes.bool,
-  onToggle: PropTypes.func,
-}
-
 const ProfileField = ({ icon, label, value, editable, onChange, multiline = false, type = "text" }) => (
   <div className="space-y-2">
-    <div className="flex items-center space-x-3 text-gray-600">
+    <div className="flex items-center space-x-3 text-gray-600 dark:text-gray-300">
       {icon && <span className="text-[#E6C2BC]">{icon}</span>}
       <label className="text-base font-semibold">{label}</label>
     </div>
@@ -909,7 +884,7 @@ const ProfileField = ({ icon, label, value, editable, onChange, multiline = fals
         <textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#E6C2BC] focus:border-transparent resize-none"
+          className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-[#E6C2BC] focus:border-transparent resize-none bg-white dark:bg-gray-700 text-[#3D4046] dark:text-white"
           rows={4}
         />
       ) : (
@@ -917,34 +892,24 @@ const ProfileField = ({ icon, label, value, editable, onChange, multiline = fals
           type={type}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#E6C2BC] focus:border-transparent"
+          className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl focus:ring-2 focus:ring-[#E6C2BC] focus:border-transparent bg-white dark:bg-gray-700 text-[#3D4046] dark:text-white"
         />
       )
     ) : (
-      <p className="font-semibold text-[#3D4046] text-lg">{value}</p>
+      <p className="font-semibold text-[#3D4046] dark:text-white text-lg">{value}</p>
     )}
   </div>
 )
 
-ProfileField.propTypes = {
-  icon: PropTypes.node,
-  label: PropTypes.string.isRequired,
-  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-  editable: PropTypes.bool,
-  onChange: PropTypes.func,
-  multiline: PropTypes.bool,
-  type: PropTypes.string,
-}
-
 const ToggleSetting = ({ title, description, isActive, onToggle }) => (
   <div className="flex items-center justify-between">
     <div>
-      <h3 className="font-semibold text-[#3D4046] text-lg">{title}</h3>
-      <p className="text-base text-gray-600">{description}</p>
+      <h3 className="font-semibold text-[#3D4046] dark:text-white text-lg">{title}</h3>
+      <p className="text-base text-gray-600 dark:text-gray-300">{description}</p>
     </div>
     <button
       onClick={onToggle}
-      className={`w-14 h-7 rounded-full p-1 transition-colors ${isActive ? "bg-[#E6C2BC]" : "bg-gray-200"}`}
+      className={`w-14 h-7 rounded-full p-1 transition-colors ${isActive ? "bg-[#E6C2BC]" : "bg-gray-200 dark:bg-gray-600"}`}
       aria-pressed={isActive}
       aria-label={`Toggle ${title}`}
     >
@@ -955,13 +920,6 @@ const ToggleSetting = ({ title, description, isActive, onToggle }) => (
   </div>
 )
 
-ToggleSetting.propTypes = {
-  title: PropTypes.string.isRequired,
-  description: PropTypes.string,
-  isActive: PropTypes.bool,
-  onToggle: PropTypes.func,
-}
-
 const RadioOption = ({ label, description, checked, onChange }) => (
   <label className="flex items-start space-x-4 cursor-pointer">
     <div className="flex items-center h-6">
@@ -969,21 +927,14 @@ const RadioOption = ({ label, description, checked, onChange }) => (
         type="radio"
         checked={checked}
         onChange={onChange}
-        className="h-5 w-5 text-[#E6C2BC] border-gray-300 focus:ring-[#E6C2BC]"
+        className="h-5 w-5 text-[#E6C2BC] border-gray-300 dark:border-gray-600 focus:ring-[#E6C2BC]"
       />
     </div>
     <div className="flex-1">
-      <p className="font-semibold text-[#3D4046] text-lg">{label}</p>
-      <p className="text-base text-gray-600">{description}</p>
+      <p className="font-semibold text-[#3D4046] dark:text-white text-lg">{label}</p>
+      <p className="text-base text-gray-600 dark:text-gray-300">{description}</p>
     </div>
   </label>
 )
-
-RadioOption.propTypes = {
-  label: PropTypes.string.isRequired,
-  description: PropTypes.string,
-  checked: PropTypes.bool,
-  onChange: PropTypes.func,
-}
 
 export default Settings

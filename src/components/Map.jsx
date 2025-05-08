@@ -1,131 +1,275 @@
-import React, { useState, useEffect } from 'react';
-import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
-
-// Fix for Leaflet's icon issues
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-});
-
-// Custom marker icon creation function
-const createColoredIcon = (color) => {
-  return new L.Icon({
-    iconUrl: 'data:image/svg+xml;base64,' + btoa(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 36">
-      <ellipse cx="12" cy="34" rx="4" ry="2" fill="rgba(0,0,0,0.3)" />
-      <path d="M12 0C7.031 0 3 4.031 3 9c0 6.75 9 15 9 15s9-8.25 9-15c0-4.969-4.031-9-9-9z" fill="${color}" />
-      <circle cx="12" cy="9" r="4" fill="white" />
-    </svg>`),
-    iconSize: [24, 36],
-    iconAnchor: [12, 36],
-    popupAnchor: [0, -36],
-  });
-};
+import { useEffect, useRef, useState } from "react"
+import "ol/ol.css"
+import { Map as OLMap, View } from "ol"
+import TileLayer from "ol/layer/Tile"
+import OSM from "ol/source/OSM"
+import { fromLonLat } from "ol/proj"
+import { Feature } from "ol"
+import { Point, LineString } from "ol/geom"
+import { Vector as VectorLayer } from "ol/layer"
+import { Vector as VectorSource } from "ol/source"
+import { Style, Fill, Stroke, Circle, Text } from "ol/style"
+import Overlay from "ol/Overlay"
+import { defaults as defaultControls } from "ol/control"
 
 const Map = () => {
-  const [isBrowser, setIsBrowser] = useState(false);
-
-  useEffect(() => {
-    setIsBrowser(true);
-  }, []);
-
-  // Create different colored markers for different types of locations
-  const icons = {
-    start: createColoredIcon('#22C55E'),    // Green for start
-    checkpoint: createColoredIcon('#3B82F6'), // Blue for checkpoints
-    end: createColoredIcon('#EF4444')       // Red for end
-  };
+  const mapRef = useRef(null)
+  const mapElement = useRef(null)
+  const popupElement = useRef(null)
+  const popupContentElement = useRef(null)
+  const popupCloserElement = useRef(null)
+  const [userLocation, setUserLocation] = useState(null)
+  const [loading, setLoading] = useState(true)
 
   // Sample locations - replace with your actual locations
   const locations = [
     {
-      position: [-1.1457049, 36.9648526], // Center point from your iframe
+      position: [36.9648526, -1.1457049], // [longitude, latitude]
       name: "Main Location",
       type: "start",
-      description: "Starting point"
+      description: "Starting point",
     },
     {
-      position: [-1.1457, 36.9670],
+      position: [36.967, -1.1457],
       name: "Checkpoint 1",
       type: "checkpoint",
-      description: "First checkpoint"
+      description: "First checkpoint",
     },
     {
-      position: [-1.1470, 36.9660],
+      position: [36.966, -1.147],
       name: "Final Point",
       type: "end",
-      description: "Destination"
+      description: "Destination",
+    },
+  ]
+
+  // Get marker color based on location type
+  const getMarkerColor = (type) => {
+    switch (type) {
+      case "start":
+        return "#22C55E" // Green
+      case "checkpoint":
+        return "#3B82F6" // Blue
+      case "end":
+        return "#EF4444" // Red
+      default:
+        return "#6B7280" // Gray
     }
-  ];
-
-  const route = locations.map(loc => loc.position);
-
-  // Render the map only when in browser
-  if (!isBrowser) {
-    return (
-      <div className="md:w-full lg:w-[515px] h-[348px] lg:h-[318px] bg-gray-800 rounded-[30px] flex items-center justify-center">
-        <div className="text-white">Loading map...</div>
-      </div>
-    );
   }
+
+  useEffect(() => {
+    if (!mapElement.current) return
+
+    setLoading(true)
+
+    // Create popup overlay
+    const popup = new Overlay({
+      element: popupElement.current,
+      autoPan: true,
+      autoPanAnimation: {
+        duration: 250,
+      },
+    })
+
+    // Create vector source for markers
+    const markersSource = new VectorSource()
+
+    // Create vector source for route
+    const routeSource = new VectorSource()
+
+    // Create vector layer for markers
+    const markersLayer = new VectorLayer({
+      source: markersSource,
+      style: (feature) => {
+        const type = feature.get("type")
+        return new Style({
+          image: new Circle({
+            radius: 8,
+            fill: new Fill({ color: getMarkerColor(type) }),
+            stroke: new Stroke({ color: "#ffffff", width: 2 }),
+          }),
+          text: new Text({
+            text: feature.get("name"),
+            offsetY: -15,
+            font: "12px Calibri,sans-serif",
+            fill: new Fill({ color: "#fff" }),
+            stroke: new Stroke({
+              color: "#000",
+              width: 3,
+            }),
+          }),
+        })
+      },
+    })
+
+    // Create vector layer for route
+    const routeLayer = new VectorLayer({
+      source: routeSource,
+      style: new Style({
+        stroke: new Stroke({
+          color: "#3B82F6",
+          width: 3,
+          lineDash: [5, 5],
+        }),
+      }),
+    })
+
+    // Create map
+    const map = new OLMap({
+      target: mapElement.current,
+      layers: [
+        // Use standard OpenStreetMap tiles (completely free, no API key needed)
+        new TileLayer({
+          source: new OSM(),
+          className: "dark-map", // We'll apply a CSS filter to make it dark
+        }),
+        routeLayer,
+        markersLayer,
+      ],
+      controls: defaultControls({ attribution: false, zoom: true }),
+      overlays: [popup],
+      view: new View({
+        center: fromLonLat(locations[0].position),
+        zoom: 15,
+      }),
+    })
+
+    // Add markers for each location
+    locations.forEach((loc) => {
+      const feature = new Feature({
+        geometry: new Point(fromLonLat(loc.position)),
+        name: loc.name,
+        type: loc.type,
+        description: loc.description,
+      })
+      markersSource.addFeature(feature)
+    })
+
+    // Add route line
+    const routeCoords = locations.map((loc) => fromLonLat(loc.position))
+    const routeFeature = new Feature({
+      geometry: new LineString(routeCoords),
+    })
+    routeSource.addFeature(routeFeature)
+
+    // Add click handler for markers
+    map.on("click", (evt) => {
+      const feature = map.forEachFeatureAtPixel(evt.pixel, (feature) => feature)
+
+      if (feature) {
+        const coordinates = feature.getGeometry().getCoordinates()
+        const name = feature.get("name")
+        const description = feature.get("description")
+
+        popupContentElement.current.innerHTML = `
+          <div class="font-semibold">${name}</div>
+          <div class="text-sm">${description}</div>
+        `
+
+        popup.setPosition(coordinates)
+      } else {
+        popup.setPosition(undefined)
+      }
+    })
+
+    // Add pointer cursor for markers
+    map.on("pointermove", (e) => {
+      const pixel = map.getEventPixel(e.originalEvent)
+      const hit = map.hasFeatureAtPixel(pixel)
+      map.getViewport().style.cursor = hit ? "pointer" : ""
+    })
+
+    // Close popup when clicking the closer button
+    popupCloserElement.current.onclick = () => {
+      popup.setPosition(undefined)
+      popupCloserElement.current.blur()
+      return false
+    }
+
+    // Get user location
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const userCoords = [position.coords.longitude, position.coords.latitude]
+          setUserLocation(userCoords)
+
+          // Add user location marker
+          const userFeature = new Feature({
+            geometry: new Point(fromLonLat(userCoords)),
+            name: "Your Location",
+            type: "user",
+          })
+
+          // Custom style for user location
+          userFeature.setStyle(
+            new Style({
+              image: new Circle({
+                radius: 8,
+                fill: new Fill({ color: "#10B981" }),
+                stroke: new Stroke({ color: "#ffffff", width: 2 }),
+              }),
+              text: new Text({
+                text: "You",
+                offsetY: -15,
+                font: "12px Calibri,sans-serif",
+                fill: new Fill({ color: "#fff" }),
+                stroke: new Stroke({
+                  color: "#000",
+                  width: 3,
+                }),
+              }),
+            }),
+          )
+
+          markersSource.addFeature(userFeature)
+        },
+        (error) => {
+          console.error("Error getting user location:", error)
+        },
+      )
+    }
+
+    mapRef.current = map
+    setLoading(false)
+
+    // Clean up on unmount
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.setTarget(undefined)
+      }
+    }
+  }, [])
 
   return (
     <div className="relative" style={{ zIndex: 10 }}>
       <div className="w-full md:w-[515px] h-[348px] md:h-[318px] bg-gray-800 rounded-[30px] overflow-hidden">
-        <MapContainer
-          center={locations[0].position}
-          zoom={15}
-          scrollWheelZoom={true}
-          style={{ width: '100%', height: '100%' }}
-          zoomControl={false} // Move zoom control to prevent overlap with popups
-        >
-          {/* Add zoom control in a better position */}
-          <div className="leaflet-control-container">
-            <div className="leaflet-top leaflet-right">
-              <div className="leaflet-control-zoom leaflet-bar leaflet-control">
-                <a className="leaflet-control-zoom-in" href="#" title="Zoom in" role="button" aria-label="Zoom in">+</a>
-                <a className="leaflet-control-zoom-out" href="#" title="Zoom out" role="button" aria-label="Zoom out">−</a>
-              </div>
+        {loading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-80 z-20 rounded-[30px]">
+            <div className="text-white flex flex-col items-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white mb-2"></div>
+              <div>Loading map...</div>
             </div>
           </div>
-          
-          {/* Dark themed map tiles */}
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
-          />
+        )}
+        <div ref={mapElement} className="w-full h-full" />
 
-          {/* Markers */}
-          {locations.map((loc, index) => (
-            <Marker
-              key={index}
-              position={loc.position}
-              icon={icons[loc.type]}
-            >
-              <Popup className="text-black">
-                <div className="font-semibold">{loc.name}</div>
-                <div className="text-sm">{loc.description}</div>
-              </Popup>
-            </Marker>
-          ))}
-
-          {/* Route line */}
-          <Polyline
-            positions={route}
-            pathOptions={{
-              color: '#3B82F6',
-              weight: 3,
-              opacity: 0.7,
-              dashArray: '10, 10'
-            }}
-          />
-        </MapContainer>
+        {/* Popup overlay */}
+        <div
+          ref={popupElement}
+          className="ol-popup bg-white p-3 rounded-lg shadow-lg max-w-[200px] absolute z-30 hidden"
+        >
+          <a
+            href="#"
+            ref={popupCloserElement}
+            className="ol-popup-closer absolute top-1 right-1 text-gray-500 hover:text-gray-700"
+          >
+            ×
+          </a>
+          <div ref={popupContentElement}></div>
+        </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Map;
+export default Map
