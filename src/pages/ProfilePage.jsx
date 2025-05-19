@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Outlet, useLocation, Link } from 'react-router-dom';
-import { CheckCircle, MapPin } from 'lucide-react';
+import { CheckCircle, MapPin, ArrowLeft } from 'lucide-react';
 import NormalNav from '../components/NormalNav';
 import PersonalProfileEdit from './PersonalProfileEdit';
 import { eventData } from '../data/event';
@@ -50,7 +50,8 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const isPics = location.pathname.endsWith('/gallery');
-  const showNestedRoute = isPics || albumId;
+  const isMyEvents = location.pathname.includes('my-event');
+  const showNestedRoute = isPics || albumId || isMyEvents;
   const [isHovered, setIsHovered] = useState(null);
 
   // Format the event data to match the expected structure
@@ -82,6 +83,10 @@ const ProfilePage = () => {
     navigate('');
   };
 
+  const handleMyEventsClick = () => {
+    navigate('my-event/details'); // Navigate to the details view by default
+  };
+
   // Function to handle edit button click
   const handleEditClick = () => {
     setIsEditModalOpen(true);
@@ -98,7 +103,16 @@ const ProfilePage = () => {
   return (
     <div>
       <NormalNav />
-      <div className="flex flex-col lg:flex-row p-4 gap-6 mt-20 max-w-[1440px] mx-auto font-sans">
+      <div className="w-full px-4  mt-16">
+        <button 
+          onClick={() => navigate(-1)} 
+          className="flex items-center gap-2 text-gray-700 hover:text-[#272222] transition-colors"
+        >
+          <ArrowLeft size={18} />
+          <span className="text-sm">Go back</span>
+        </button>
+      </div>
+      <div className="flex flex-col lg:flex-row p-4 gap-6 mt-2 max-w-[1440px] mx-auto font-sans">
         {/* Left Profile Section */}
         <div className="w-full lg:w-80 bg-white rounded-2xl p-6 h-fit shadow-lg border border-gray-100">
           <div className="relative mb-6 flex justify-center">
@@ -145,9 +159,6 @@ const ProfilePage = () => {
               <button className="p-2.5 border border-gray-200 rounded-full hover:bg-gray-50 transition-colors">
                 <MapPin className="w-5 h-5 text-[#272222]" />
               </button>
-              <button className="p-2.5 border border-gray-200 rounded-full hover:bg-gray-50 transition-colors">
-                <MapPin className="w-5 h-5 text-[#272222]" />
-              </button>
             </div>
           </div>
         </div>
@@ -158,7 +169,7 @@ const ProfilePage = () => {
             <button
               onClick={handleEventsClick}
               className={`flex gap-2 items-center px-4 md:px-5 py-2 font-medium text-sm transition-all duration-200 ${
-                !isPics
+                !isPics && !isMyEvents
                   ? 'bg-[#272222] text-white rounded-full shadow-md'
                   : 'border border-gray-200 rounded-full bg-gray-100 text-[#272222] hover:bg-gray-200'
               }`}
@@ -201,6 +212,31 @@ const ProfilePage = () => {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Z"
+                />
+              </svg>
+            </button>
+
+            <button
+              onClick={handleMyEventsClick}
+              className={`flex gap-2 items-center px-4 md:px-5 py-2 font-medium text-sm transition-all duration-200 ${
+                isMyEvents
+                  ? 'bg-[#272222] text-white rounded-full shadow-md'
+                  : 'border border-gray-200 rounded-full bg-gray-100 text-[#272222] hover:bg-gray-200'
+              }`}
+            >
+              My Events
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-4 h-4"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m15.75 10.5 4.72-4.72a.75.75 0 0 1 1.28.53v11.38a.75.75 0 0 1-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25h-9A2.25 2.25 0 0 0 2.25 7.5v9a2.25 2.25 0 0 0 2.25 2.25Z"
                 />
               </svg>
             </button>

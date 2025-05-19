@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import Map from "./Map"
 import LiveEvent from "./LiveEvent"
 import MyEvents from "./MyEvents"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import { eventData } from "../data/event"
 import { ChevronLeft, ChevronRight, Calendar, Clock, MapPin, Users, Heart, Share } from "lucide-react"
 import RequestInviteModal from "./RequestInviteModal"
@@ -207,31 +207,36 @@ const MainContent = ({ activeFilter }) => {
                         className="w-full h-[300px] md:h-[312px] object-cover rounded-lg md:rounded-[30px] cursor-pointer"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-black/30 rounded-xl lg:rounded-[30px] p-4 md:px-8 lg:px-12 lg:py-6 text-white">
-                        {/* Date/Time Tag */}
-                        <div className="absolute top-4 sm:top-6 right-4 sm:right-6 px-3 sm:px-4 py-1 sm:py-2 bg-black/30 rounded-full backdrop-blur-sm">
-                          <div className="flex flex-col items-center gap-0.5">
-                            <div className="flex items-center gap-1 sm:gap-2">
-                              <Calendar className="w-3 h-3 sm:w-4 sm:h-4 text-purple-300" />
-                              <span className="text-white text-xs sm:text-sm font-medium">{event.date}</span>
-                            </div>
-                            <div className="text-purple-200 text-[10px] sm:text-xs font-semibold">
-                              {event.time || "7:00 PM"}
-                            </div>
-                          </div>
-                        </div>
-
                         {/* Event Title and Organizer at the bottom like in EventDetail */}
                         <div className="absolute bottom-0 left-0 right-0 p-6">
                           <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2">{event.title}</h1>
-                          <div className="flex items-center gap-2">
-                            <img
-                              src={event.profile || "/placeholder.svg"}
-                              alt={event.host}
-                              className="w-8 h-8 rounded-full object-cover border-2 border-white"
-                            />
-                            <span className="text-white text-sm">{event.host}</span>
-                          </div>
+                          <Link to={`/profile/${event.organizer.id}`}>
+                            <div className="flex items-center gap-2">
+                              <img
+                                src={event.profile || "/placeholder.svg"}
+                                alt={event.host}
+                                className="w-8 h-8 rounded-full object-cover border-2 border-white"
+                              />
+                              <span className="text-white text-sm">{event.host}</span>
+                            </div>
+                          </Link>
 
+                          {/* Date/Time Tag */}
+                          <div className="flex flex-wrap gap-4 text-white mt-4 mb-4">
+                            <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                              <Calendar className="w-3.5 h-3.5 text-purple-300" />
+                              <span className="text-xs text-gray-200">{event.date}</span>
+                            </div>
+                            <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                              <Clock className="w-3.5 h-3.5 text-purple-300" />
+                              <span className="text-xs text-gray-200">{event.time}</span>
+                            </div>
+                            {/* Location moved to menu */}
+                            <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                              <Users className="w-3.5 h-3.5 text-purple-300" />
+                              <span className="text-xs text-gray-200">{event.capacity}</span>
+                            </div>
+                          </div>
                           {/* Action buttons */}
                           <div className="flex justify-between items-center mt-4">
                             <div className="flex items-center gap-4">

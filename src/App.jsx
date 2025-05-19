@@ -102,15 +102,15 @@ const App = () => {
                 <Route path="/profile/:id" element={<ProfilePage />}>
                   <Route path="gallery" element={<ProfileGallery />} />
                   <Route path="album/:albumId" element={<ProfilePhotoAlbum />} />
+                  <Route path="my-event">
+                    <Route index element={<Navigate to="details" replace />} />
+                    <Route path="details" element={<MyOrganizerEvents organizerId={organizerId} />} />
+                    <Route path="analytics" element={<EventAnalytics />} />
+                  </Route>
                 </Route>
                 <Route path="/happening-now" element={<HappeningNow />} />
                 <Route path="details/:eventId" element={<EventDetail />} />
-                <Route path="/my-event" element={<MyEvent />}>
-                  <Route path="details" element={<MyOrganizerEvents organizerId={organizerId} />} />
-                  
-                  <Route path="analytics" element={<EventAnalytics />} />
-                  {/*<Route path=":id/edit" element={<EditEvent onClose={() => navigate(-1)} />} />*/}
-                </Route>
+                
                 <Route path="/event-route" element={<EventRoute />} />
               </Routes>
             </div>
