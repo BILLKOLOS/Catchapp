@@ -31,7 +31,6 @@ const App = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [hasCompletedOnboarding, setHasCompletedOnboarding] = useState(false)
   const [hasVisitedBefore, setHasVisitedBefore] = useState(false)
-  const organizerId = 101
 
   useEffect(() => {
     // Check if user has visited the app before
@@ -104,7 +103,7 @@ const App = () => {
                   <Route path="album/:albumId" element={<ProfilePhotoAlbum />} />
                   <Route path="my-event">
                     <Route index element={<Navigate to="details" replace />} />
-                    <Route path="details" element={<MyOrganizerEvents organizerId={organizerId} />} />
+                    <Route path="details" element={<MyOrganizerEvents />} />
                     <Route path="analytics" element={<EventAnalytics />} />
                   </Route>
                 </Route>

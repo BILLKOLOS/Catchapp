@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate, useLocation, useParams } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   Calendar,
   Users,
   Activity,
@@ -10,401 +13,575 @@ import {
   BarChart2,
   Clock,
   Edit,
+  MapPin,
+  Heart,
+  Share2,
+  MessageCircle,
+  Star,
+  X,
+  ArrowLeft,
+  MoreVertical,
+  Trash2,
+  Copy,
+  Archive
 } from "lucide-react";
 import { eventData } from '../data/event';
 import EditEvent from './EditEvent';
 
-const MyOrganizerEvents = ({ organizerId }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [activeCategory, setActiveCategory] = useState("menu");
-  const [selectedEventIndex, setSelectedEventIndex] = useState(0);
-  const [showEventModal, setShowEventModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+const DropdownMenu = ({ onClose, onEdit, onDelete, onDuplicate, onArchive }) => (
+  <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg py-1 border border-gray-100 z-50">
+    <button
+      onClick={onEdit}
+      className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+    >
+      <Edit className="w-4 h-4" />
+      Edit Event
+    </button>
+    <button
+      onClick={onDuplicate}
+      className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+    >
+      <Copy className="w-4 h-4" />
+      Duplicate
+    </button>
+    <button
+      onClick={onArchive}
+      className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+    >
+      <Archive className="w-4 h-4" />
+      Archive
+    </button>
+    <button
+      onClick={onDelete}
+      className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+    >
+      <Trash2 className="w-4 h-4" />
+      Delete
+    </button>
+  </div>
+);
 
-  const isDetailsView = location.pathname.endsWith('/details') || 
-                     (location.pathname.endsWith('my-event') && !location.pathname.includes('/analytics'));
-
-
-  // Get the base path for my-event
-  const basePath = location.pathname.split('/my-event')[0] + '/my-event';
-
-  useEffect(() => {
-    if (location.pathname.endsWith('my-event')) {
-      navigate('details', { replace: true });
+const EventDetailDropdown = ({ event, isOpen, onToggle, onEdit }) => {
+  const [activeTab, setActiveTab] = useState('details');
+  const [showDropdown, setShowDropdown] = useState(false);
+  
+  const handleClickOutside = (e) => {
+    if (!e.target.closest('.dropdown-menu') && !e.target.closest('.dropdown-toggle')) {
+      setShowDropdown(false);
     }
-  }, [location, navigate]);
-
-  // Filter events by organizer ID
-  const organizerEvents = eventData.filter(event => 
-    event.organizer.id === organizerId
-  ).map(event => ({
-    id: event.id,
-    title: event.title,
-    date: event.date,
-    organizer: event.organizer,
-    likes: event.likes,
-    description: event.description,
-    image: event.coverImage,
-    type: event.type,
-    profile: event.organizer.src,
-    categories: event.categories,
-    capacity: event.capacity
-  }));
+  };
 
   useEffect(() => {
-    // Simulate loading
-    const timer = setTimeout(() => setIsLoading(false), 500);
-    return () => clearTimeout(timer);
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-if (isLoading) return <div className="text-center mt-20">Loading events...</div>;
-
-  const currentEvent = organizerEvents[selectedEventIndex];
-
-  const initialData = {
-    id: currentEvent.id,
-    title: currentEvent.title,
-    description: currentEvent.description,
-    date: currentEvent.date,
-    time: "18:00",
-    location: "Event Location",
-    coverImage: currentEvent.image,
-    capacity: currentEvent.capacity,
-    personalities: {
-      performers: currentEvent.categories.personalities?.sections.performers || [],
-      guests: currentEvent.categories.personalities?.sections.guests || [],
-      speakers: currentEvent.categories.personalities?.sections.speakers || []
-    },
-    requirements: currentEvent.categories.requirements?.items.map(item => item.name).join('\n') || "",
-    activities: currentEvent.categories.activities?.items.map(item => item.name).join('\n') || "",
-    food: currentEvent.categories.food?.items || [],
-    drinks: currentEvent.categories.drinks?.items || []
+  const handleEdit = () => {
+    setShowDropdown(false);
+    onEdit();
   };
 
-  const renderCategoryContent = () => {
-    const selectedEvent = organizerEvents[selectedEventIndex];
-    const category = selectedEvent.categories[activeCategory];
+  const handleDelete = () => {
+    setShowDropdown(false);
+    // Implement delete functionality
+  };
 
-    if (activeCategory === "personalities") {
-      return (
-        <div className="space-y-8 animate-fadeIn">
-          {Object.entries(category.sections).map(([sectionName, people]) => (
-            <div key={sectionName} className="space-y-4">
-              <h3 className="text-sm font-semibold text-gray-400 capitalize pl-2">
-                {sectionName}
-              </h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {people.map((person, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col items-center p-2 sm:p-3 bg-gray-800/50 rounded-xl backdrop-blur-sm 
-                               hover:bg-gray-700/50 transition-all duration-300 transform hover:-translate-y-1"
+  const handleDuplicate = () => {
+    setShowDropdown(false);
+    // Implement duplicate functionality
+  };
+
+  const handleArchive = () => {
+    setShowDropdown(false);
+    // Implement archive functionality
+  };
+
+  const mockCategories = {
+    food: {
+      title: event.categories?.menu?.title || "Food Menu",
+      items: event.categories?.menu?.items || [
+        { name: "Grilled Chicken Salad", price: "$15" },
+        { name: "Beef Stir Fry", price: "$18" },
+        { name: "Vegetarian Pasta", price: "$14" },
+        { name: "Seafood Platter", price: "$25" },
+        { name: "BBQ Ribs", price: "$22" }
+      ]
+    },
+    drinks: {
+      title: "Drinks Menu",
+      items: event.categories?.menu?.items?.filter(item => item.type === "beverage") || [
+        { name: "Fresh Fruit Smoothies", price: "$8" },
+        { name: "Craft Cocktails", price: "$12" },
+        { name: "Premium Wine Selection", price: "$10" },
+        { name: "Artisanal Coffee", price: "$5" },
+        { name: "Fresh Juices", price: "$6" }
+      ]
+    },
+    activities: {
+      title: event.categories?.activities?.title || "Activities",
+      items: event.categories?.activities?.items || [
+        { name: "Live Music Performance" },
+        { name: "Interactive Games" },
+        { name: "Dance Floor" },
+        { name: "Photo Booth" }
+      ]
+    },
+    requirements: {
+      title: event.categories?.requirements?.title || "Requirements",
+      items: event.categories?.requirements?.items || [
+        { name: "Valid ID Required" },
+        { name: "Smart Casual Dress Code" },
+        { name: "Advance Registration" },
+        { name: "COVID-19 Safety Protocols" }
+      ]
+    }
+  };
+  
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: "auto" }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="bg-white border-t border-gray-200 overflow-hidden"
+        >
+          {/* Header with tabs and controls */}
+          <div className="p-6 border-b border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-2xl font-bold text-[#272222]">Event Details</h2>
+              <div className="flex items-center gap-2">
+                <div className="relative dropdown-menu">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowDropdown(!showDropdown);
+                    }}
+                    className="p-2 text-[#272222] hover:bg-[#272222]/5 rounded-full transition-colors dropdown-toggle"
                   >
-                    <img
-                      src={person.image}
-                      alt={person.name}
-                      className="w-8 h-8 sm:w-12 sm:h-12 rounded-full ring-2 ring-purple-500 p-0.5"
+                    <MoreVertical className="w-5 h-5" />
+                  </button>
+                  {showDropdown && (
+                    <DropdownMenu
+                      onClose={() => setShowDropdown(false)}
+                      onEdit={handleEdit}
+                      onDelete={handleDelete}
+                      onDuplicate={handleDuplicate}
+                      onArchive={handleArchive}
                     />
-                    <span className="mt-1 sm:mt-2 text-xs sm:text-sm font-medium text-gray-200 text-center">
-                      {person.name}
-                    </span>
-                  </div>
-                ))}
+                  )}
+                </div>
+                <button
+                  onClick={onToggle}
+                  className="p-2 text-[#272222] hover:bg-[#272222]/5 rounded-full transition-colors"
+                >
+                  <ChevronUp className="w-5 h-5" />
+                </button>
               </div>
             </div>
-          ))}
-        </div>
-      );
-    }
 
-    if (!organizerEvents.length) {
-      return (
-        <div className="text-center mt-20 p-4">
-          <p>No events found for this organizer.</p>
-          <button 
-            onClick={() => navigate(-1)} 
-            className="mt-4 px-4 py-2 bg-[#272222] text-white rounded-full"
-          >
-            Go Back
-          </button>
-        </div>
-      );
-    }
-
-    return (
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 animate-fadeIn">
-        {category.items?.map((item, index) => (
-          <div
-            key={index}
-            className="group relative p-3 sm:p-6 bg-gray-800/50 rounded-xl backdrop-blur-sm 
-                       hover:bg-gray-700/50 transition-all duration-300 transform hover:-translate-y-1"
-          >
-            <div
-              className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent 
-                          rounded-xl opacity-0 group-hover:opacity-100 transition-opacity"
-            />
-            <span className="relative text-xs sm:text-sm font-medium text-gray-200">
-              {item.name}
-            </span>
+            {/* Tabs */}
+            <div className="flex gap-6 border-b border-gray-200 -mb-6">
+              {['details', 'requirements', 'activities', 'menu'].map((tab) => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`py-3 px-1 text-sm font-medium border-b-2 transition-colors ${
+                    activeTab === tab
+                      ? 'border-[#272222] text-[#272222]'
+                      : 'border-transparent text-gray-500 hover:text-[#272222]'
+                  }`}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </button>
+              ))}
+            </div>
           </div>
-        ))}
-      </div>
-    );
-  };
 
-  return (
-    <div className="flex-1 flex-col">
-      {/* Navigation Tabs - Always visible */}
-      <div className="flex justify-center gap-4 mb-6">
-        <button
-          onClick={() => navigate(`${basePath}/details`)}
-          className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-            isDetailsView
-              ? 'bg-[#272222] text-white shadow-md'
-              : 'bg-gray-100 text-[#272222] hover:bg-gray-200'
-          }`}
-        >
-          <Activity className="w-4 h-4" />
-          Event Details
-        </button>
-        <button
-          onClick={() => navigate(`${basePath}/analytics`)}
-          className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-            !isDetailsView
-              ? 'bg-[#272222] text-white shadow-md'
-              : 'bg-gray-100 text-[#272222] hover:bg-gray-200'
-          }`}
-        >
-          <BarChart2 className="w-4 h-4" />
-          Analytics
-        </button>
-      </div>
-
-      {/* Conditional content */}
-      {isDetailsView ? (
-        // Event Details Content
-        <div className="space-y-6">
-          {organizerEvents.map((event, index) => (
-            <div
-            key={index}
-            className="rounded-2xl md:rounded-[30px] overflow-hidden shadow-xl transform transition hover:scale-[1.01] bg-white"
-            >
-              {/* Event Header - Updated to match event details style */}
-              <div
-                className="relative h-[300px] md:h-[350px] bg-cover bg-center cursor-pointer"
-                style={{ backgroundImage: `url(${event.image})` }}
-              >
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/30" />
-
-                <div className="relative z-10 h-full p-4 sm:p-6 flex flex-col gap-2 justify-end">
-                  {/* Top section with host info */}
-
-                  {/* Center content - title */}
-                  <div className="my-4">
-                    <h1 className="text-2xl sm:text-3xl text-white font-bold mb-2 tracking-tight">{event.title}</h1>
+          {/* Content */}
+          <div className="p-6">
+            <AnimatePresence mode="wait">
+              {activeTab === 'details' && (
+                <motion.div
+                  key="details"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="space-y-6"
+                >
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3 text-gray-900">About This Event</h3>
+                    <p className="text-gray-700 leading-relaxed">{event.description}</p>
                   </div>
-                  <div className="flex justify-between">
-                    <div className="flex items-center gap-3">
+
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3 text-gray-900">Event Host</h3>
+                    <div className="flex items-center gap-4">
                       <img
-                        src={event.profile || "/placeholder.svg?height=48&width=48"}
-                        alt={event.host}
-                        className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover ring-2 ring-white/50"
+                        src={event.organizer.src}
+                        alt="Host"
+                        className="w-12 h-12 rounded-full object-cover"
                       />
                       <div>
-                        <span className="text-sm sm:text-base text-white font-medium">{event.host}</span>
-                        <div className="flex items-center gap-2 mt-1">
-                          <div className="w-2 h-2 rounded-full bg-green-400" />
-                          <span className="text-xs text-gray-200">Host</span>
+                        <h4 className="font-medium text-gray-900">{event.organizer.name}</h4>
+                        <p className="text-sm text-gray-600">Event Organizer</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold mb-3 text-gray-900">Event Information</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex items-center gap-3 p-3 bg-[#272222]/5 rounded-lg">
+                        <Calendar className="w-5 h-5 text-[#272222]" />
+                        <div>
+                          <p className="text-sm text-gray-600">Date</p>
+                          <p className="font-medium text-[#272222]">{event.date}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-[#272222]/5 rounded-lg">
+                        <Clock className="w-5 h-5 text-[#272222]" />
+                        <div>
+                          <p className="text-sm text-gray-600">Time</p>
+                          <p className="font-medium text-[#272222]">6:00 PM</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-[#272222]/5 rounded-lg">
+                        <MapPin className="w-5 h-5 text-[#272222]" />
+                        <div>
+                          <p className="text-sm text-gray-600">Location</p>
+                          <p className="font-medium text-[#272222]">Nairobi, Kenya</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-[#272222]/5 rounded-lg">
+                        <Users className="w-5 h-5 text-[#272222]" />
+                        <div>
+                          <p className="text-sm text-gray-600">Capacity</p>
+                          <p className="font-medium text-[#272222]">{event.capacity} spots</p>
                         </div>
                       </div>
                     </div>
                   </div>
+                </motion.div>
+              )}
 
-                  {/* Event details row */}
-                  <div className="flex flex-wrap gap-4 text-white mb-4">
-                    <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                      <Calendar className="w-3.5 h-3.5 text-purple-300" />
-                      <span className="text-xs text-gray-200">{event.date}</span>
-                    </div>
-                    <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                      <Clock className="w-3.5 h-3.5 text-purple-300" />
-                      <span className="text-xs text-gray-200">{event.time}</span>
-                    </div>
-                    {/* Location moved to menu */}
-                    <div className="flex items-center gap-2 bg-black/40 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                      <Users className="w-3.5 h-3.5 text-purple-300" />
-                      <span className="text-xs text-gray-200">{event.capacity}</span>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-
-              {selectedEventIndex === index && (
-                <div className="p-4 sm:p-6 bg-[#272222] rounded-b-2xl transition-all duration-300 ease-in-out">
-                  {/* Category Navigation */}
-                  <div className="flex items-center justify-between mb-6">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const categories = Object.keys(organizerEvents[selectedEventIndex].categories);
-                        const currentIndex = categories.indexOf(activeCategory);
-                        const prevIndex = currentIndex - 1 < 0 ? categories.length - 1 : currentIndex - 1;
-                        setActiveCategory(categories[prevIndex]);
-                      }}
-                      className="p-2 hover:bg-gray-800/70 rounded-xl transition-colors duration-300"
-                    >
-                      <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
-                    </button>
-
-                    <div className="flex items-center gap-2">
-                      {organizerEvents[selectedEventIndex].categories[activeCategory].icon}
-                      <span className="text-sm sm:text-base text-white font-medium">
-                        {organizerEvents[selectedEventIndex].categories[activeCategory].title}
-                      </span>
-                    </div>
-
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const categories = Object.keys(organizerEvents[selectedEventIndex].categories);
-                        const currentIndex = categories.indexOf(activeCategory);
-                        const nextIndex = (currentIndex + 1) % categories.length;
-                        setActiveCategory(categories[nextIndex]);
-                      }}
-                      className="p-2 hover:bg-gray-800/70 rounded-xl transition-colors duration-300"
-                    >
-                      <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
-                    </button>
-                  </div>
-
-                  {/* Event Description Section */}
-                  <div className="mb-6 animate-fadeIn">
-                    <h2 className="text-lg font-bold text-white mb-3">About This Event</h2>
-                    <p className="text-gray-300 text-sm leading-relaxed">
-                      {organizerEvents[selectedEventIndex].description}
-                    </p>
-                    
-                    {/* Location and Time */}
-                    <div className="mt-4 grid grid-cols-2 gap-3">
-                      <div className="flex items-center gap-2 text-gray-300">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="text-purple-300"
-                        >
-                          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
-                          <line x1="16" y1="2" x2="16" y2="6"></line>
-                          <line x1="8" y1="2" x2="8" y2="6"></line>
-                          <line x1="3" y1="10" x2="21" y2="10"></line>
-                        </svg>
-                        <span className="text-sm">{organizerEvents[selectedEventIndex].date}</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-300">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="text-purple-300"
-                        >
-                          <circle cx="12" cy="12" r="10"></circle>
-                          <polyline points="12 6 12 12 16 14"></polyline>
-                        </svg>
-                        <span className="text-sm">6:00 PM</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-300">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="text-purple-300"
-                        >
-                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                          <circle cx="12" cy="10" r="3"></circle>
-                        </svg>
-                        <span className="text-sm">Nairobi, Kenya</span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-300">
-                        <Users className="w-4 h-4 text-purple-300" />
-                        <span className="text-sm">{organizerEvents[selectedEventIndex].capacity} spots</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Category Dots Indicator */}
-                  <div className="flex justify-center gap-1.5 py-2 mb-4">
-                    {Object.keys(organizerEvents[selectedEventIndex].categories).map((cat) => (
+              {activeTab === 'requirements' && (
+                <motion.div
+                  key="requirements"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                >
+                  <h3 className="text-lg font-semibold mb-4 text-[#272222]">{event.categories?.requirements?.title || "Requirements"}</h3>
+                  <div className="grid gap-3">
+                    {event.categories?.requirements?.items?.map((item, index) => (
                       <div
-                        key={cat}
-                        className={`w-1.5 h-1.5 rounded-full ${
-                          activeCategory === cat ? "bg-purple-500" : "bg-gray-600"
-                        }`}
-                      />
+                        key={index}
+                        className="flex items-center gap-3 p-4 bg-[#272222]/5 rounded-lg border border-[#272222]/10"
+                      >
+                        <div className="w-2 h-2 bg-[#272222] rounded-full flex-shrink-0" />
+                        <span className="text-[#272222] font-medium">{item.name}</span>
+                      </div>
                     ))}
                   </div>
+                </motion.div>
+              )}
 
-                  {/* Category Content */}
-                  {renderCategoryContent()}
-
-                  {/* Availability Status */}
-                  <div className="mt-6 pt-4 border-t border-gray-800">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-green-400" />
-                        <span className="text-xs sm:text-sm text-gray-400">
-                          Currently Available
-                        </span>
+              {activeTab === 'activities' && (
+                <motion.div
+                  key="activities"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                >
+                  <h3 className="text-lg font-semibold mb-4 text-[#272222]">{event.categories?.activities?.title || "Activities"}</h3>
+                  <div className="grid gap-3">
+                    {event.categories?.activities?.items?.map((item, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center gap-3 p-4 bg-[#272222]/5 rounded-lg border border-[#272222]/10"
+                      >
+                        <Activity className="w-5 h-5 text-[#272222] flex-shrink-0" />
+                        <span className="text-[#272222] font-medium">{item.name}</span>
                       </div>
-                      <span className="text-xs sm:text-sm font-medium text-purple-400">
-                        {organizerEvents[selectedEventIndex].capacity}
-                      </span>
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+
+              {activeTab === 'menu' && (
+                <motion.div
+                  key="menu"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="grid md:grid-cols-2 gap-6"
+                >
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4 text-[#272222]">{event.categories?.menu?.title || "Food Menu"}</h3>
+                    <div className="space-y-3">
+                      {event.categories?.menu?.items?.filter(item => item.type !== "beverage").map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-3 bg-[#272222]/5 rounded-lg border border-[#272222]/10"
+                        >
+                          <div className="flex items-center gap-3">
+                            <Coffee className="w-5 h-5 text-[#272222]" />
+                            <span className="text-[#272222] font-medium">{item.name}</span>
+                          </div>
+                          {item.price && <span className="text-[#272222] font-bold">{item.price}</span>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4 text-[#272222]">Drinks Menu</h3>
+                    <div className="space-y-3">
+                      {event.categories?.menu?.items?.filter(item => item.type === "beverage").map((item, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center justify-between p-3 bg-[#272222]/5 rounded-lg border border-[#272222]/10"
+                        >
+                          <div className="flex items-center gap-3">
+                            <Coffee className="w-5 h-5 text-[#272222]" />
+                            <span className="text-[#272222] font-medium">{item.name}</span>
+                          </div>
+                          {item.price && <span className="text-[#272222] font-bold">{item.price}</span>}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+};
+
+const MyOrganizerEvents = () => {
+  const [expandedEvent, setExpandedEvent] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [likedEvents, setLikedEvents] = useState({});
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [activeTab, setActiveTab] = useState('details');
+  const navigate = useNavigate();
+  const { id: organizerId } = useParams(); // Get organizerId from URL params
+
+  // Filter events by organizer ID
+  const organizerEvents = eventData.filter(event => 
+    event.organizer.id.toString() === organizerId?.toString()
+  );
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 500);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const handleLike = (eventId) => {
+    setLikedEvents(prev => ({
+      ...prev,
+      [eventId]: !prev[eventId]
+    }));
+  };
+
+  const handleToggleDetails = (eventId) => {
+    setExpandedEvent(expandedEvent === eventId ? null : eventId);
+  };
+
+  const handleEditClick = (event) => {
+    setSelectedEvent(event);
+    setShowEditModal(true);
+  };
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    if (tab === 'analytics') {
+      navigate('analytics');
+    } else {
+      navigate('details');
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="flex items-center justify-center min-h-[60vh]"
+      >
+        <div className="w-16 h-16 border-4 border-[#272222] border-t-transparent rounded-full animate-spin"></div>
+      </motion.div>
+    );
+  }
+
+  if (organizerEvents.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-4">
+        <div className="max-w-3xl mx-auto px-4">
+          <div className="bg-white rounded-2xl p-8 text-center">
+            <h3 className="text-lg font-semibold text-gray-900">No Events Found</h3>
+            <p className="text-gray-600 mt-2">This organizer hasn't created any events yet.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 pt-4">
+      {/* Main Navigation Tabs */}
+      <div className="max-w-3xl mx-auto px-4 mb-6">
+        <div className="bg-white rounded-2xl shadow-sm p-4">
+          <div className="flex justify-center gap-4">
+            <button
+              onClick={() => handleTabChange('details')}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                activeTab === 'details'
+                  ? 'bg-[#272222] text-white shadow-lg transform hover:scale-105'
+                  : 'bg-gray-100 text-[#272222] hover:bg-gray-200'
+              }`}
+            >
+              <Activity className="w-4 h-4" />
+              Event Details
+            </button>
+            <button
+              onClick={() => handleTabChange('analytics')}
+              className={`flex items-center gap-2 px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 ${
+                activeTab === 'analytics'
+                  ? 'bg-[#272222] text-white shadow-lg transform hover:scale-105'
+                  : 'bg-gray-100 text-[#272222] hover:bg-gray-200'
+              }`}
+            >
+              <BarChart2 className="w-4 h-4" />
+              Analytics
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Event Cards */}
+      {activeTab === 'details' && (
+        <div className="max-w-3xl mx-auto px-4">
+          <div className="space-y-6">
+            {organizerEvents.map((event) => (
+              <motion.div
+                key={event.id}
+                className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                {/* Event Image */}
+                <div className="relative h-[250px] group">
+                  <img
+                    src={event.coverImage}
+                    alt={event.title}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+                  
+                  {/* Event Info Overlay */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <h2 className="text-2xl font-bold mb-2">{event.title}</h2>
+                    <div className="flex flex-wrap gap-3 text-sm">
+                      <div className="flex items-center gap-1.5">
+                        <Calendar className="w-4 h-4 text-purple-300" />
+                        <span>{event.date}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Clock className="w-4 h-4 text-purple-300" />
+                        <span>{event.time}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <MapPin className="w-4 h-4 text-purple-300" />
+                        <span>{event.location}</span>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Users className="w-4 h-4 text-purple-300" />
+                        <span>{event.capacity} spots</span>
+                      </div>
                     </div>
                   </div>
                 </div>
-              )}
-            </div>
-          ))}
-        </div>
-       ) : (
-        // Analytics Content via Outlet
-        <Outlet context={{ organizerEvents, selectedEventIndex, setSelectedEventIndex }} />
-      )}
-    
 
-      {/* Edit Button */}
-      <button
-        onClick={() => setShowEventModal(true)}
-        className="fixed bottom-20 right-8 bg-black text-white p-3 rounded-full hover:bg-gray-800 transition-colors shadow-lg"
-      >
-        <Edit className="w-5 h-5" />
-      </button>
+                {/* Event Actions */}
+                <div className="p-4 bg-white">
+                  <div className="flex items-center justify-between">
+                    <div className="flex gap-6">
+                      <button
+                        onClick={() => handleLike(event.id)}
+                        className="flex items-center gap-2 group"
+                      >
+                        <Heart
+                          className={`w-5 h-5 transition-colors duration-300 ${
+                            likedEvents[event.id]
+                              ? "fill-red-500 text-red-500"
+                              : "text-[#272222] group-hover:text-red-500"
+                          }`}
+                        />
+                        <span className={`text-sm ${likedEvents[event.id] ? "text-red-500" : "text-[#272222]"}`}>
+                          {event.likes}
+                        </span>
+                      </button>
+                      <button className="flex items-center gap-2 group">
+                        <MessageCircle className="w-5 h-5 text-[#272222] group-hover:text-blue-500 transition-colors duration-300" />
+                        <span className="text-sm text-[#272222] group-hover:text-blue-500">0</span>
+                      </button>
+                      <button className="flex items-center gap-2 group">
+                        <Share2 className="w-5 h-5 text-[#272222] group-hover:text-green-500 transition-colors duration-300" />
+                        <span className="text-sm text-[#272222] group-hover:text-green-500">0</span>
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleEditClick(event)}
+                        className="p-2 text-[#272222] hover:text-black transition-colors duration-300"
+                      >
+                        <Edit className="w-5 h-5" />
+                      </button>
+                      <button
+                        onClick={() => handleToggleDetails(event.id)}
+                        className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-[#272222] hover:text-black hover:bg-gray-100 rounded-lg transition-colors duration-300"
+                      >
+                        View Details
+                        {expandedEvent === event.id ? (
+                          <ChevronUp className="w-4 h-4" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Event Detail Dropdown */}
+                <EventDetailDropdown
+                  event={event}
+                  isOpen={expandedEvent === event.id}
+                  onToggle={() => handleToggleDetails(event.id)}
+                  onEdit={() => handleEditClick(event)}
+                />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Analytics Tab Content */}
+      {activeTab === 'analytics' && (
+        <div className="max-w-3xl mx-auto px-4">
+          <Outlet />
+        </div>
+      )}
 
       {/* Edit Event Modal */}
-      {showEventModal && (
-        <EditEvent 
-          onClose={() => setShowEventModal(false)} 
-          initialData={initialData} 
+      {showEditModal && selectedEvent && (
+        <EditEvent
+          onClose={() => setShowEditModal(false)}
+          initialData={selectedEvent}
         />
       )}
     </div>

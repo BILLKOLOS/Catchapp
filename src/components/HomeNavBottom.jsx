@@ -7,12 +7,13 @@ import EventModal from "./EventModal"
 
 const BottomNav = () => {
   const { theme } = useTheme()
-  const [isAtBottom, setIsAtBottom] = useState(false)
   const [showEventModal, setShowEventModal] = useState(false)
   const [showCategories, setShowCategories] = useState(false)
   const [selectedCategory, setSelectedCategory] = useState("General")
   const categoriesRef = useRef(null)
   const location = useLocation()
+  const [isScrollingUp, setIsScrollingUp] = useState(true)
+  const [lastScrollY, setLastScrollY] = useState(0)
 
   const categories = [
     { id: 1, name: "General", active: true },
@@ -27,24 +28,14 @@ const BottomNav = () => {
   // Handle scroll detection
   useEffect(() => {
     const handleScroll = () => {
-      const windowHeight = window.innerHeight
-      const documentHeight = document.documentElement.scrollHeight
-      const scrollTop = window.scrollY || document.documentElement.scrollTop
-
-      // Consider "at bottom" when within 100px of the bottom or if the page isn't scrollable
-      const isBottom = documentHeight <= windowHeight || scrollTop + windowHeight >= documentHeight - 100
-
-      setIsAtBottom(isBottom)
+      const currentScrollY = window.scrollY
+      setIsScrollingUp(currentScrollY < lastScrollY)
+      setLastScrollY(currentScrollY)
     }
 
-    window.addEventListener("scroll", handleScroll)
-    // Initial check
-    handleScroll()
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll)
-    }
-  }, [location.pathname]) // Re-check when route changes
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [lastScrollY])
 
   // Close categories dropdown when clicking outside
   useEffect(() => {
@@ -123,133 +114,131 @@ const BottomNav = () => {
       )}
 
       {/* Bottom Navigation Bar */}
-      {isAtBottom && (
-        <div
-          className={`
-            fixed bottom-0 left-0 right-0 z-40
-            transition-transform duration-500 ease-in-out
-          `}
-        >
-          <div className="max-w-7xl mx-auto px-4 py-3">
-            <div className="flex items-center justify-between gap-4">
-              {/* Main Navigation */}
-              <div
-                className={`flex items-center gap-2 md:gap-3 ${theme === "dark" ? "bg-gray-800/90" : "bg-gray-100/90"} backdrop-blur-md p-1.5 md:p-2 rounded-full shadow-md w-auto md:w-[400px] lg:w-[500px]`}
+      <div
+        className={`
+          fixed bottom-0 left-0 right-0 z-40
+          transition-all duration-300 ease-in-out
+          ${isScrollingUp ? 'translate-y-0' : 'translate-y-full'}
+        `}
+      >
+        <div className="max-w-7xl mx-auto px-4 py-3">
+          <div className="flex items-center justify-between gap-4">
+            {/* Main Navigation */}
+            <div
+              className={`flex items-center gap-2 md:gap-3 ${theme === "dark" ? "bg-gray-800/90" : "bg-gray-100/90"} backdrop-blur-md p-1.5 md:p-2 rounded-full shadow-md w-auto md:w-[400px] lg:w-[500px]`}
+            >
+              {/* Home */}
+              <NavLink
+                to="/"
+                className={({ isActive }) => `
+                  p-2 md:p-2.5 rounded-full flex items-center justify-center
+                  transition-all duration-200
+                  ${
+                    isActive
+                      ? "bg-[#272222] text-white"
+                      : theme === "dark"
+                        ? "text-gray-300 hover:bg-gray-700"
+                        : "text-gray-700 hover:bg-gray-200"
+                  }
+                `}
               >
-                {/* Home */}
-                <NavLink
-                  to="/"
-                  className={({ isActive }) => `
-                    p-2 md:p-2.5 rounded-full flex items-center justify-center
-                    transition-all duration-200
-                    ${
-                      isActive
-                        ? "bg-[#272222] text-white"
-                        : theme === "dark"
-                          ? "text-gray-300 hover:bg-gray-700"
-                          : "text-gray-700 hover:bg-gray-200"
-                    }
-                  `}
-                >
-                  <Home className="w-5 h-5 md:w-6 md:h-6" />
-                </NavLink>
+                <Home className="w-5 h-5 md:w-6 md:h-6" />
+              </NavLink>
 
-                {/* Category Selector */}
-                <div
-                  className={`flex items-center gap-1.5 px-3 md:px-4 py-1.5 md:py-2 flex-grow max-w-[150px] md:max-w-[180px]
-                    border ${theme === "dark" ? "border-gray-700 hover:bg-gray-700" : "border-gray-300 hover:bg-gray-200"} rounded-full cursor-pointer
-                    transition-all duration-200`}
-                  onClick={toggleCategories}
-                >
-                  <span
-                    className={`text-xs md:text-sm font-medium ${theme === "dark" ? "text-gray-200" : "text-gray-800"}`}
-                  >
-                    {selectedCategory}
-                  </span>
-                  {showCategories ? (
-                    <ChevronUp className={`w-3 h-3 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`} />
-                  ) : (
-                    <ChevronDown className={`w-3 h-3 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`} />
-                  )}
-                </div>
-
-                {/* Calendar */}
-                <NavLink
-                  to="/explore/trending"
-                  className={({ isActive }) => `
-                    p-2 md:p-2.5 rounded-full flex items-center justify-center
-                    transition-all duration-200
-                    ${
-                      isActive
-                        ? "bg-[#272222] text-white"
-                        : theme === "dark"
-                          ? "text-gray-300 hover:bg-gray-700"
-                          : "text-gray-700 hover:bg-gray-200"
-                    }
-                  `}
-                >
-                  <Calendar className="w-5 h-5 md:w-6 md:h-6" />
-                </NavLink>
-
-                {/* Settings */}
-                <NavLink
-                  to="/settings"
-                  className={({ isActive }) => `
-                    p-2 md:p-2.5 rounded-full flex items-center justify-center
-                    transition-all duration-200
-                    ${
-                      isActive
-                        ? "bg-[#272222] text-white"
-                        : theme === "dark"
-                          ? "text-gray-300 hover:bg-gray-700"
-                          : "text-gray-700 hover:bg-gray-200"
-                    }
-                  `}
-                >
-                  <Settings className="w-5 h-5 md:w-6 md:h-6" />
-                </NavLink>
-
-                {/* Profile */}
-                <NavLink
-                  to="/profile"
-                  className={({ isActive }) => `
-                    rounded-full flex items-center justify-center
-                    transition-all duration-200 p-0.5
-                    ${isActive ? "ring-2 ring-[#272222]" : "hover:ring-2 hover:ring-gray-300"}
-                  `}
-                >
-                  <div className="relative">
-                    <img
-                      src={profile || "/placeholder.svg"}
-                      alt="Profile"
-                      className="object-cover rounded-full w-7 h-7 md:w-8 md:h-8"
-                    />
-                    <span className="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full border-[1px] border-white"></span>
-                  </div>
-                </NavLink>
-              </div>
-
-              {/* Host Button */}
-              <div className="flex items-center gap-4 cursor-pointer group" onClick={() => setShowEventModal(true)}>
-                <div
-                  className={`${theme === "dark" ? "bg-gray-800 group-hover:bg-gray-700" : "bg-[#272222] group-hover:bg-black"} text-white p-2.5 md:p-3 rounded-full 
-                    shadow-md transition-all duration-200
-                    transform group-hover:scale-105`}
-                >
-                  <Plus className="w-5 h-5 md:w-6 md:h-6" />
-                </div>
+              {/* Category Selector */}
+              <div
+                className={`flex items-center gap-1.5 px-3 md:px-4 py-1.5 md:py-2 flex-grow max-w-[150px] md:max-w-[180px]
+                  border ${theme === "dark" ? "border-gray-700 hover:bg-gray-700" : "border-gray-300 hover:bg-gray-200"} rounded-full cursor-pointer
+                  transition-all duration-200`}
+                onClick={toggleCategories}
+              >
                 <span
-                  className={`text-xs md:text-sm font-bold ${theme === "dark" ? "text-white group-hover:text-gray-300" : "text-[#272222] group-hover:text-black"}`}
+                  className={`text-xs md:text-sm font-medium ${theme === "dark" ? "text-gray-200" : "text-gray-800"}`}
                 >
-                  Host
+                  {selectedCategory}
                 </span>
+                {showCategories ? (
+                  <ChevronUp className={`w-3 h-3 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`} />
+                ) : (
+                  <ChevronDown className={`w-3 h-3 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`} />
+                )}
               </div>
+
+              {/* Calendar */}
+              <NavLink
+                to="/explore/trending"
+                className={({ isActive }) => `
+                  p-2 md:p-2.5 rounded-full flex items-center justify-center
+                  transition-all duration-200
+                  ${
+                    isActive
+                      ? "bg-[#272222] text-white"
+                      : theme === "dark"
+                        ? "text-gray-300 hover:bg-gray-700"
+                        : "text-gray-700 hover:bg-gray-200"
+                  }
+                `}
+              >
+                <Calendar className="w-5 h-5 md:w-6 md:h-6" />
+              </NavLink>
+
+              {/* Settings */}
+              <NavLink
+                to="/settings"
+                className={({ isActive }) => `
+                  p-2 md:p-2.5 rounded-full flex items-center justify-center
+                  transition-all duration-200
+                  ${
+                    isActive
+                      ? "bg-[#272222] text-white"
+                      : theme === "dark"
+                        ? "text-gray-300 hover:bg-gray-700"
+                        : "text-gray-700 hover:bg-gray-200"
+                  }
+                `}
+              >
+                <Settings className="w-5 h-5 md:w-6 md:h-6" />
+              </NavLink>
+
+              {/* Profile */}
+              <NavLink
+                to="/profile"
+                className={({ isActive }) => `
+                  rounded-full flex items-center justify-center
+                  transition-all duration-200 p-0.5
+                  ${isActive ? "ring-2 ring-[#272222]" : "hover:ring-2 hover:ring-gray-300"}
+                `}
+              >
+                <div className="relative">
+                  <img
+                    src={profile || "/placeholder.svg"}
+                    alt="Profile"
+                    className="object-cover rounded-full w-7 h-7 md:w-8 md:h-8"
+                  />
+                  <span className="absolute bottom-0 right-0 w-2 h-2 bg-green-500 rounded-full border-[1px] border-white"></span>
+                </div>
+              </NavLink>
+            </div>
+
+            {/* Host Button */}
+            <div className="flex items-center gap-4 cursor-pointer group" onClick={() => setShowEventModal(true)}>
+              <div
+                className={`${theme === "dark" ? "bg-gray-800 group-hover:bg-gray-700" : "bg-[#272222] group-hover:bg-black"} text-white p-2.5 md:p-3 rounded-full 
+                  shadow-md transition-all duration-200
+                  transform group-hover:scale-105`}
+              >
+                <Plus className="w-5 h-5 md:w-6 md:h-6" />
+              </div>
+              <span
+                className={`text-xs md:text-sm font-bold ${theme === "dark" ? "text-white group-hover:text-gray-300" : "text-[#272222] group-hover:text-black"}`}
+              >
+                Host
+              </span>
             </div>
           </div>
         </div>
-      )}
+      </div>
 
-       
       {showEventModal && <EventModal onClose = {() => setShowEventModal(false)}/>}
     </>
   )

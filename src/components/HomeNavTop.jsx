@@ -154,7 +154,11 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                     {/* Desktop Search Icon Only */}
                     <button 
                         onClick={toggleSearch} 
-                        className={`hidden md:flex items-center justify-center w-10 h-10 ${theme === 'dark' ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-gray-50 text-[#000000] hover:bg-gray-100'} rounded-full transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-200`}
+                        className={`hidden md:flex items-center justify-center w-10 h-10 ${
+                            theme === 'dark' 
+                                ? 'bg-gray-800 text-white hover:bg-gray-700 hover:text-purple-300' 
+                                : 'bg-gray-50 text-[#000000] hover:bg-gray-100 hover:text-purple-600'
+                        } rounded-full transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 transform hover:scale-105`}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -175,7 +179,11 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                     {/* Mobile Search Icon */}
                     <button 
                         onClick={toggleMobileSearch} 
-                        className={`md:hidden flex items-center justify-center w-10 h-10 ${theme === 'dark' ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-gray-50 text-[#000000] hover:bg-gray-100'} rounded-full transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-200`}
+                        className={`md:hidden flex items-center justify-center w-10 h-10 ${
+                            theme === 'dark' 
+                                ? 'bg-gray-800 text-white hover:bg-gray-700 hover:text-purple-300' 
+                                : 'bg-gray-50 text-[#000000] hover:bg-gray-100 hover:text-purple-600'
+                        } rounded-full transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 transform hover:scale-105`}
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -193,25 +201,32 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                         </svg>
                     </button>
 
-                    {/* Chevron Down Button */}
+                    {/* Chevron Down Button - Premium Search */}
                     <button 
                         onClick={toggleSearchEvent}
-                        className={`flex items-center justify-center w-10 h-10 ${theme === 'dark' ? 'bg-gray-800 text-white hover:bg-gray-700' : 'bg-gray-50 text-[#000000] hover:bg-gray-100'} p-2 rounded-full transition-all cursor-pointer focus:outline-none focus:ring-2 focus:ring-gray-200`}
+                        className={`flex items-center justify-center w-10 h-10 ${
+                            theme === 'dark' 
+                                ? 'bg-gradient-to-r from-purple-700 to-purple-500 text-white hover:from-purple-600 hover:to-purple-400' 
+                                : 'bg-gradient-to-r from-purple-600 to-purple-400 text-white hover:from-purple-500 hover:to-purple-300'
+                        } p-2 rounded-full transition-all duration-300 cursor-pointer focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-offset-2 transform hover:scale-105 shadow-lg hover:shadow-purple-200`}
                     >
-                        <svg 
-                            xmlns="http://www.w3.org/2000/svg" 
-                            fill="none" 
-                            viewBox="0 0 24 24" 
-                            strokeWidth={2} 
-                            stroke="currentColor" 
-                            className="w-5 h-5"
-                        >
-                            <path 
-                                strokeLinecap="round" 
-                                strokeLinejoin="round" 
-                                d="M19.5 8.25l-7.5 7.5-7.5-7.5" 
-                            />
-                        </svg>
+                        <div className="relative">
+                            <svg 
+                                xmlns="http://www.w3.org/2000/svg" 
+                                fill="none" 
+                                viewBox="0 0 24 24" 
+                                strokeWidth={2.5} 
+                                stroke="currentColor" 
+                                className="w-5 h-5"
+                            >
+                                <path 
+                                    strokeLinecap="round" 
+                                    strokeLinejoin="round" 
+                                    d="M19.5 8.25l-7.5 7.5-7.5-7.5" 
+                                />
+                            </svg>
+                            <span className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-300 rounded-full animate-pulse"></span>
+                        </div>
                     </button>
                 </div>
 
@@ -242,14 +257,18 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                                     text-sm 
                                     border
                                     ${theme === 'dark' 
-                                        ? 'text-white bg-gray-800 border-gray-700 focus:border-gray-500' 
-                                        : 'text-[#272222] bg-gray-50 border-gray-200 focus:border-black'
+                                        ? 'text-white bg-gray-800/90 border-gray-700 focus:border-purple-500' 
+                                        : 'text-[#272222] bg-gray-50/90 border-gray-200 focus:border-purple-500'
                                     }
                                     focus:outline-none 
-                                    focus:ring-1
-                                    focus:ring-black 
+                                    focus:ring-2
+                                    focus:ring-purple-400
+                                    focus:ring-opacity-50
                                     rounded-full
                                     shadow-sm
+                                    backdrop-blur-sm
+                                    transition-all
+                                    duration-300
                                 `}
                             />
                             <svg
@@ -492,17 +511,11 @@ const TopNav = ({ activeFilter, setActiveFilter }) => {
                         placeholder="Search Catchapp" 
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        className={`
-                            w-full 
-                            pl-12 
-                            pr-12
-                            py-3
-                            text-sm
-                            ${theme === 'dark' ? 'text-white bg-gray-800' : 'text-[#272222] bg-white'}
-                            border-none
-                            focus:outline-none 
-                            focus:ring-0
-                        `}
+                        className={`w-full pl-12 pr-12 py-3 text-sm ${
+                            theme === 'dark' 
+                                ? 'text-white bg-gray-800/90 focus:bg-gray-800' 
+                                : 'text-[#272222] bg-white/90 focus:bg-white'
+                        } border-none focus:outline-none focus:ring-2 focus:ring-purple-400 focus:ring-opacity-50 transition-all duration-300 backdrop-blur-sm`}
                     />
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

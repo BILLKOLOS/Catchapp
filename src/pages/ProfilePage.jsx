@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, Outlet, useLocation, Link } from 'react-router-dom';
-import { CheckCircle, MapPin, ArrowLeft } from 'lucide-react';
+import { CheckCircle, MapPin, ArrowLeft, MessageCircle, Mail } from 'lucide-react';
 import NormalNav from '../components/NormalNav';
 import PersonalProfileEdit from './PersonalProfileEdit';
 import { eventData } from '../data/event';
@@ -157,7 +157,7 @@ const ProfilePage = () => {
             </button>
             <div className="flex gap-2">
               <button className="p-2.5 border border-gray-200 rounded-full hover:bg-gray-50 transition-colors">
-                <MapPin className="w-5 h-5 text-[#272222]" />
+                <Mail className="w-5 h-5 text-[#272222]" />
               </button>
             </div>
           </div>
@@ -244,7 +244,9 @@ const ProfilePage = () => {
 
           {/* Conditionally render Events grid or PicsGallery via Outlet */}
           {showNestedRoute ? (
-            <Outlet />
+            <div className="max-w-3xl mx-auto">
+              <Outlet />
+            </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {service.galleryImages.map((image) => {
