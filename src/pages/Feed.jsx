@@ -110,16 +110,41 @@ const SocialFeed = () => {
     },
   ])
 
+  // People around you data
+  const [peopleAroundYou] = useState([
+    {
+      id: 1,
+      username: "brian gikunga",
+      avatar:
+        "https://images.pexels.com/photos/29976870/pexels-photo-29976870/free-photo-of-contemplative-young-adult-in-urban-setting.jpeg?auto=compress&cs=tinysrgb&w=600",
+      isFollowing: false,
+    },
+    {
+      id: 2,
+      username: "quincy gikunga",
+      avatar:
+        "https://images.pexels.com/photos/30007344/pexels-photo-30007344/free-photo-of-dynamic-portrait-of-a-woman-with-flowing-hair.jpeg?auto=compress&cs=tinysrgb&w=600",
+      isFollowing: false,
+    },
+    {
+      id: 3,
+      username: "nancy ciku",
+      avatar:
+        "https://images.pexels.com/photos/30039441/pexels-photo-30039441/free-photo-of-emotional-portrait-of-a-woman-in-low-light.jpeg?auto=compress&cs=tinysrgb&w=600",
+      isFollowing: false,
+    },
+  ])
+
   const [newPostText, setNewPostText] = useState("")
   const [selectedImages, setSelectedImages] = useState([])
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+  const [followingStatus, setFollowingStatus] = useState({})
   const fileInputRef = useRef(null)
   const cameraInputRef = useRef(null)
 
   const handleImageSelect = (e) => {
     const files = Array.from(e.target.files)
     const imageFiles = files.filter((file) => file.type.startsWith("image/"))
-
     if (imageFiles.length > 0) {
       const newImages = imageFiles.map((file) => ({
         url: URL.createObjectURL(file),
@@ -204,6 +229,13 @@ const SocialFeed = () => {
         return post
       }),
     )
+  }
+
+  const handleFollow = (userId) => {
+    setFollowingStatus((prev) => ({
+      ...prev,
+      [userId]: !prev[userId],
+    }))
   }
 
   return (
@@ -304,6 +336,36 @@ const SocialFeed = () => {
         </div>
       </div>
 
+      {/* People Around You Section */}
+      <div className="bg-white rounded-2xl shadow-md mb-6 mx-3 sm:mx-0 p-4 sm:p-5">
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">people on catchap around you</h3>
+        <div className="flex gap-4 overflow-x-auto pb-2">
+          {peopleAroundYou.map((person) => (
+            <div
+              key={person.id}
+              className="flex-shrink-0 bg-[#272222] rounded-2xl p-4 text-center min-w-[140px] w-[140px]"
+            >
+              <div className="w-16 h-16 mx-auto mb-3 rounded-full overflow-hidden ring-2 ring-gray-600">
+                <img
+                  src={person.avatar || "/placeholder.svg"}
+                  alt={person.username}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <h4 className="text-white text-sm font-medium mb-3 leading-tight">{person.username}</h4>
+              <button
+                onClick={() => handleFollow(person.id)}
+                className={`w-full px-4 py-1.5 text-xs font-medium rounded-full transition-colors ${
+                  followingStatus[person.id] ? "bg-gray-600 text-white" : "bg-white text-[#272222] hover:bg-gray-100"
+                }`}
+              >
+                {followingStatus[person.id] ? "following" : "follow"}
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* Emoji Picker Modal */}
       {showEmojiPicker && <EmojiPicker onSelect={handleEmojiSelect} onClose={() => setShowEmojiPicker(false)} />}
 
@@ -382,6 +444,7 @@ const SocialFeed = () => {
                     <span className="text-sm text-gray-500 group-hover:text-green-500">{post.shares}</span>
                   </button>
                 </div>
+
                 <button onClick={() => handleSave(post.id)} className="group">
                   <BookmarkIcon
                     className={`w-5 h-5 ${post.saved ? "fill-yellow-500 text-yellow-500" : "text-gray-500 group-hover:text-yellow-500"} transition-colors`}
